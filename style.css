@@ -267,10 +267,10 @@ footer {
         font-size: 1.2rem;
     }
 
-    /* Entries sit two across instead of one tall stack */
+    /* Entries stay in one stacked column */
 
     .items {
-        grid-template-columns: 1fr 1fr;
-        gap: 2.25rem 2.5rem;
+        grid-template-columns: 1fr;
+        gap: 2.25rem;
     }
 }

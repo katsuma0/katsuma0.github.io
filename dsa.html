@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DSA Cryptosystem · Katsuma Onishi</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<nav>
+    <a href="index.html">Home</a>
+    <a href="apps.html" aria-current="page">Apps and Projects</a>
+    <a href="sewing-projects.html">Sewing Projects</a>
+    <a href="contact.html">Contact</a>
+</nav>
+
+<a class="backlink" href="apps.html">← Apps and Projects</a>
+
+<h1>DSA Cryptosystem</h1>
+<p class="meta">Project · December 2024 · Python</p>
+<p><a class="btn" href="https://github.com/katsuma0/DSA-Cryptosystem/blob/main/DSA%20Cryptosystem.ipynb">View the notebook ↗</a></p>
+
+<p class="lead">A cryptography project in two halves. First I built a hybrid system that borrows from the Chinese Remainder Theorem and RSA. Then I turned around and attacked it, using the exposed public key to show where it breaks.</p>
+
+<h4>What it does</h4>
+<p>The build side sets up the keys and runs messages through encryption and decryption. The attack side is the interesting part. It takes what a real observer would actually have, the public key, and works backward to recover what should have stayed secret. Seeing the two side by side makes it clear that a scheme can look fine and still leak everything if the wrong piece is public.</p>
+
+<h4>How it is put together</h4>
+<p>It runs as a Python notebook, so the code, the math, and the results sit together and you can read straight through the whole thing.</p>
+
+<footer>
+    Last updated: July 2026
+</footer>
+
+</body>
+</html>

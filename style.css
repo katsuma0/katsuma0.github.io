@@ -239,14 +239,14 @@ footer {
     color: var(--muted);
 }
 
-/* Larger screens: wider, less compressed, smaller readable type */
+/* Larger screens: smaller readable type, and the same width and side margins on every page */
 
 @media (min-width: 820px) {
     body {
         font-size: 1rem;
         line-height: 1.6;
-        max-width: 44rem;
-        padding: 3rem 1.5rem 4.5rem;
+        max-width: 50rem;
+        padding: 3rem 2.5rem 4.5rem;
     }
 
     nav {
@@ -267,24 +267,10 @@ footer {
         font-size: 1.2rem;
     }
 
-    /* Wide pages spread the entries across the screen instead of stacking them */
+    /* Entries sit two across instead of one tall stack */
 
-    body.wide {
-        max-width: 62rem;
-    }
-
-    body.wide .lead {
-        max-width: 40rem;
-    }
-
-    body.wide .items {
+    .items {
         grid-template-columns: 1fr 1fr;
-        gap: 2.25rem 2.75rem;
-    }
-}
-
-@media (min-width: 1100px) {
-    body.wide .items {
-        grid-template-columns: 1fr 1fr 1fr;
+        gap: 2.25rem 2.5rem;
     }
 }

@@ -8,7 +8,9 @@ Main pages: `index.html`, `apps.html`, `sewing-projects.html`, `shop.html`, `con
 
 App and project detail pages, all linked from `apps.html`: `tides.html`, `wildlife.html`, `fishing.html`, `camp.html`, `spotify.html`, `used-car.html`, `carbon-cycle.html`, `dsa.html`. They use a `backlink` to Projects, an `Open the app ↗` button for apps, and `h4` section headings. Display names are the brand names (On-Site is `camp.html`, On-Fishing is `fishing.html`, On-Wildlife is `wildlife.html`, Maritides is `tides.html`, Unwrapped is `spotify.html`); the filenames are older than the names and stay.
 
-Redirect stubs for short URLs: `unwrapped.html` (to `/spotify-unwrapped/`), `nb-tides.html` (to `/maritides/`), and `on-site.html` (to `/camp.html`, kept so old links to the removed On-Site hub page still land somewhere). Detail pages must never share a name with one of my app repos, because a page named like a repo shadows that repo's project site path on katsuma.ca (that is why the tides detail page is `tides.html`, not `maritides.html`).
+Redirect stubs for short URLs: `unwrapped.html` (to `/spotify-unwrapped/`), `nb-tides.html` (to `/maritides/`), and `on-site.html` (to `/camp.html`, kept so old links to the removed On-Site hub page still land somewhere).
+
+`on-stores.html` is the sticker storefront (every sticker sold has an NFC tag inside; prices match Ontario Parks, not undercut). Its circle mockups are pure CSS (`.mockups`/`.mock`), placeholders until commissioned art exists. `business/` holds the private business plan and pitch; it is gitignored and must never be committed to this public repo. Detail pages must never share a name with one of my app repos, because a page named like a repo shadows that repo's project site path on katsuma.ca (that is why the tides detail page is `tides.html`, not `maritides.html`).
 
 ## No build step
 
@@ -34,10 +36,12 @@ images/sewing/<slug>/1-thumb.jpeg, ...          700px grid thumbnails, made with
 
 ## Conventions
 
-- Times New Roman, black and white, CSS variables in `:root`. Keep it that way.
+- The design matches meishi.shop on purpose: cream background (#f2eee4), navy ink (#22304a), system sans, one narrow 36rem column, generous spacing. CSS variables in `:root`. Keep it that way.
+- Everything displays lowercase, enforced by `text-transform: lowercase` on `body` and lowercase `<title>`/meta description text. Not a single uppercase letter anywhere. That is the owner's quirk, do not "fix" it.
+- No nav. Every page except `index.html` starts with a `← back to katsuma.ca` backlink (detail pages also get `← projects`). The homepage is the hub; its sections link everything. Hub and spoke, never more than one hop from home.
+- Every page ends with the universal footer: name, email, phone, then the manually maintained last-updated line. The footer is pinned to the viewport bottom on short pages (body is a flex column, footer has margin-top auto).
 - Page titles are `Page Name · Katsuma Onishi` with a middle dot. `index.html` is just `Katsuma Onishi`.
-- The five-link nav (Home, Projects, Arts and Crafts, Shop, Contact) is duplicated by hand in every main and detail page, with `aria-current="page"` on the current page's link (`aria-current="true"` on the Projects link from detail pages). The nav label Arts and Crafts points at `sewing-projects.html`; the filename is older than the label and stays. `life.html` and the redirect stubs are the exceptions. No include mechanism, and that is fine.
-- Every page has a `meta name="description"` and a manually maintained `Last updated: Month Year` footer.
+- Every page has a `meta name="description"` (lowercase).
 - Sewing entries: `div.project` with `h3` title, `p.meta` date, `div.photos` grid, then description. Newest first, directly after the lead paragraph.
 - Apps entries in `apps.html`: `div.item` with linked `h3`, `p.meta` (`App · Month Year · Claude Code` or `Project · Month Year · Tool`), summary, `More →` button. Newest first.
 - Photo grids reference `-thumb.jpeg` files; the lightbox swaps `-thumb.jpeg` back to `.jpeg` for the original. A new photo needs both files. Thumbnail: `sips -Z 700 -s format jpeg -s formatOptions 55 N.jpeg --out N-thumb.jpeg`. The first project's photos load eagerly, everything below gets `loading="lazy"`.
@@ -48,7 +52,7 @@ images/sewing/<slug>/1-thumb.jpeg, ...          700px grid thumbnails, made with
 
 Listed so you do not "discover" them at me every session. Do not fix these unless I ask.
 
-- `.DS_Store` files are tracked. There is no `.gitignore`.
+- `.DS_Store` files are tracked. `.gitignore` exists but only covers `business/`; that is deliberate.
 - The `hemsashiko` originals are only 240x320, smaller than every other project's photos, so their thumbs are just copies. Replace with higher-resolution exports when available and regenerate the thumbs.
 - Project entries use `h3` titles directly under the page `h1`. Screen reader outline purists would prefer `h2`, but `h3` is the convention here.
 

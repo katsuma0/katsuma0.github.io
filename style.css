@@ -229,6 +229,32 @@ h3 a:hover {
     object-fit: contain;
 }
 
+.lightbox button {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    background: none;
+    border: 1px solid #fff;
+    color: #fff;
+    font-family: inherit;
+    font-size: 0.9rem;
+    padding: 0.35rem 0.8rem;
+    cursor: pointer;
+}
+
+/* Focus */
+
+a:focus-visible,
+button:focus-visible,
+.photos img:focus-visible {
+    outline: 2px solid var(--ink);
+    outline-offset: 2px;
+}
+
+.lightbox button:focus-visible {
+    outline-color: #fff;
+}
+
 /* Footer */
 
 footer {

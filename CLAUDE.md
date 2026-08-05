@@ -10,7 +10,7 @@ App and project detail pages, all linked from `apps.html`: `tides.html`, `wildli
 
 Redirect stubs for short URLs: `unwrapped.html` (to `/spotify-unwrapped/`), `nb-tides.html` (to `/maritides/`), and `on-site.html` (to `/camp.html`, kept so old links to the removed On-Site hub page still land somewhere).
 
-`on-stores.html` is the sticker storefront (every sticker sold has an NFC tag inside; prices match Ontario Parks, not undercut). Its circle mockups are pure CSS (`.mockups`/`.mock`), placeholders until commissioned art exists. `business/` holds the private business plan and pitch; it is gitignored and must never be committed to this public repo. Detail pages must never share a name with one of my app repos, because a page named like a repo shadows that repo's project site path on katsuma.ca (that is why the tides detail page is `tides.html`, not `maritides.html`).
+`on-stores.html` is the sticker storefront, branded meishi stickers (all physical goods, cards, stickers, wallets, sell under the meishi brand; every sticker sold has an NFC tag inside; prices match Ontario Parks, not undercut). Its circle mockups are pure CSS (`.mockups`/`.mock`), placeholders until commissioned art exists. `business/` holds the private business plan and pitch; it is gitignored and must never be committed to this public repo. Detail pages must never share a name with one of my app repos, because a page named like a repo shadows that repo's project site path on katsuma.ca (that is why the tides detail page is `tides.html`, not `maritides.html`).
 
 ## No build step
 

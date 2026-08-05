@@ -1,8 +1,9 @@
 body {
     font-family: "Times New Roman", serif;
-    font-size: 11pt;
+    font-size: 16px;
     line-height: 1.5;
     color: #000;
+    background: #fff;
     max-width: 700px;
     margin: 60px auto;
     padding: 0 24px;
@@ -15,13 +16,21 @@ nav {
 }
 
 nav a {
+    display: inline-block;
     margin-right: 20px;
+    padding: 8px 0;
     color: #000;
     text-decoration: none;
+    border-bottom: none;
 }
 
 nav a:hover {
     text-decoration: underline;
+}
+
+a:focus-visible {
+    outline: 2px solid #000;
+    outline-offset: 2px;
 }
 
 h1 {
@@ -91,6 +100,19 @@ footer {
     aspect-ratio: 1 / 1;
     object-fit: cover;
     cursor: pointer;
+    background: #eee;
+    transition: opacity 150ms ease;
+}
+
+.photos img:hover,
+.photos img:focus-visible {
+    opacity: 0.8;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    * {
+        transition: none !important;
+    }
 }
 
 /* lightbox */
@@ -113,4 +135,22 @@ footer {
     max-width: 90%;
     max-height: 90%;
     object-fit: contain;
+}
+
+.lightbox button {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    background: none;
+    border: 1px solid #fff;
+    color: #fff;
+    font-family: inherit;
+    font-size: 16px;
+    padding: 8px 16px;
+    cursor: pointer;
+}
+
+.lightbox button:focus-visible {
+    outline: 2px solid #fff;
+    outline-offset: 2px;
 }

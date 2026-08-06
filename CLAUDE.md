@@ -20,7 +20,7 @@ To preview, open the `.html` file directly or run any throwaway static server (t
 
 ## Deploy and domains
 
-GitHub Pages user site from the root of `main`. Pushing to `main` is the deploy. No workflows, no `.github/` directory.
+GitHub Pages user site from the root of `main`. Pushing to `main` is the deploy. The one workflow, `.github/workflows/journal-ingest.yml`, is the life page pipeline (see below); it only ever opens pull requests, it never pushes to `main`. The owner merges every life PR by hand; that merge is the approval and the deploy, so nothing lands on the public site without the owner being the last one to push.
 
 Custom domain is `katsuma.ca` via the `CNAME` file. Because of that, every project repo with Pages also serves under it automatically: katsuma.ca/maritides, /on-camp, /on-fishing, /on-wildlife, /spotify-unwrapped. The other katsuma.* domains forward at GoDaddy: .org and .site to katsuma.ca, .shop and .store to katsuma.ca/shop, .life to katsuma.ca/life.
 
@@ -32,7 +32,37 @@ CNAME
 style.css                 the only stylesheet, CSS variables, mobile first, 820px breakpoint
 images/sewing/<slug>/1.jpeg, 2.jpeg, ...        originals, shown by the lightbox
 images/sewing/<slug>/1-thumb.jpeg, ...          700px grid thumbnails, made with sips
+images/life/<slug>/1.webp, 1-thumb.webp, ...    life photos, written by the journal pipeline
+life/data/<slug>.json                           one record per life entry, the pipeline's source of truth
+tools/journal_ingest.py                         Apple Journal export -> life entries
+.github/workflows/journal-ingest.yml            release published -> ingest -> pull request
 ```
+
+## Life page pipeline
+
+`life.html` is katsuma.life (GoDaddy forward to katsuma.ca/life). Its entry
+cards between the `journal:start` / `journal:end` markers are GENERATED from
+`life/data/*.json` by `tools/journal_ingest.py`; edit the JSON (or the
+generator), never the generated cards. Hand-written cards live after the end
+marker inside `div.entries`.
+
+How a post happens: the owner writes an entry in Apple Journal titled
+`life@<place><year>` (for example `life@grundy2026`; matching is forgiving
+about case, spacing, doubled letters, and `:`/`#` for `@`, but the separator
+is required so private entries can never leak), exports from Journal, and
+uploads the export zip as an asset on a new GitHub release. The workflow
+unpacks it, keeps only new life@ entries, takes the first 3 photos (0, 1, or
+2 are fine), converts them to webp pairs, regenerates `life.html`, and opens
+a PR. Journal exports always contain every entry; already-published slugs are
+skipped, so re-exports are cheap. The entry's own date (Journal's date, not
+upload day) sorts it, newest first, so backdated entries land in their true
+spot. Display is title plus month and year only. No captions, no location on
+the page, by the owner's choice.
+
+To change or remove a published entry: edit or delete its
+`life/data/<slug>.json` (and `images/life/<slug>/`), rerun
+`python3 tools/journal_ingest.py <any export> ` or just call
+`rebuild_page()`, and PR the result.
 
 ## Conventions
 

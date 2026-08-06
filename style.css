@@ -308,3 +308,64 @@ footer a {
         padding: 3rem 1.5rem 2.5rem;
     }
 }
+
+/* Life page: entry cards in a responsive grid. One per row on a phone,
+   two on a tablet, three on a laptop; the page column widens to hold
+   them, everything else stays the narrow 36rem column. */
+
+body.wide {
+    max-width: 64rem;
+}
+
+.entries {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2.5rem 2rem;
+    margin-top: 1.5rem;
+}
+
+@media (min-width: 640px) {
+    .entries {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (min-width: 980px) {
+    .entries {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+.entry {
+    margin: 0;
+    min-width: 0;
+}
+
+/* the entry line: name on the left, month and year on the right,
+   a dotted leader stitched between them */
+.entry-title {
+    display: flex;
+    align-items: baseline;
+    gap: 0.6rem;
+    margin-bottom: 0.35rem;
+}
+
+.entry-title .leader {
+    flex: 1;
+    border-bottom: 1px dotted var(--muted);
+    transform: translateY(-0.3em);
+}
+
+.entry-date {
+    font-size: 0.8rem;
+    font-weight: normal;
+    color: var(--muted);
+    white-space: nowrap;
+}
+
+/* inside a card the photos stack full width, newest look, tap to zoom */
+.entry .photos {
+    grid-template-columns: 1fr;
+    gap: 0.5rem;
+    margin-top: 0.75rem;
+}

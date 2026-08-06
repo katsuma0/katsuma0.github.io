@@ -7,24 +7,76 @@
     <title>life · katsuma onishi</title>
     <link rel="stylesheet" href="style.css">
 </head>
-<body>
+<body class="wide">
 
 <a class="backlink" href="index.html">← back to katsuma.ca</a>
 
 <h1>Life</h1>
 
-<p class="lead">Photos from events and a small log of what I've been up to, kept public so I keep it honest.</p>
+<p class="lead">Photos from events and a small log of what I've been up to, kept public so I keep it honest. Written in my journal, posted here.</p>
 
-<div class="project">
-    <h3>Site launch</h3>
-    <p class="meta">August 2026</p>
-    <p>Connected the katsuma domains to this site. Events and updates will get posted here as they happen.</p>
+<div class="entries">
+<!-- journal:start -->
+<article class="entry" id="grundy2026">
+    <h3 class="entry-title"><span>life @ grundy</span><span class="leader"></span><span class="entry-date">august 2026</span></h3>
+    <p>blah blah blah</p>
+    <p>blah blah</p>
+</article>
+<!-- journal:end -->
+
+<article class="entry">
+    <h3 class="entry-title"><span>site launch</span><span class="leader"></span><span class="entry-date">august 2026</span></h3>
+    <p>Connected the katsuma domains to this site. Events and updates get posted here as they happen.</p>
+</article>
 </div>
 
 <footer>
     <p>katsuma onishi · <a href="mailto:katsuma123@gmail.com">katsuma123@gmail.com</a> · <a href="tel:+16475254859">647 525 4859</a></p>
     <p>last updated: august 2026</p>
 </footer>
+
+<!-- lightbox -->
+<div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Enlarged photo">
+    <button id="lightbox-close">Close</button>
+    <img id="lightbox-img" src="" alt="">
+</div>
+
+<script>
+    const lightbox = document.getElementById('lightbox');
+    const lightboxImg = document.getElementById('lightbox-img');
+    const lightboxClose = document.getElementById('lightbox-close');
+    let lastFocused = null;
+
+    function openLightbox(img) {
+        lastFocused = img;
+        lightboxImg.src = img.src.replace('-thumb.webp', '.webp');
+        lightboxImg.alt = img.alt;
+        lightbox.classList.add('active');
+        lightboxClose.focus();
+    }
+
+    function closeLightbox() {
+        if (!lightbox.classList.contains('active')) return;
+        lightbox.classList.remove('active');
+        lightboxImg.src = '';
+        if (lastFocused) lastFocused.focus();
+    }
+
+    document.querySelectorAll('.photos img').forEach(img => {
+        img.addEventListener('click', () => openLightbox(img));
+        img.addEventListener('keydown', e => {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                openLightbox(img);
+            }
+        });
+    });
+
+    lightbox.addEventListener('click', closeLightbox);
+    document.addEventListener('keydown', e => {
+        if (e.key === 'Escape') closeLightbox();
+    });
+</script>
 
 </body>
 </html>

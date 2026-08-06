@@ -1,0 +1,80 @@
+# life page pipeline: publish a release with an Apple Journal export zip
+# attached, and this workflow turns the life@ entries in it into a pull
+# request. Nothing goes live until that PR is merged by hand.
+name: journal ingest
+
+on:
+  release:
+    types: [published]
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: journal-ingest
+
+jobs:
+  ingest:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: install image tools
+        run: pip install --quiet pillow pillow-heif
+
+      - name: download the export from the release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          mkdir -p /tmp/journal-drop
+          gh release download "${{ github.event.release.tag_name }}" \
+            --repo "${{ github.repository }}" \
+            --pattern "*.zip" --dir /tmp/journal-drop || true
+          ls -la /tmp/journal-drop
+
+      - name: ingest entries
+        id: ingest
+        run: |
+          shopt -s nullglob
+          echo "## journal ingest: release ${{ github.event.release.tag_name }}" > /tmp/summary.md
+          zips=(/tmp/journal-drop/*.zip)
+          if [ ${#zips[@]} -eq 0 ]; then
+            echo "- no zip attached to this release; nothing done" >> /tmp/summary.md
+          fi
+          for z in "${zips[@]}"; do
+            python3 tools/journal_ingest.py "$z" --summary /tmp/summary.md
+          done
+          if [ -n "$(git status --porcelain)" ]; then
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: open the pull request
+        if: steps.ingest.outputs.changed == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          branch="journal/${{ github.event.release.tag_name }}-${{ github.run_id }}"
+          git config user.name "journal ingest"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git checkout -b "$branch"
+          git add -A
+          git commit -m "life: entries from journal export ${{ github.event.release.tag_name }}"
+          git push -u origin "$branch"
+          echo "" >> /tmp/summary.md
+          echo "merge this and it is live at katsuma.life. full-size originals stay on the release." >> /tmp/summary.md
+          gh pr create --base main --head "$branch" \
+            --title "life: journal export ${{ github.event.release.tag_name }}" \
+            --body-file /tmp/summary.md
+
+      - name: write the run summary
+        if: always()
+        run: cat /tmp/summary.md >> "$GITHUB_STEP_SUMMARY" || true

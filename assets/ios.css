@@ -47,6 +47,24 @@
   --press-pill: rgba(120, 120, 128, .16);
   --shadow-float: 0 8px 24px rgba(0, 0, 0, .12);
 
+
+  /* Apple type scale (Dynamic Type at the default Large setting).
+     Sizes, line heights and tracking straight from the HIG; every
+     font-size in this file must be one of these. */
+  --font-sys: -apple-system, BlinkMacSystemFont, system-ui, "Segoe UI", Roboto, sans-serif;
+  --fs-large-title: 34px; --lh-large-title: 41px; --ls-large-title: 0.37px;
+  --fs-title1: 28px; --lh-title1: 34px; --ls-title1: 0.36px;
+  --fs-title2: 22px; --lh-title2: 28px; --ls-title2: 0.35px;
+  --fs-title3: 20px; --lh-title3: 25px; --ls-title3: 0.38px;
+  --fs-headline: 17px; --lh-headline: 22px; --ls-headline: -0.41px;
+  --fs-body: 17px; --lh-body: 22px; --ls-body: -0.41px;
+  --fs-callout: 16px; --lh-callout: 21px; --ls-callout: -0.32px;
+  --fs-subhead: 15px; --lh-subhead: 20px; --ls-subhead: -0.24px;
+  --fs-footnote: 13px; --lh-footnote: 18px; --ls-footnote: -0.08px;
+  --fs-caption1: 12px; --lh-caption1: 16px; --ls-caption1: 0;
+  --fs-caption2: 11px; --lh-caption2: 13px; --ls-caption2: 0.07px;
+  --fs-tab: 10px;   /* the one exception: tab bar labels, as on iOS */
+
   /* geometry */
   --r-group: 12px;
   --r-tile: 7px;
@@ -161,9 +179,10 @@ body {
   min-height: 100dvh;
   background: var(--bg);
   color: var(--label);
-  font-family: -apple-system, BlinkMacSystemFont, system-ui, "Segoe UI", Roboto, sans-serif;
-  font-size: 17px;
-  line-height: 1.4;
+  font-family: var(--font-sys);
+  font-size: var(--fs-body);
+  line-height: var(--lh-body);
+  letter-spacing: var(--ls-body);
   -webkit-font-smoothing: antialiased;
   -webkit-tap-highlight-color: transparent;
   overscroll-behavior-y: none;
@@ -221,7 +240,7 @@ button {
   justify-content: center;
   background: var(--fill-strong);
   color: var(--label);
-  font-size: 19px;
+  font-size: var(--fs-title3);
   font-weight: 600;
   text-decoration: none;
   overflow: hidden;
@@ -251,10 +270,10 @@ button {
   align-items: center;
   justify-content: space-between;
   gap: 12px;
-  font-size: 26px;
+  font-size: var(--fs-title1);
   font-weight: 700;
-  letter-spacing: -0.02em;
-  line-height: 1.2;
+  letter-spacing: var(--ls-title1);
+  line-height: var(--lh-title1);
   color: var(--label);
   margin: 26px 0 8px;
   padding-left: var(--gutter);
@@ -291,7 +310,8 @@ button {
 }
 /* small footnote under a group, outside the card */
 .ios-group-foot {
-  font-size: 13px;
+  font-size: var(--fs-footnote);
+  letter-spacing: var(--ls-footnote);
   color: var(--label-2);
   margin: -24px var(--gutter) 32px;
   padding: 8px 4px 0;
@@ -307,7 +327,8 @@ button {
   padding: 8px 14px;
   gap: 12px;
   color: var(--label);
-  font-size: 17px;
+  font-size: var(--fs-body);
+  letter-spacing: var(--ls-body);
   text-decoration: none;
   text-align: left;
   background: var(--card);
@@ -333,7 +354,9 @@ button {
 .ios-row-body { flex: 1; min-width: 0; }
 .ios-row-title {
   display: block;
-  font-size: 17px;
+  font-size: var(--fs-body);
+  line-height: var(--lh-body);
+  letter-spacing: var(--ls-body);
   color: var(--label);
   overflow: hidden;
   text-overflow: ellipsis;
@@ -341,7 +364,9 @@ button {
 }
 .ios-row-sub {
   display: block;
-  font-size: 13px;
+  font-size: var(--fs-footnote);
+  line-height: var(--lh-footnote);
+  letter-spacing: var(--ls-footnote);
   color: var(--label-2);
   margin-top: 1px;
   overflow: hidden;
@@ -352,7 +377,8 @@ button {
   flex: none;
   margin-left: auto;
   color: var(--label-2);
-  font-size: 17px;
+  font-size: var(--fs-body);
+  letter-spacing: var(--ls-body);
   font-variant-numeric: tabular-nums;
 }
 .ios-chevron {
@@ -417,7 +443,7 @@ button {
   padding: 0 14px;
   border-radius: 22px;
   color: var(--label-aa);
-  font-size: 10px;
+  font-size: var(--fs-tab);
   font-weight: 500;
   line-height: 1;
   text-decoration: none;
@@ -465,19 +491,19 @@ img { height: auto; }
    .ios-section-title in the markup, the rules here are fallbacks. */
 
 h1 {
-  font-size: 34px;
+  font-size: var(--fs-large-title);
   font-weight: 700;
-  letter-spacing: -0.02em;
-  line-height: 1.15;
+  letter-spacing: var(--ls-large-title);
+  line-height: var(--lh-large-title);
   color: var(--label);
   margin: 18px var(--gutter) 10px;
 }
 
 h2, h4 {
-  font-size: 26px;
+  font-size: var(--fs-title1);
   font-weight: 700;
-  letter-spacing: -0.02em;
-  line-height: 1.2;
+  letter-spacing: var(--ls-title1);
+  line-height: var(--lh-title1);
   color: var(--label);
   margin: 26px var(--gutter) 8px;
 }
@@ -485,10 +511,10 @@ h2, h4 {
 h2.ios-section-title, h4.ios-section-title { margin: 26px 0 8px; }
 
 h3 {
-  font-size: 17px;
+  font-size: var(--fs-headline);
   font-weight: 600;
   color: var(--label);
-  line-height: 1.3;
+  line-height: var(--lh-headline);
   margin: 0 0 2px;
 }
 
@@ -504,9 +530,9 @@ main.ios-page > ul {
 li { margin: 0 0 0.4rem; }
 
 .meta {
-  font-size: 13px;
+  font-size: var(--fs-footnote);
   color: var(--label-aa);
-  letter-spacing: 0.01em;
+  letter-spacing: var(--ls-footnote);
 }
 
 main.ios-page > .meta { margin: 0 var(--gutter) 12px; }
@@ -532,8 +558,9 @@ h3.ios-row-title { margin: 0; }
   position: relative;
   margin: 0;
   padding: 10px 14px 12px;
-  font-size: 15px;
-  line-height: 1.45;
+  font-size: var(--fs-subhead);
+  line-height: var(--lh-subhead);
+  letter-spacing: var(--ls-subhead);
   color: var(--label);
   background: var(--card);
 }
@@ -559,7 +586,7 @@ h3.ios-row-title { margin: 0; }
 }
 
 .project .meta { display: block; margin: 0 0 8px; }
-.project p { margin: 10px 0 0; font-size: 15px; line-height: 1.45; }
+.project p { margin: 10px 0 0; font-size: var(--fs-subhead); line-height: var(--lh-subhead); letter-spacing: var(--ls-subhead); }
 
 /* Photos: rounded tiles in a responsive grid inside the column */
 
@@ -612,8 +639,8 @@ h3.ios-row-title { margin: 0; }
   border: 1px solid var(--on-scrim);
   border-radius: 22px;
   color: var(--on-scrim);
-  font-family: inherit;
-  font-size: 0.9rem;
+  font-family: var(--font-sys);
+  font-size: var(--fs-subhead);
   padding: 0.35rem 0.9rem;
   cursor: pointer;
 }
@@ -652,8 +679,9 @@ h3.ios-row-title { margin: 0; }
 
 footer {
   margin: 40px var(--gutter) 0;
-  font-size: 13px;
-  line-height: 1.5;
+  font-size: var(--fs-footnote);
+  line-height: var(--lh-footnote);
+  letter-spacing: var(--ls-footnote);
   color: var(--label-aa);
 }
 
@@ -700,13 +728,13 @@ footer a { color: var(--label-aa); text-decoration: underline; text-underline-of
 }
 
 .entry-date {
-  font-size: 13px;
+  font-size: var(--fs-footnote);
   font-weight: normal;
   color: var(--label-aa);
   white-space: nowrap;
 }
 
-.entry p { margin: 0 0 0.5rem; font-size: 15px; line-height: 1.45; }
+.entry p { margin: 0 0 0.5rem; font-size: var(--fs-subhead); line-height: var(--lh-subhead); letter-spacing: var(--ls-subhead); }
 .entry p:last-child { margin-bottom: 0; }
 
 /* inside a card the photos stack full width, newest look, tap to zoom */

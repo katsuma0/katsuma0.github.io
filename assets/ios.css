@@ -1046,3 +1046,99 @@ h1, h2, h3, h4, .btn { font-family: var(--font-display); }
 .riskbar-fill, .clprog-fill, .pprog-fill { background: var(--tone3); }
 /* tone 2 carries secondary highlights */
 .pill-new, .badge-info.on { background: var(--tone2); }
+
+/* =====================================================================
+   ios.css desktop layer: the responsive arrangement for big screens.
+   Appended after the appearance layer so its selectors win on ties.
+   Under 700px nothing here fires and the phone chrome stands as is.
+   From 700px the reading column relaxes a step and any sheet would sit
+   as a centred dialog. From 1100px the page reads as a normal website:
+   a solid 60px top bar, the tab bar restyled as a 264px left sidebar
+   of labelled rows, one centred main column, no right rail.
+   These are text pages, so the column caps at 760px for comfortable
+   reading rather than the app repos' 1016px.
+   The styleguide's chrome is demo markup nested inside .sg-phone
+   panes, so every rule below reaches the real chrome through body >
+   and the demos keep their phone look at every width.
+   ===================================================================== */
+
+/* the brand name sits in the header only on big screens */
+.ios-brand { display: none; }
+
+@media (min-width: 700px) {
+  /* relax the column. the shared tablet constant is 900px, but 900px
+     paragraphs read poorly and would shrink back at 1100px, so these
+     text pages hold 760px from here up. the header row widens with it
+     so the avatar keeps the column's left edge. */
+  main.ios-page { max-width: 760px; }
+  body > .ios-header .ios-header-row { max-width: 760px; }
+
+  /* dialog sheets from 700px, the shared contract. no page here ships
+     a sheet today; the rule waits so the four sites stay in step. */
+  .sheet, :root:not([data-glass="off"]) .sheet {
+    left: 50%; right: auto; top: 8vh; bottom: auto;
+    width: min(560px, 92vw);
+    max-height: 84vh;
+    border-radius: 16px;
+    transform: translate(-50%, 0);
+  }
+}
+
+@media (min-width: 1100px) {
+  /* room for the fixed sidebar, only on pages that carry the real tab
+     bar as a direct child of body. the styleguide's demo bars sit
+     deeper in the tree and do not count. */
+  body:has(> .ios-tabbar) { padding-left: 264px; }
+
+  /* the fixed top bar takes the header out of the flow, so the column
+     pads down past it */
+  main.ios-page { max-width: 760px; margin: 0 auto; padding-top: 60px; }
+
+  /* the top bar: solid, full width, never frosted. the scrolled and
+     glass variants are restated so their heavier selectors from the
+     appearance layer cannot bring the wash back. */
+  body > .ios-header,
+  body > .ios-header.is-scrolled,
+  body > .ios-header.scrolled,
+  :root:not([data-glass="off"]) body > .ios-header.is-scrolled,
+  :root:not([data-glass="off"]) body > .ios-header.scrolled {
+    position: fixed; top: 0; left: 0; right: 0;
+    height: 60px; padding: 0;
+    background: var(--card);
+    background-image: none;
+    -webkit-backdrop-filter: none; backdrop-filter: none;
+    border-bottom: 1px solid var(--sep);
+    box-shadow: none;
+    z-index: 40;
+  }
+  body > .ios-header .ios-header-row { height: 60px; max-width: none; padding: 0 20px; justify-content: flex-start; gap: 12px; }
+  body > .ios-header .ios-brand { display: block; font-family: var(--font-display); font-weight: 700; font-size: var(--fs-headline); color: var(--label); }
+  body > .ios-header .ios-header-actions { margin-left: auto; }
+
+  /* the tab bar becomes the sidebar */
+  body > .ios-tabbar,
+  :root:not([data-glass="off"]) body > .ios-tabbar {
+    left: 0; right: auto; top: 60px; bottom: 0;
+    width: 264px; height: auto; max-width: none; margin: 0;
+    border-radius: 0; border: 0; border-right: 1px solid var(--sep);
+    background: var(--bg);
+    background-image: none;
+    -webkit-backdrop-filter: none; backdrop-filter: none;
+    box-shadow: none;
+    display: flex; flex-direction: column; justify-content: flex-start;
+    gap: 4px; padding: 16px 12px;
+  }
+  body > .ios-tabbar .ios-tab,
+  :root:not([data-glass="off"]) body > .ios-tabbar .ios-tab[aria-current="page"],
+  :root:not([data-glass="off"]) body > .ios-tabbar .ios-tab.on {
+    flex: 0 0 auto; width: 100%; max-width: none;
+    flex-direction: row; justify-content: flex-start; gap: 10px;
+    min-height: 36px; height: 36px; padding: 0 12px;
+    border-radius: 8px; box-shadow: none;
+  }
+  body > .ios-tabbar .ios-tab svg { width: 18px; height: 18px; }
+  body > .ios-tabbar .ios-tab span { font-size: var(--fs-subhead); line-height: 1; }
+  body > .ios-tabbar .ios-tab:hover { background: var(--fill); }
+  body > .ios-tabbar .ios-tab[aria-current="page"],
+  body > .ios-tabbar .ios-tab.on { background: var(--tint-soft); color: var(--tint-text); }
+}

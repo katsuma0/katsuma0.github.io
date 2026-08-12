@@ -2,14 +2,33 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+    <meta name="theme-color" content="#F2F2F7" media="(prefers-color-scheme: light)">
+    <meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
     <meta name="description" content="apps and projects by katsuma onishi. browser apps for the ontario outdoors and the maritimes, plus projects from school and self-teaching.">
     <title>projects · katsuma onishi</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="icon" href="data:,">
+    <link rel="stylesheet" href="assets/ios.css">
 </head>
 <body>
 
-<a class="backlink" href="index.html">← back to katsuma.ca</a>
+<header class="ios-header">
+    <div class="ios-header-row">
+        <a class="ios-avatar" href="index.html" aria-label="home">k</a>
+        <div class="ios-header-actions">
+            <a class="ios-glass-btn" href="contact.html" aria-label="contact"><svg aria-hidden="true"><use href="assets/icons.svg#mail"/></svg></a>
+        </div>
+    </div>
+</header>
+
+<main class="ios-page">
+
+<nav class="ios-group ios-group--links" aria-label="backlinks">
+    <a class="ios-row ios-row--plain" href="index.html">
+        <span class="ios-row-body"><span class="ios-row-title">← back to katsuma.ca</span></span>
+        <span class="ios-chevron"><svg aria-hidden="true"><use href="assets/icons.svg#chevron-right"/></svg></span>
+    </a>
+</nav>
 
 <h1>Projects</h1>
 
@@ -17,60 +36,84 @@
 
 <div class="items">
 
-    <div class="item">
-        <h3><a href="tides.html">Maritides</a></h3>
-        <p class="meta">App · August 2026 · Claude Code</p>
-        <p>A one-page tide viewer for Grand Manan Island, New Brunswick. Whether the tide is coming in or going out, when the next high is, and two weeks of highs and lows, working offline once loaded.</p>
-        <p><a class="btn" href="tides.html" aria-label="More about Maritides">More →</a></p>
+    <div class="item ios-group">
+        <a class="ios-row" href="tides.html">
+            <span class="ios-tile ios-tile--blue"><svg aria-hidden="true"><use href="assets/icons.svg#waves"/></svg></span>
+            <span class="ios-row-body"><h3 class="ios-row-title">Maritides</h3> <span class="ios-row-sub">App · August 2026 · Claude Code</span></span>
+            <span class="ios-chevron"><svg aria-hidden="true"><use href="assets/icons.svg#chevron-right"/></svg></span>
+        </a>
+        <p class="item-note sep-top">A one-page tide viewer for Grand Manan Island, New Brunswick. Whether the tide is coming in or going out, when the next high is, and two weeks of highs and lows, working offline once loaded.</p>
+        <a class="ios-row ios-row--plain sep-top" href="tides.html" aria-label="More about Maritides"><span class="ios-row-body"><span class="ios-row-title">More →</span></span></a>
     </div>
 
-    <div class="item">
-        <h3><a href="wildlife.html">On-Wildlife</a></h3>
-        <p class="meta">App · July 2026 · Claude Code</p>
-        <p>A field journal for the wildlife you run into around Ontario. Log a moose, a spring peeper, a walleye, or a turtle on the road, and keep a running guide to what lives where.</p>
-        <p><a class="btn" href="wildlife.html" aria-label="More about On-Wildlife">More →</a></p>
+    <div class="item ios-group">
+        <a class="ios-row" href="wildlife.html">
+            <span class="ios-tile ios-tile--green"><svg aria-hidden="true"><use href="assets/icons.svg#paw"/></svg></span>
+            <span class="ios-row-body"><h3 class="ios-row-title">On-Wildlife</h3> <span class="ios-row-sub">App · July 2026 · Claude Code</span></span>
+            <span class="ios-chevron"><svg aria-hidden="true"><use href="assets/icons.svg#chevron-right"/></svg></span>
+        </a>
+        <p class="item-note sep-top">A field journal for the wildlife you run into around Ontario. Log a moose, a spring peeper, a walleye, or a turtle on the road, and keep a running guide to what lives where.</p>
+        <a class="ios-row ios-row--plain sep-top" href="wildlife.html" aria-label="More about On-Wildlife"><span class="ios-row-body"><span class="ios-row-title">More →</span></span></a>
     </div>
 
-    <div class="item">
-        <h3><a href="camp.html">On-Site</a></h3>
-        <p class="meta">App · July 2026 · Claude Code</p>
-        <p>A private journal for Ontario Parks campsites. Walk a campground, rate the sites, and remember which ones are worth booking next time.</p>
-        <p><a class="btn" href="camp.html" aria-label="More about On-Site">More →</a></p>
+    <div class="item ios-group">
+        <a class="ios-row" href="camp.html">
+            <span class="ios-tile ios-tile--green"><svg aria-hidden="true"><use href="assets/icons.svg#tent"/></svg></span>
+            <span class="ios-row-body"><h3 class="ios-row-title">On-Site</h3> <span class="ios-row-sub">App · July 2026 · Claude Code</span></span>
+            <span class="ios-chevron"><svg aria-hidden="true"><use href="assets/icons.svg#chevron-right"/></svg></span>
+        </a>
+        <p class="item-note sep-top">A private journal for Ontario Parks campsites. Walk a campground, rate the sites, and remember which ones are worth booking next time.</p>
+        <a class="ios-row ios-row--plain sep-top" href="camp.html" aria-label="More about On-Site"><span class="ios-row-body"><span class="ios-row-title">More →</span></span></a>
     </div>
 
-    <div class="item">
-        <h3><a href="fishing.html">On-Fishing</a></h3>
-        <p class="meta">App · June 2026 · Claude Code</p>
-        <p>An interactive map of Ontario's 20 fishing zones. Tap your zone, or use your location, and see the seasons, catch limits, and what is open right now.</p>
-        <p><a class="btn" href="fishing.html" aria-label="More about On-Fishing">More →</a></p>
+    <div class="item ios-group">
+        <a class="ios-row" href="fishing.html">
+            <span class="ios-tile ios-tile--blue"><svg aria-hidden="true"><use href="assets/icons.svg#fish"/></svg></span>
+            <span class="ios-row-body"><h3 class="ios-row-title">On-Fishing</h3> <span class="ios-row-sub">App · June 2026 · Claude Code</span></span>
+            <span class="ios-chevron"><svg aria-hidden="true"><use href="assets/icons.svg#chevron-right"/></svg></span>
+        </a>
+        <p class="item-note sep-top">An interactive map of Ontario's 20 fishing zones. Tap your zone, or use your location, and see the seasons, catch limits, and what is open right now.</p>
+        <a class="ios-row ios-row--plain sep-top" href="fishing.html" aria-label="More about On-Fishing"><span class="ios-row-body"><span class="ios-row-title">More →</span></span></a>
     </div>
 
-    <div class="item">
-        <h3><a href="spotify.html">Unwrapped</a></h3>
-        <p class="meta">App · April 2026 · Claude Code</p>
-        <p>Drop in the data export Spotify emails you and get a dashboard of your listening. Your totals, a listening personality, your top artists and tracks, and a deep end of 101 odd stats. It all runs in your browser.</p>
-        <p><a class="btn" href="spotify.html" aria-label="More about Unwrapped">More →</a></p>
+    <div class="item ios-group">
+        <a class="ios-row" href="spotify.html">
+            <span class="ios-tile ios-tile--green"><svg aria-hidden="true"><use href="assets/icons.svg#chart"/></svg></span>
+            <span class="ios-row-body"><h3 class="ios-row-title">Unwrapped</h3> <span class="ios-row-sub">App · April 2026 · Claude Code</span></span>
+            <span class="ios-chevron"><svg aria-hidden="true"><use href="assets/icons.svg#chevron-right"/></svg></span>
+        </a>
+        <p class="item-note sep-top">Drop in the data export Spotify emails you and get a dashboard of your listening. Your totals, a listening personality, your top artists and tracks, and a deep end of 101 odd stats. It all runs in your browser.</p>
+        <a class="ios-row ios-row--plain sep-top" href="spotify.html" aria-label="More about Unwrapped"><span class="ios-row-body"><span class="ios-row-title">More →</span></span></a>
     </div>
 
-    <div class="item">
-        <h3><a href="used-car.html">Used Car Price Prediction Model</a></h3>
-        <p class="meta">Project · March 2025 · R</p>
-        <p>A linear regression model trained on more than 100,000 Craigslist listings to predict used car prices. It landed on an R² of 0.691 and came within 11 to 13 percent on common cars.</p>
-        <p><a class="btn" href="used-car.html" aria-label="More about Used Car Price Prediction Model">More →</a></p>
+    <div class="item ios-group">
+        <a class="ios-row" href="used-car.html">
+            <span class="ios-tile ios-tile--graphite"><svg aria-hidden="true"><use href="assets/icons.svg#chart"/></svg></span>
+            <span class="ios-row-body"><h3 class="ios-row-title">Used Car Price Prediction Model</h3> <span class="ios-row-sub">Project · March 2025 · R</span></span>
+            <span class="ios-chevron"><svg aria-hidden="true"><use href="assets/icons.svg#chevron-right"/></svg></span>
+        </a>
+        <p class="item-note sep-top">A linear regression model trained on more than 100,000 Craigslist listings to predict used car prices. It landed on an R² of 0.691 and came within 11 to 13 percent on common cars.</p>
+        <a class="ios-row ios-row--plain sep-top" href="used-car.html" aria-label="More about Used Car Price Prediction Model"><span class="ios-row-body"><span class="ios-row-title">More →</span></span></a>
     </div>
 
-    <div class="item">
-        <h3><a href="carbon-cycle.html">Carbon Cycle and Sustainable Deforestation Model</a></h3>
-        <p class="meta">Project · January 2025 · R</p>
-        <p>A dynamic systems model looking at how deforestation changes carbon storage in an ecosystem, with seasonal climate shifts built in. I presented what I found to a full lecture hall.</p>
-        <p><a class="btn" href="carbon-cycle.html" aria-label="More about Carbon Cycle and Sustainable Deforestation Model">More →</a></p>
+    <div class="item ios-group">
+        <a class="ios-row" href="carbon-cycle.html">
+            <span class="ios-tile ios-tile--graphite"><svg aria-hidden="true"><use href="assets/icons.svg#leaf"/></svg></span>
+            <span class="ios-row-body"><h3 class="ios-row-title">Carbon Cycle and Sustainable Deforestation Model</h3> <span class="ios-row-sub">Project · January 2025 · R</span></span>
+            <span class="ios-chevron"><svg aria-hidden="true"><use href="assets/icons.svg#chevron-right"/></svg></span>
+        </a>
+        <p class="item-note sep-top">A dynamic systems model looking at how deforestation changes carbon storage in an ecosystem, with seasonal climate shifts built in. I presented what I found to a full lecture hall.</p>
+        <a class="ios-row ios-row--plain sep-top" href="carbon-cycle.html" aria-label="More about Carbon Cycle and Sustainable Deforestation Model"><span class="ios-row-body"><span class="ios-row-title">More →</span></span></a>
     </div>
 
-    <div class="item">
-        <h3><a href="dsa.html">DSA Cryptosystem</a></h3>
-        <p class="meta">Project · December 2024 · Python</p>
-        <p>A hybrid cryptosystem built on the Chinese Remainder Theorem and RSA. Then I broke it, using the exposed public key to show where the whole thing falls apart.</p>
-        <p><a class="btn" href="dsa.html" aria-label="More about DSA Cryptosystem">More →</a></p>
+    <div class="item ios-group">
+        <a class="ios-row" href="dsa.html">
+            <span class="ios-tile ios-tile--graphite"><svg aria-hidden="true"><use href="assets/icons.svg#lock"/></svg></span>
+            <span class="ios-row-body"><h3 class="ios-row-title">DSA Cryptosystem</h3> <span class="ios-row-sub">Project · December 2024 · Python</span></span>
+            <span class="ios-chevron"><svg aria-hidden="true"><use href="assets/icons.svg#chevron-right"/></svg></span>
+        </a>
+        <p class="item-note sep-top">A hybrid cryptosystem built on the Chinese Remainder Theorem and RSA. Then I broke it, using the exposed public key to show where the whole thing falls apart.</p>
+        <a class="ios-row ios-row--plain sep-top" href="dsa.html" aria-label="More about DSA Cryptosystem"><span class="ios-row-body"><span class="ios-row-title">More →</span></span></a>
     </div>
 
 </div>
@@ -79,6 +122,15 @@
     <p>katsuma onishi · <a href="mailto:katsuma123@gmail.com">katsuma123@gmail.com</a> · <a href="tel:+16475254859">647 525 4859</a></p>
     <p>last updated: august 2026</p>
 </footer>
+
+</main>
+
+<nav class="ios-tabbar" aria-label="primary">
+    <a class="ios-tab" href="index.html"><svg aria-hidden="true"><use href="assets/icons.svg#home"/></svg><span>home</span></a>
+    <a class="ios-tab" href="apps.html" aria-current="page"><svg aria-hidden="true"><use href="assets/icons.svg#compass"/></svg><span>projects</span></a>
+    <a class="ios-tab" href="life.html"><svg aria-hidden="true"><use href="assets/icons.svg#leaf"/></svg><span>life</span></a>
+    <a class="ios-tab" href="contact.html"><svg aria-hidden="true"><use href="assets/icons.svg#mail"/></svg><span>contact</span></a>
+</nav>
 
 </body>
 </html>

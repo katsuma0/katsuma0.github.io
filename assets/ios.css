@@ -24,6 +24,9 @@
   /* chrome and tint */
   --tint: #007AFF;
   --tint-press: #0062CC;
+  --tint-text: #0066CC;
+  --tint-fill: #0066CC;
+  --label-aa: rgba(60, 60, 67, .78);
   --tint-soft: rgba(0, 122, 255, .12);
   --on-tint: #FFFFFF;
   --chrome: rgba(255, 255, 255, .72);
@@ -70,6 +73,9 @@
     --sep: rgba(84, 84, 88, .65);
     --tint: #0A84FF;
     --tint-press: #409CFF;
+    --tint-text: #0A84FF;
+    --tint-fill: #0A84FF;
+    --label-aa: rgba(235, 235, 245, .75);
     --tint-soft: rgba(10, 132, 255, .16);
     --chrome: rgba(28, 28, 30, .72);
     --green: #30D158;
@@ -99,6 +105,9 @@
   --sep: rgba(60, 60, 67, .29);
   --tint: #007AFF;
   --tint-press: #0062CC;
+  --tint-text: #0066CC;
+  --tint-fill: #0066CC;
+  --label-aa: rgba(60, 60, 67, .78);
   --tint-soft: rgba(0, 122, 255, .12);
   --chrome: rgba(255, 255, 255, .72);
   --green: #34C759;
@@ -125,6 +134,9 @@
   --sep: rgba(84, 84, 88, .65);
   --tint: #0A84FF;
   --tint-press: #409CFF;
+    --tint-text: #0A84FF;
+    --tint-fill: #0A84FF;
+    --label-aa: rgba(235, 235, 245, .75);
   --tint-soft: rgba(10, 132, 255, .16);
   --chrome: rgba(28, 28, 30, .72);
   --green: #30D158;
@@ -159,7 +171,8 @@ body {
   padding-bottom: 88px;
 }
 img { max-width: 100%; }
-a { color: var(--tint); text-decoration: none; }
+/* inline text links use the darker text tint so small type keeps AA contrast */
+a { color: var(--tint-text, var(--tint)); text-decoration: none; }
 button {
   font-family: inherit;
   color: inherit;
@@ -247,6 +260,7 @@ button {
   padding-left: var(--gutter);
 }
 .ios-overflow {
+  position: relative;
   width: 24px;
   height: 24px;
   flex: none;
@@ -255,6 +269,16 @@ button {
   justify-content: center;
   color: var(--label-2);
   margin-right: var(--gutter);
+}
+/* the glyph stays 24px per the spec; the thing you aim at is 44px */
+.ios-overflow::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 44px;
+  height: 44px;
+  transform: translate(-50%, -50%);
 }
 .ios-overflow svg { width: 24px; height: 24px; }
 
@@ -392,7 +416,7 @@ button {
   height: 44px;
   padding: 0 14px;
   border-radius: 22px;
-  color: var(--label-2);
+  color: var(--label-aa);
   font-size: 10px;
   font-weight: 500;
   line-height: 1;
@@ -402,7 +426,292 @@ button {
 .ios-tab[aria-current="page"],
 .ios-tab.on {
   background: var(--press-pill);
-  color: var(--tint);
+  /* the text tint: a 10px label needs the AA-passing blue */
+  color: var(--tint-text);
 }
 /* static variant so the styleguide can show the bar in the flow */
 .ios-tabbar--demo { position: static; margin: 8px auto; }
+
+/* =====================================================================
+   ios.css, part 2 of 2: katsuma.ca page styles.
+   This is the old style.css moved below the core and rebuilt on the
+   core tokens. The cream and navy :root colour blocks are gone; every
+   colour now comes from the token blocks at the top of this file. The
+   old .btn and .backlink link styles were retired when those links
+   became ios-row entries, and the hover rules went with them: touch
+   gets the pressed colour instead.
+   ===================================================================== */
+
+/* app-layout tokens: geometry plus the photo overlay constants. The two
+   overlay colours are deliberately the same in both schemes, because
+   the lightbox scrim is always near black with white controls. */
+:root {
+  --r-photo: 12px;
+  --scrim: rgba(0, 0, 0, .9);
+  --on-scrim: #FFFFFF;
+}
+
+::selection {
+  background: var(--tint);
+  color: var(--on-tint);
+}
+
+/* the whole site displays lowercase, the owner's quirk. do not "fix". */
+body { text-transform: lowercase; }
+
+img { height: auto; }
+
+/* Headings. h1 is the large page title; h2 and h4 carry
+   .ios-section-title in the markup, the rules here are fallbacks. */
+
+h1 {
+  font-size: 34px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.15;
+  color: var(--label);
+  margin: 18px var(--gutter) 10px;
+}
+
+h2, h4 {
+  font-size: 26px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+  color: var(--label);
+  margin: 26px var(--gutter) 8px;
+}
+
+h2.ios-section-title, h4.ios-section-title { margin: 26px 0 8px; }
+
+h3 {
+  font-size: 17px;
+  font-weight: 600;
+  color: var(--label);
+  line-height: 1.3;
+  margin: 0 0 2px;
+}
+
+/* Text. Bare copy sits in the 640px column with the standard gutter. */
+
+main.ios-page > p { margin: 0 var(--gutter) 0.85rem; }
+
+main.ios-page > ul {
+  margin: 0 var(--gutter) 0.85rem;
+  padding-left: 1.3rem;
+}
+
+li { margin: 0 0 0.4rem; }
+
+.meta {
+  font-size: 13px;
+  color: var(--label-aa);
+  letter-spacing: 0.01em;
+}
+
+main.ios-page > .meta { margin: 0 var(--gutter) 12px; }
+
+.lead { margin-bottom: 1.35rem; }
+
+/* Rows: this site's row text is real copy, so let it wrap instead of
+   truncating, and zero the heading margin when an h3 is the title. */
+
+.ios-row .ios-row-title,
+.ios-row .ios-row-sub { white-space: normal; }
+h3.ios-row-title { margin: 0; }
+
+/* the backlink group at the top of a subpage */
+.ios-group--links { margin: 16px var(--gutter) 24px; }
+
+/* Project and app entries: one card per item, a linked title row, the
+   summary as body text in the card, then the More row. */
+
+.items .ios-group { margin-bottom: 16px; }
+
+.item-note {
+  position: relative;
+  margin: 0;
+  padding: 10px 14px 12px;
+  font-size: 15px;
+  line-height: 1.45;
+  color: var(--label);
+  background: var(--card);
+}
+
+/* separator between stacked card pieces, inset like a row separator */
+.sep-top::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 14px;
+  right: 0;
+  height: 0.5px;
+  background: var(--sep);
+}
+
+/* Sewing and craft entries: card per project */
+
+.project {
+  background: var(--card);
+  border-radius: var(--r-group);
+  margin: 0 var(--gutter) 16px;
+  padding: 14px;
+}
+
+.project .meta { display: block; margin: 0 0 8px; }
+.project p { margin: 10px 0 0; font-size: 15px; line-height: 1.45; }
+
+/* Photos: rounded tiles in a responsive grid inside the column */
+
+.photos {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+  gap: 8px;
+  margin: 10px 0 0;
+}
+
+.photos img {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+  border-radius: var(--r-photo);
+  cursor: zoom-in;
+  display: block;
+}
+
+/* Lightbox */
+
+.lightbox {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: var(--scrim);
+  justify-content: center;
+  align-items: center;
+  padding: 1rem;
+  cursor: zoom-out;
+  z-index: 999;
+}
+
+.lightbox.active { display: flex; }
+
+.lightbox img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  border-radius: var(--r-photo);
+}
+
+.lightbox button {
+  position: absolute;
+  top: calc(0.75rem + env(safe-area-inset-top));
+  right: 0.75rem;
+  min-width: 44px;
+  min-height: 44px;
+  background: none;
+  border: 1px solid var(--on-scrim);
+  border-radius: 22px;
+  color: var(--on-scrim);
+  font-family: inherit;
+  font-size: 0.9rem;
+  padding: 0.35rem 0.9rem;
+  cursor: pointer;
+}
+
+.lightbox button:focus-visible { outline-color: var(--on-scrim); }
+
+/* Sticker mockups: pure CSS circles, placeholders until art exists */
+
+.mockups {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1rem;
+  margin: 0.65rem var(--gutter) 0.75rem;
+}
+
+.mock {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  border-radius: 50%;
+  border: 2px solid var(--sep);
+  background: var(--card);
+  color: var(--label-2);
+  box-shadow: var(--shadow-float);
+  font-size: 0.7rem;
+  line-height: 1.2;
+}
+
+.mock-lg { width: 7.5rem; height: 7.5rem; }
+.mock-md { width: 6rem; height: 6rem; }
+.mock-sm { width: 3rem; height: 3rem; font-size: 0.55rem; }
+
+/* Footer: small quiet text above the tab bar clearance */
+
+footer {
+  margin: 40px var(--gutter) 0;
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--label-aa);
+}
+
+footer p { margin: 0 0 4px; }
+
+footer a { color: var(--label-aa); text-decoration: underline; text-underline-offset: 2px; }
+
+/* Life page: entry cards in the same 640px column as everything else.
+   The card markup between the journal markers is generated by
+   tools/journal_ingest.py, so these class names must not change. */
+
+.entries {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+  margin: 8px var(--gutter) 0;
+}
+
+@media (min-width: 560px) {
+  .entries { grid-template-columns: repeat(2, 1fr); }
+}
+
+.entry {
+  margin: 0;
+  min-width: 0;
+  background: var(--card);
+  border-radius: var(--r-group);
+  padding: 14px;
+}
+
+/* the entry line: name on the left, month and year on the right,
+   a dotted leader stitched between them */
+.entry-title {
+  display: flex;
+  align-items: baseline;
+  gap: 0.6rem;
+  margin: 0 0 0.35rem;
+}
+
+.entry-title .leader {
+  flex: 1;
+  border-bottom: 1px dotted var(--label-3);
+  transform: translateY(-0.3em);
+}
+
+.entry-date {
+  font-size: 13px;
+  font-weight: normal;
+  color: var(--label-aa);
+  white-space: nowrap;
+}
+
+.entry p { margin: 0 0 0.5rem; font-size: 15px; line-height: 1.45; }
+.entry p:last-child { margin-bottom: 0; }
+
+/* inside a card the photos stack full width, newest look, tap to zoom */
+.entry .photos {
+  grid-template-columns: 1fr;
+  gap: 8px;
+  margin-top: 0.75rem;
+}

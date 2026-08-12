@@ -1,0 +1,745 @@
+/* =====================================================================
+   ios.css, part 1 of 2: the shared iOS design system.
+   One stylesheet per site. Tokens live on :root; dark mode follows the
+   OS through prefers-color-scheme. The apps carry their own
+   Auto / Light / Dark setting, which lands as data-theme on <html> and
+   must win in both directions. The .ios-scheme-* classes expose the
+   same two palettes to the styleguide so it can show both modes on one
+   page without duplicating a token anywhere else.
+   No hex outside the token blocks below.
+   ===================================================================== */
+
+:root {
+  /* ground and surfaces */
+  --bg: #F2F2F7;
+  --card: #FFFFFF;
+  --card-pressed: #D1D1D6;
+
+  /* text */
+  --label: #000000;
+  --label-2: rgba(60, 60, 67, .60);
+  --label-3: rgba(60, 60, 67, .30);
+  --sep: rgba(60, 60, 67, .29);
+
+  /* chrome and tint */
+  --tint: #007AFF;
+  --tint-press: #0062CC;
+  --tint-text: #0066CC;
+  --tint-fill: #0066CC;
+  --label-aa: rgba(60, 60, 67, .78);
+  --tint-soft: rgba(0, 122, 255, .12);
+  --on-tint: #FFFFFF;
+  --chrome: rgba(255, 255, 255, .72);
+
+  /* accents, one per tile colour */
+  --green: #34C759;
+  --blue: #007AFF;
+  --purple: #AF52DE;
+  --grey: #8E8E93;
+  --graphite: #48484A;
+  --orange: #FF9500;
+  --yellow: #FFCC00;
+  --red: #FF3B30;
+
+  /* system fills */
+  --fill: rgba(120, 120, 128, .12);
+  --fill-strong: rgba(120, 120, 128, .2);
+  --press-pill: rgba(120, 120, 128, .16);
+  --shadow-float: 0 8px 24px rgba(0, 0, 0, .12);
+
+
+  /* Apple type scale (Dynamic Type at the default Large setting).
+     Sizes, line heights and tracking straight from the HIG; every
+     font-size in this file must be one of these. */
+  --font-sys: -apple-system, BlinkMacSystemFont, system-ui, "Segoe UI", Roboto, sans-serif;
+  --fs-large-title: 34px; --lh-large-title: 41px; --ls-large-title: 0.37px;
+  --fs-title1: 28px; --lh-title1: 34px; --ls-title1: 0.36px;
+  --fs-title2: 22px; --lh-title2: 28px; --ls-title2: 0.35px;
+  --fs-title3: 20px; --lh-title3: 25px; --ls-title3: 0.38px;
+  --fs-headline: 17px; --lh-headline: 22px; --ls-headline: -0.41px;
+  --fs-body: 17px; --lh-body: 22px; --ls-body: -0.41px;
+  --fs-callout: 16px; --lh-callout: 21px; --ls-callout: -0.32px;
+  --fs-subhead: 15px; --lh-subhead: 20px; --ls-subhead: -0.24px;
+  --fs-footnote: 13px; --lh-footnote: 18px; --ls-footnote: -0.08px;
+  --fs-caption1: 12px; --lh-caption1: 16px; --ls-caption1: 0;
+  --fs-caption2: 11px; --lh-caption2: 13px; --ls-caption2: 0.07px;
+  --fs-tab: 10px;   /* the one exception: tab bar labels, as on iOS */
+
+  /* geometry */
+  --r-group: 12px;
+  --r-tile: 7px;
+  --row-min: 48px;
+  --gutter: 16px;
+
+  /* compat aliases: older component css reads these names */
+  --bg-elevated: var(--card);
+  --bg-secondary: var(--bg);
+  --bar: var(--chrome);
+  --bar-border: var(--sep);
+  --separator: var(--sep);
+  --tab-inactive: var(--label-2);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #000000;
+    --card: #1C1C1E;
+    --card-pressed: #2C2C2E;
+    --label: #FFFFFF;
+    --label-2: rgba(235, 235, 245, .60);
+    --label-3: rgba(235, 235, 245, .30);
+    --sep: rgba(84, 84, 88, .65);
+    --tint: #0A84FF;
+    --tint-press: #409CFF;
+    --tint-text: #0A84FF;
+    --tint-fill: #0A84FF;
+    --label-aa: rgba(235, 235, 245, .75);
+    --tint-soft: rgba(10, 132, 255, .16);
+    --chrome: rgba(28, 28, 30, .72);
+    --green: #30D158;
+    --blue: #0A84FF;
+    --purple: #BF5AF2;
+    --graphite: #3A3A3C;
+    --orange: #FF9F0A;
+    --yellow: #FFD60A;
+    --red: #FF453A;
+    --fill: rgba(120, 120, 128, .24);
+    --fill-strong: rgba(120, 120, 128, .36);
+    --press-pill: rgba(120, 120, 128, .29);
+    color-scheme: dark;
+  }
+}
+
+/* The in-app theme picker must beat the OS in both directions, and the
+   styleguide borrows the same palettes for its side by side panels. */
+:root[data-theme="light"],
+.ios-scheme-light {
+  --bg: #F2F2F7;
+  --card: #FFFFFF;
+  --card-pressed: #D1D1D6;
+  --label: #000000;
+  --label-2: rgba(60, 60, 67, .60);
+  --label-3: rgba(60, 60, 67, .30);
+  --sep: rgba(60, 60, 67, .29);
+  --tint: #007AFF;
+  --tint-press: #0062CC;
+  --tint-text: #0066CC;
+  --tint-fill: #0066CC;
+  --label-aa: rgba(60, 60, 67, .78);
+  --tint-soft: rgba(0, 122, 255, .12);
+  --chrome: rgba(255, 255, 255, .72);
+  --green: #34C759;
+  --blue: #007AFF;
+  --purple: #AF52DE;
+  --grey: #8E8E93;
+  --graphite: #48484A;
+  --orange: #FF9500;
+  --yellow: #FFCC00;
+  --red: #FF3B30;
+  --fill: rgba(120, 120, 128, .12);
+  --fill-strong: rgba(120, 120, 128, .2);
+  --press-pill: rgba(120, 120, 128, .16);
+  color-scheme: light;
+}
+:root[data-theme="dark"],
+.ios-scheme-dark {
+  --bg: #000000;
+  --card: #1C1C1E;
+  --card-pressed: #2C2C2E;
+  --label: #FFFFFF;
+  --label-2: rgba(235, 235, 245, .60);
+  --label-3: rgba(235, 235, 245, .30);
+  --sep: rgba(84, 84, 88, .65);
+  --tint: #0A84FF;
+  --tint-press: #409CFF;
+    --tint-text: #0A84FF;
+    --tint-fill: #0A84FF;
+    --label-aa: rgba(235, 235, 245, .75);
+  --tint-soft: rgba(10, 132, 255, .16);
+  --chrome: rgba(28, 28, 30, .72);
+  --green: #30D158;
+  --blue: #0A84FF;
+  --purple: #BF5AF2;
+  --grey: #8E8E93;
+  --graphite: #3A3A3C;
+  --orange: #FF9F0A;
+  --yellow: #FFD60A;
+  --red: #FF453A;
+  --fill: rgba(120, 120, 128, .24);
+  --fill-strong: rgba(120, 120, 128, .36);
+  --press-pill: rgba(120, 120, 128, .29);
+  color-scheme: dark;
+}
+
+/* ------------------------------------------------------------ globals */
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0;
+  min-height: 100dvh;
+  background: var(--bg);
+  color: var(--label);
+  font-family: var(--font-sys);
+  font-size: var(--fs-body);
+  line-height: var(--lh-body);
+  letter-spacing: var(--ls-body);
+  -webkit-font-smoothing: antialiased;
+  -webkit-tap-highlight-color: transparent;
+  overscroll-behavior-y: none;
+  /* content must clear the floating tab bar */
+  padding-bottom: 88px;
+}
+img { max-width: 100%; }
+/* inline text links use the darker text tint so small type keeps AA contrast */
+a { color: var(--tint-text, var(--tint)); text-decoration: none; }
+button {
+  font-family: inherit;
+  color: inherit;
+  background: none;
+  border: 0;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+:focus-visible {
+  outline: 2px solid var(--tint);
+  outline-offset: 2px;
+  border-radius: 6px;
+}
+/* one centred column, capped at 640px */
+.ios-page { max-width: 640px; margin: 0 auto; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { transition-duration: .01ms !important; animation-duration: .01ms !important; }
+}
+
+/* ------------------------------------------------------- 1. header */
+.ios-header {
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  background: var(--chrome);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
+  backdrop-filter: blur(24px) saturate(180%);
+  padding: calc(8px + env(safe-area-inset-top)) var(--gutter) 8px;
+}
+.ios-header-row {
+  max-width: 640px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  min-height: 44px;
+}
+.ios-avatar {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--fill-strong);
+  color: var(--label);
+  font-size: var(--fs-title3);
+  font-weight: 600;
+  text-decoration: none;
+  overflow: hidden;
+  flex: none;
+}
+.ios-avatar img { width: 100%; height: 100%; object-fit: cover; }
+.ios-avatar svg { width: 22px; height: 22px; color: var(--label-2); }
+.ios-avatar:active { background: var(--card-pressed); }
+.ios-header-actions { display: flex; gap: 10px; margin-left: auto; }
+.ios-glass-btn {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--fill);
+  border: 0.5px solid var(--sep);
+  color: var(--label);
+}
+.ios-glass-btn svg { width: 22px; height: 22px; }
+.ios-glass-btn:active { background: var(--card-pressed); }
+
+/* ------------------------------------------------ 2. section title */
+.ios-section-title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  font-size: var(--fs-title1);
+  font-weight: 700;
+  letter-spacing: var(--ls-title1);
+  line-height: var(--lh-title1);
+  color: var(--label);
+  margin: 26px 0 8px;
+  padding-left: var(--gutter);
+}
+.ios-overflow {
+  position: relative;
+  width: 24px;
+  height: 24px;
+  flex: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--label-2);
+  margin-right: var(--gutter);
+}
+/* the glyph stays 24px per the spec; the thing you aim at is 44px */
+.ios-overflow::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 44px;
+  height: 44px;
+  transform: translate(-50%, -50%);
+}
+.ios-overflow svg { width: 24px; height: 24px; }
+
+/* -------------------------------------------------------- 3. group */
+.ios-group {
+  background: var(--card);
+  border-radius: var(--r-group);
+  margin: 0 var(--gutter) 32px;
+  overflow: hidden;
+}
+/* small footnote under a group, outside the card */
+.ios-group-foot {
+  font-size: var(--fs-footnote);
+  letter-spacing: var(--ls-footnote);
+  color: var(--label-2);
+  margin: -24px var(--gutter) 32px;
+  padding: 8px 4px 0;
+  line-height: 1.35;
+}
+
+/* ---------------------------------------------------------- 4. row */
+.ios-row {
+  position: relative;
+  display: flex;
+  align-items: center;
+  min-height: var(--row-min);
+  padding: 8px 14px;
+  gap: 12px;
+  color: var(--label);
+  font-size: var(--fs-body);
+  letter-spacing: var(--ls-body);
+  text-decoration: none;
+  text-align: left;
+  background: var(--card);
+  /* a <button> is a form control: without this its row shrink-wraps */
+  width: 100%;
+  border: 0;
+}
+.ios-row:active { background: var(--card-pressed); }
+/* separator starts at the label, never the card edge:
+   14px pad + 32px tile + 12px gap = 58px when a tile leads the row */
+.ios-row + .ios-row::before,
+.ios-row + details > .ios-row::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 58px;
+  right: 0;
+  height: 0.5px;
+  background: var(--sep);
+}
+/* rows with no leading tile: the label starts at the padding */
+.ios-row--plain + .ios-row--plain::before { left: 14px; }
+.ios-row-body { flex: 1; min-width: 0; }
+.ios-row-title {
+  display: block;
+  font-size: var(--fs-body);
+  line-height: var(--lh-body);
+  letter-spacing: var(--ls-body);
+  color: var(--label);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.ios-row-sub {
+  display: block;
+  font-size: var(--fs-footnote);
+  line-height: var(--lh-footnote);
+  letter-spacing: var(--ls-footnote);
+  color: var(--label-2);
+  margin-top: 1px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.ios-row-value {
+  flex: none;
+  margin-left: auto;
+  color: var(--label-2);
+  font-size: var(--fs-body);
+  letter-spacing: var(--ls-body);
+  font-variant-numeric: tabular-nums;
+}
+.ios-chevron {
+  flex: none;
+  margin-left: auto;
+  display: flex;
+  color: var(--label-3);
+}
+.ios-row-value + .ios-chevron { margin-left: 8px; }
+.ios-chevron svg { width: 16px; height: 16px; display: block; }
+
+/* --------------------------------------------------------- 5. tile */
+.ios-tile {
+  width: 32px;
+  height: 32px;
+  border-radius: var(--r-tile);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--on-tint);
+  flex: none;
+}
+.ios-tile svg { width: 18px; height: 18px; }
+.ios-tile--green { background: var(--green); }
+.ios-tile--blue { background: var(--blue); }
+.ios-tile--purple { background: var(--purple); }
+.ios-tile--grey { background: var(--grey); }
+.ios-tile--graphite { background: var(--graphite); }
+.ios-tile--orange { background: var(--orange); }
+.ios-tile--yellow { background: var(--yellow); }
+.ios-tile--red { background: var(--red); }
+.ios-tile--tint { background: var(--tint); }
+
+/* ------------------------------------------------------ 6. tab bar */
+.ios-tabbar {
+  position: fixed;
+  left: 12px;
+  right: 12px;
+  bottom: calc(8px + env(safe-area-inset-bottom));
+  height: 56px;
+  max-width: 616px;
+  margin: 0 auto;
+  border-radius: 28px;
+  background: var(--chrome);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
+  backdrop-filter: blur(24px) saturate(180%);
+  border: 0.5px solid var(--sep);
+  box-shadow: var(--shadow-float);
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  z-index: 50;
+}
+.ios-tab {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  min-width: 62px;
+  height: 44px;
+  padding: 0 14px;
+  border-radius: 22px;
+  color: var(--label-aa);
+  font-size: var(--fs-tab);
+  font-weight: 500;
+  line-height: 1;
+  text-decoration: none;
+}
+.ios-tab svg { width: 24px; height: 24px; }
+.ios-tab[aria-current="page"],
+.ios-tab.on {
+  background: var(--press-pill);
+  /* the text tint: a 10px label needs the AA-passing blue */
+  color: var(--tint-text);
+}
+/* static variant so the styleguide can show the bar in the flow */
+.ios-tabbar--demo { position: static; margin: 8px auto; }
+
+/* =====================================================================
+   ios.css, part 2 of 2: katsuma.ca page styles.
+   This is the old style.css moved below the core and rebuilt on the
+   core tokens. The cream and navy :root colour blocks are gone; every
+   colour now comes from the token blocks at the top of this file. The
+   old .btn and .backlink link styles were retired when those links
+   became ios-row entries, and the hover rules went with them: touch
+   gets the pressed colour instead.
+   ===================================================================== */
+
+/* app-layout tokens: geometry plus the photo overlay constants. The two
+   overlay colours are deliberately the same in both schemes, because
+   the lightbox scrim is always near black with white controls. */
+:root {
+  --r-photo: 12px;
+  --scrim: rgba(0, 0, 0, .9);
+  --on-scrim: #FFFFFF;
+}
+
+::selection {
+  background: var(--tint);
+  color: var(--on-tint);
+}
+
+/* the whole site displays lowercase, the owner's quirk. do not "fix". */
+body { text-transform: lowercase; }
+
+img { height: auto; }
+
+/* Headings. h1 is the large page title; h2 and h4 carry
+   .ios-section-title in the markup, the rules here are fallbacks. */
+
+h1 {
+  font-size: var(--fs-large-title);
+  font-weight: 700;
+  letter-spacing: var(--ls-large-title);
+  line-height: var(--lh-large-title);
+  color: var(--label);
+  margin: 18px var(--gutter) 10px;
+}
+
+h2, h4 {
+  font-size: var(--fs-title1);
+  font-weight: 700;
+  letter-spacing: var(--ls-title1);
+  line-height: var(--lh-title1);
+  color: var(--label);
+  margin: 26px var(--gutter) 8px;
+}
+
+h2.ios-section-title, h4.ios-section-title { margin: 26px 0 8px; }
+
+h3 {
+  font-size: var(--fs-headline);
+  font-weight: 600;
+  color: var(--label);
+  line-height: var(--lh-headline);
+  margin: 0 0 2px;
+}
+
+/* Text. Bare copy sits in the 640px column with the standard gutter. */
+
+main.ios-page > p { margin: 0 var(--gutter) 0.85rem; }
+
+main.ios-page > ul {
+  margin: 0 var(--gutter) 0.85rem;
+  padding-left: 1.3rem;
+}
+
+li { margin: 0 0 0.4rem; }
+
+.meta {
+  font-size: var(--fs-footnote);
+  color: var(--label-aa);
+  letter-spacing: var(--ls-footnote);
+}
+
+main.ios-page > .meta { margin: 0 var(--gutter) 12px; }
+
+.lead { margin-bottom: 1.35rem; }
+
+/* Rows: this site's row text is real copy, so let it wrap instead of
+   truncating, and zero the heading margin when an h3 is the title. */
+
+.ios-row .ios-row-title,
+.ios-row .ios-row-sub { white-space: normal; }
+h3.ios-row-title { margin: 0; }
+
+/* the backlink group at the top of a subpage */
+.ios-group--links { margin: 16px var(--gutter) 24px; }
+
+/* Project and app entries: one card per item, a linked title row, the
+   summary as body text in the card, then the More row. */
+
+.items .ios-group { margin-bottom: 16px; }
+
+.item-note {
+  position: relative;
+  margin: 0;
+  padding: 10px 14px 12px;
+  font-size: var(--fs-subhead);
+  line-height: var(--lh-subhead);
+  letter-spacing: var(--ls-subhead);
+  color: var(--label);
+  background: var(--card);
+}
+
+/* separator between stacked card pieces, inset like a row separator */
+.sep-top::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 14px;
+  right: 0;
+  height: 0.5px;
+  background: var(--sep);
+}
+
+/* Sewing and craft entries: card per project */
+
+.project {
+  background: var(--card);
+  border-radius: var(--r-group);
+  margin: 0 var(--gutter) 16px;
+  padding: 14px;
+}
+
+.project .meta { display: block; margin: 0 0 8px; }
+.project p { margin: 10px 0 0; font-size: var(--fs-subhead); line-height: var(--lh-subhead); letter-spacing: var(--ls-subhead); }
+
+/* Photos: rounded tiles in a responsive grid inside the column */
+
+.photos {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+  gap: 8px;
+  margin: 10px 0 0;
+}
+
+.photos img {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+  border-radius: var(--r-photo);
+  cursor: zoom-in;
+  display: block;
+}
+
+/* Lightbox */
+
+.lightbox {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: var(--scrim);
+  justify-content: center;
+  align-items: center;
+  padding: 1rem;
+  cursor: zoom-out;
+  z-index: 999;
+}
+
+.lightbox.active { display: flex; }
+
+.lightbox img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  border-radius: var(--r-photo);
+}
+
+.lightbox button {
+  position: absolute;
+  top: calc(0.75rem + env(safe-area-inset-top));
+  right: 0.75rem;
+  min-width: 44px;
+  min-height: 44px;
+  background: none;
+  border: 1px solid var(--on-scrim);
+  border-radius: 22px;
+  color: var(--on-scrim);
+  font-family: var(--font-sys);
+  font-size: var(--fs-subhead);
+  padding: 0.35rem 0.9rem;
+  cursor: pointer;
+}
+
+.lightbox button:focus-visible { outline-color: var(--on-scrim); }
+
+/* Sticker mockups: pure CSS circles, placeholders until art exists */
+
+.mockups {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1rem;
+  margin: 0.65rem var(--gutter) 0.75rem;
+}
+
+.mock {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  border-radius: 50%;
+  border: 2px solid var(--sep);
+  background: var(--card);
+  color: var(--label-2);
+  box-shadow: var(--shadow-float);
+  font-size: 0.7rem;
+  line-height: 1.2;
+}
+
+.mock-lg { width: 7.5rem; height: 7.5rem; }
+.mock-md { width: 6rem; height: 6rem; }
+.mock-sm { width: 3rem; height: 3rem; font-size: 0.55rem; }
+
+/* Footer: small quiet text above the tab bar clearance */
+
+footer {
+  margin: 40px var(--gutter) 0;
+  font-size: var(--fs-footnote);
+  line-height: var(--lh-footnote);
+  letter-spacing: var(--ls-footnote);
+  color: var(--label-aa);
+}
+
+footer p { margin: 0 0 4px; }
+
+footer a { color: var(--label-aa); text-decoration: underline; text-underline-offset: 2px; }
+
+/* Life page: entry cards in the same 640px column as everything else.
+   The card markup between the journal markers is generated by
+   tools/journal_ingest.py, so these class names must not change. */
+
+.entries {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+  margin: 8px var(--gutter) 0;
+}
+
+@media (min-width: 560px) {
+  .entries { grid-template-columns: repeat(2, 1fr); }
+}
+
+.entry {
+  margin: 0;
+  min-width: 0;
+  background: var(--card);
+  border-radius: var(--r-group);
+  padding: 14px;
+}
+
+/* the entry line: name on the left, month and year on the right,
+   a dotted leader stitched between them */
+.entry-title {
+  display: flex;
+  align-items: baseline;
+  gap: 0.6rem;
+  margin: 0 0 0.35rem;
+}
+
+.entry-title .leader {
+  flex: 1;
+  border-bottom: 1px dotted var(--label-3);
+  transform: translateY(-0.3em);
+}
+
+.entry-date {
+  font-size: var(--fs-footnote);
+  font-weight: normal;
+  color: var(--label-aa);
+  white-space: nowrap;
+}
+
+.entry p { margin: 0 0 0.5rem; font-size: var(--fs-subhead); line-height: var(--lh-subhead); letter-spacing: var(--ls-subhead); }
+.entry p:last-child { margin-bottom: 0; }
+
+/* inside a card the photos stack full width, newest look, tap to zoom */
+.entry .photos {
+  grid-template-columns: 1fr;
+  gap: 8px;
+  margin-top: 0.75rem;
+}

@@ -2,31 +2,68 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+    <meta name="theme-color" content="#F2F2F7" media="(prefers-color-scheme: light)">
+    <meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
     <meta name="description" content="a dynamic systems model of deforestation and carbon storage.">
     <title>carbon cycle and sustainable deforestation model · katsuma onishi</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="icon" href="data:,">
+    <link rel="stylesheet" href="assets/ios.css">
 </head>
 <body>
 
-<p class="backlinks"><a class="backlink" href="index.html">← back to katsuma.ca</a> <a class="backlink" href="apps.html">← Projects</a></p>
+<header class="ios-header">
+    <div class="ios-header-row">
+        <a class="ios-avatar" href="index.html" aria-label="home">k</a>
+        <div class="ios-header-actions">
+            <a class="ios-glass-btn" href="contact.html" aria-label="contact"><svg aria-hidden="true"><use href="assets/icons.svg#mail"/></svg></a>
+        </div>
+    </div>
+</header>
+
+<main class="ios-page">
+
+<nav class="ios-group ios-group--links" aria-label="backlinks">
+    <a class="ios-row ios-row--plain" href="index.html">
+        <span class="ios-row-body"><span class="ios-row-title">← back to katsuma.ca</span></span>
+        <span class="ios-chevron"><svg aria-hidden="true"><use href="assets/icons.svg#chevron-right"/></svg></span>
+    </a>
+    <a class="ios-row ios-row--plain" href="apps.html">
+        <span class="ios-row-body"><span class="ios-row-title">← Projects</span></span>
+        <span class="ios-chevron"><svg aria-hidden="true"><use href="assets/icons.svg#chevron-right"/></svg></span>
+    </a>
+</nav>
 
 <h1>Carbon Cycle and Sustainable Deforestation Model</h1>
 <p class="meta">Project · January 2025 · R</p>
-<p><a class="btn" href="https://drive.google.com/file/d/1PS-ptnxuQo83_wshYGxiUIF9TzrdNMLe/view?usp=sharing">View the report ↗</a></p>
+<div class="ios-group">
+    <a class="ios-row" href="https://drive.google.com/file/d/1PS-ptnxuQo83_wshYGxiUIF9TzrdNMLe/view?usp=sharing">
+        <span class="ios-tile ios-tile--graphite"><svg aria-hidden="true"><use href="assets/icons.svg#leaf"/></svg></span>
+        <span class="ios-row-body"><span class="ios-row-title">View the report ↗</span></span>
+    </a>
+</div>
 
 <p class="lead">A dynamic systems model of how an ecosystem stores and cycles carbon, and what happens to that balance when you start removing trees. It runs across the seasons, so the climate shifts through the year instead of sitting still.</p>
 
-<h4>What it looks at</h4>
+<h4 class="ios-section-title">What it looks at</h4>
 <p>The question was how much deforestation an ecosystem can absorb before its carbon storage stops bouncing back. The model tracks carbon moving between the trees, the soil, and the air, and lets you push the amount of forest loss up and down to watch where the balance tips.</p>
 
-<h4>Where it went</h4>
+<h4 class="ios-section-title">Where it went</h4>
 <p>I wrote it in R and presented what it showed to a full lecture hall.</p>
 
 <footer>
     <p>katsuma onishi · <a href="mailto:katsuma123@gmail.com">katsuma123@gmail.com</a> · <a href="tel:+16475254859">647 525 4859</a></p>
     <p>last updated: august 2026</p>
 </footer>
+
+</main>
+
+<nav class="ios-tabbar" aria-label="primary">
+    <a class="ios-tab" href="index.html"><svg aria-hidden="true"><use href="assets/icons.svg#home"/></svg><span>home</span></a>
+    <a class="ios-tab" href="apps.html" aria-current="page"><svg aria-hidden="true"><use href="assets/icons.svg#compass"/></svg><span>projects</span></a>
+    <a class="ios-tab" href="life.html"><svg aria-hidden="true"><use href="assets/icons.svg#leaf"/></svg><span>life</span></a>
+    <a class="ios-tab" href="contact.html"><svg aria-hidden="true"><use href="assets/icons.svg#mail"/></svg><span>contact</span></a>
+</nav>
 
 </body>
 </html>

@@ -4,7 +4,7 @@
 
 My personal site, served at katsuma.ca. Hand-written HTML pages, no blog engine.
 
-Main pages: `index.html`, `apps.html`, `sewing-projects.html`, `shop.html`, `contact.html`, plus `life.html` (events and a small public log, the landing page for katsuma.life, deliberately outside the main nav, it only links back home).
+Main pages: `index.html`, `apps.html`, `sewing-projects.html`, `shop.html`, `contact.html`, plus `life.html` (events and a small public log, the landing page for katsuma.life, now also the life tab in the tab bar).
 
 App and project detail pages, all linked from `apps.html`: `tides.html`, `wildlife.html`, `fishing.html`, `camp.html`, `spotify.html`, `used-car.html`, `carbon-cycle.html`, `dsa.html`. They use a `backlink` to Projects, an `Open the app ↗` button for apps, and `h4` section headings. Display names are the brand names (On-Site is `camp.html`, On-Fishing is `fishing.html`, On-Wildlife is `wildlife.html`, Maritides is `tides.html`, Unwrapped is `spotify.html`); the filenames are older than the names and stay.
 
@@ -29,7 +29,9 @@ Custom domain is `katsuma.ca` via the `CNAME` file. Because of that, every proje
 ```
 *.html                    pages, see above
 CNAME
-style.css                 the only stylesheet, CSS variables, mobile first, 820px breakpoint
+assets/ios.css            the only stylesheet: shared iOS core tokens and components, then the site's page styles below
+assets/icons.svg          the shared icon sprite, referenced with <use href="assets/icons.svg#name">
+styleguide.html           the design contract page for the iOS look, both colour schemes
 images/sewing/<slug>/1.jpeg, 2.jpeg, ...        originals, shown by the lightbox
 images/sewing/<slug>/1-thumb.jpeg, ...          700px grid thumbnails, made with sips
 images/life/<slug>/1.webp, 1-thumb.webp, ...    life photos, written by the journal pipeline
@@ -66,9 +68,9 @@ To change or remove a published entry: edit or delete its
 
 ## Conventions
 
-- The design matches meishi.shop on purpose: cream background (#f2eee4), navy ink (#22304a), system sans, one narrow 36rem column, generous spacing. CSS variables in `:root`. Keep it that way.
+- The design is the shared iOS 26 system: core tokens and components at the top of `assets/ios.css` (system blue tint, light and dark via `prefers-color-scheme`), the site's own page styles below them, one 640px column. No hex outside the token blocks. `styleguide.html` is the contract; keep components matching it.
 - Everything displays lowercase, enforced by `text-transform: lowercase` on `body` and lowercase `<title>`/meta description text. Not a single uppercase letter anywhere. That is the owner's quirk, do not "fix" it.
-- No nav. Every page except `index.html` starts with a `← back to katsuma.ca` backlink (detail pages also get `← projects`). The homepage is the hub; its sections link everything. Hub and spoke, never more than one hop from home.
+- Navigation is the shared chrome: a sticky `.ios-header` (monogram avatar to home, mail glass button to contact) and a floating four tab `.ios-tabbar` (home, projects, life, contact) on every page. Every page except `index.html` also keeps its `← back to katsuma.ca` backlink row (detail pages also get `← projects`). The homepage is still the hub; its sections link everything.
 - Every page ends with the universal footer: name, email, phone, then the manually maintained last-updated line. The footer is pinned to the viewport bottom on short pages (body is a flex column, footer has margin-top auto).
 - Page titles are `Page Name · Katsuma Onishi` with a middle dot. `index.html` is just `Katsuma Onishi`.
 - Every page has a `meta name="description"` (lowercase).

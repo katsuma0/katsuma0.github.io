@@ -2,22 +2,50 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+    <meta name="theme-color" content="#F2F2F7" media="(prefers-color-scheme: light)">
+    <meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
     <meta name="description" content="maritides, a one-page offline tide viewer for grand manan island, new brunswick.">
     <title>maritides · katsuma onishi</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="icon" href="data:,">
+    <link rel="stylesheet" href="assets/ios.css">
 </head>
 <body>
 
-<p class="backlinks"><a class="backlink" href="index.html">← back to katsuma.ca</a> <a class="backlink" href="apps.html">← Projects</a></p>
+<header class="ios-header">
+    <div class="ios-header-row">
+        <a class="ios-avatar" href="index.html" aria-label="home">k</a>
+        <div class="ios-header-actions">
+            <a class="ios-glass-btn" href="contact.html" aria-label="contact"><svg aria-hidden="true"><use href="assets/icons.svg#mail"/></svg></a>
+        </div>
+    </div>
+</header>
+
+<main class="ios-page">
+
+<nav class="ios-group ios-group--links" aria-label="backlinks">
+    <a class="ios-row ios-row--plain" href="index.html">
+        <span class="ios-row-body"><span class="ios-row-title">← back to katsuma.ca</span></span>
+        <span class="ios-chevron"><svg aria-hidden="true"><use href="assets/icons.svg#chevron-right"/></svg></span>
+    </a>
+    <a class="ios-row ios-row--plain" href="apps.html">
+        <span class="ios-row-body"><span class="ios-row-title">← Projects</span></span>
+        <span class="ios-chevron"><svg aria-hidden="true"><use href="assets/icons.svg#chevron-right"/></svg></span>
+    </a>
+</nav>
 
 <h1>Maritides</h1>
 <p class="meta">App · August 2026 · Claude Code</p>
-<p><a class="btn" href="https://katsuma0.github.io/maritides/">Open the app ↗</a></p>
+<div class="ios-group">
+    <a class="ios-row" href="https://katsuma0.github.io/maritides/">
+        <span class="ios-tile ios-tile--blue"><svg aria-hidden="true"><use href="assets/icons.svg#waves"/></svg></span>
+        <span class="ios-row-body"><span class="ios-row-title">Open the app ↗</span></span>
+    </a>
+</div>
 
 <p class="lead">A one-page tide viewer for Grand Manan Island, New Brunswick. Built to answer one question at a glance: is the tide coming in or going out, and when is the next high?</p>
 
-<h4>What it does</h4>
+<h4 class="ios-section-title">What it does</h4>
 <ul>
     <li>A big "coming in / going out" state with a countdown to the next high or low.</li>
     <li>A 36-hour tide curve with every crest and trough labelled, and a NOW marker.</li>
@@ -26,13 +54,22 @@
     <li>Metres and feet, always in Atlantic Time, no matter what time zone the phone thinks it is in.</li>
 </ul>
 
-<h4>It works offline</h4>
+<h4 class="ios-section-title">It works offline</h4>
 <p>Predictions are computed in the browser from harmonic constituents baked into the page. Nothing is fetched at runtime, so once it has loaded it keeps working with no signal, which matters on an island where coverage is patchy. Open it once on wifi, add it to your home screen, and it opens like an app with no network at all.</p>
 
 <footer>
     <p>katsuma onishi · <a href="mailto:katsuma123@gmail.com">katsuma123@gmail.com</a> · <a href="tel:+16475254859">647 525 4859</a></p>
     <p>last updated: august 2026</p>
 </footer>
+
+</main>
+
+<nav class="ios-tabbar" aria-label="primary">
+    <a class="ios-tab" href="index.html"><svg aria-hidden="true"><use href="assets/icons.svg#home"/></svg><span>home</span></a>
+    <a class="ios-tab" href="apps.html" aria-current="page"><svg aria-hidden="true"><use href="assets/icons.svg#compass"/></svg><span>projects</span></a>
+    <a class="ios-tab" href="life.html"><svg aria-hidden="true"><use href="assets/icons.svg#leaf"/></svg><span>life</span></a>
+    <a class="ios-tab" href="contact.html"><svg aria-hidden="true"><use href="assets/icons.svg#mail"/></svg><span>contact</span></a>
+</nav>
 
 </body>
 </html>

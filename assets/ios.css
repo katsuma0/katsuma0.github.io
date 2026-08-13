@@ -744,6 +744,30 @@ footer a { color: var(--label-aa); text-decoration: underline; text-underline-of
   margin-top: 0.75rem;
 }
 
+/* life entries: a place line under the title, and a three-across photo
+   grid. photos arrive in multiples of three, so full rows land clean;
+   an odd count still flows without breaking anything */
+.entry-place {
+  margin: -0.25rem 0 0.5rem;
+  font-size: var(--fs-footnote);
+  line-height: var(--lh-footnote);
+  letter-spacing: var(--ls-footnote);
+  color: var(--label-2);
+}
+.entry .photos.p3 {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 6px;
+}
+.entry .photos.p3 img {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+  border-radius: 8px;
+  cursor: zoom-in;
+  display: block;
+}
+
 /* =====================================================================
    ios.css appearance layer: liquid glass, the three tone palettes, six
    faces, four text sizes, and the blended header.

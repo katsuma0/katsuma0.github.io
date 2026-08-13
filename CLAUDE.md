@@ -20,7 +20,7 @@ To preview, open the `.html` file directly or run any throwaway static server (t
 
 ## Deploy and domains
 
-GitHub Pages user site from the root of `main`. Pushing to `main` is the deploy. The one workflow, `.github/workflows/journal-ingest.yml`, is the life page pipeline (see below); it only ever opens pull requests, it never pushes to `main`. The owner merges every life PR by hand; that merge is the approval and the deploy, so nothing lands on the public site without the owner being the last one to push.
+GitHub Pages user site from the root of `main`. Pushing to `main` is the deploy. The two workflows, `.github/workflows/journal-ingest.yml` and `.github/workflows/life-post.yml`, are the life page pipelines (see below); both only ever open pull requests, they never push to `main`. The owner merges every life PR by hand; that merge is the approval and the deploy, so nothing lands on the public site without the owner being the last one to push.
 
 Custom domain is `katsuma.ca` via the `CNAME` file. Because of that, every project repo with Pages also serves under it automatically: katsuma.ca/maritides, /on-camp, /on-fishing, /on-wildlife, /spotify-unwrapped. The other katsuma.* domains forward at GoDaddy: .org and .site to katsuma.ca, .shop and .store to katsuma.ca/shop, .life to katsuma.ca/life.
 
@@ -29,9 +29,8 @@ Custom domain is `katsuma.ca` via the `CNAME` file. Because of that, every proje
 ```
 *.html                    pages, see above
 CNAME
-assets/ios.css            the only stylesheet: shared iOS core tokens and components, then the site's page styles below
-assets/icons.svg          the shared icon sprite, referenced with <use href="assets/icons.svg#name">
-styleguide.html           the design contract page for the iOS look, both colour schemes
+assets/site.css           the only stylesheet: tokens at the top, the document components below
+styleguide.html           the design contract page for the resume look, both colour schemes
 images/sewing/<slug>/1.jpeg, 2.jpeg, ...        originals, shown by the lightbox
 images/sewing/<slug>/1-thumb.jpeg, ...          700px grid thumbnails, made with sips
 images/life/<slug>/1.webp, 1-thumb.webp, ...    life photos, written by the journal pipeline
@@ -40,13 +39,22 @@ tools/journal_ingest.py                         Apple Journal export -> life ent
 .github/workflows/journal-ingest.yml            release published -> ingest -> pull request
 ```
 
-## Life page pipeline
+## Life page pipelines
 
 `life.html` is katsuma.life (GoDaddy forward to katsuma.ca/life). Its entry
 cards between the `journal:start` / `journal:end` markers are GENERATED from
-`life/data/*.json` by `tools/journal_ingest.py`; edit the JSON (or the
-generator), never the generated cards. Hand-written cards live after the end
-marker inside `div.entries`.
+`life/data/*.json` by `tools/journal_ingest.py` (`rebuild_page()`); edit the
+JSON (or the generator), never the generated cards. Hand-written cards live
+after the end marker inside `div.entries`. There are two ways in and one
+source of truth: the Apple Journal export flow below, and the issue flow
+(`.github/workflows/life-post.yml` + `.github/scripts/life_post.py`), where
+the owner opens an issue titled `entry title | place` with the text and
+photos in the body and a `life` label; the workflow writes the same JSON
+record (with optional `title` and `place` fields the export flow does not
+set), converts every attached photo to the same webp pairs, regenerates the
+page with the shared renderer, and opens a PR. Both flows skip slugs that
+already exist, so neither can clobber the other. Photos render three across;
+the export flow keeps the first 12, the issue flow takes what is attached.
 
 How a post happens: the owner writes an entry in Apple Journal titled
 `life@<place><year>` (for example `life@grundy2026`; matching is forgiving
@@ -68,9 +76,9 @@ To change or remove a published entry: edit or delete its
 
 ## Conventions
 
-- The design is the shared iOS 26 system: core tokens and components at the top of `assets/ios.css` (system blue tint, light and dark via `prefers-color-scheme`), the site's own page styles below them, one 640px column. No hex outside the token blocks. `styleguide.html` is the contract; keep components matching it.
+- The design is a plain document in the voice of a resume: one column at a 42rem measure, the system sans stack, quiet blue links, section names as small ruled `h2` labels, light and dark via `prefers-color-scheme`. Everything lives in `assets/site.css` (tokens at the top, components below); no hex outside the token block. `styleguide.html` is the contract; keep components matching it. No bars, no tiles, no glass, no app chrome of any kind.
 - Everything displays lowercase, enforced by `text-transform: lowercase` on `body` and lowercase `<title>`/meta description text. Not a single uppercase letter anywhere. That is the owner's quirk, do not "fix" it.
-- Navigation is the shared chrome: a sticky `.ios-header` (monogram avatar to home, mail glass button to contact) and a floating four tab `.ios-tabbar` (home, projects, life, contact) on every page. There are no backlink rows: the monogram is the way home, the projects tab reaches projects, and the browser's native back handles the rest. The redirect stubs (`nb-tides.html`, `on-site.html`, `unwrapped.html`) keep their single `opening … →` row. The homepage is still the hub; its sections link everything.
+- Navigation is text: `header.top` carries the name (the way home) on the left and four links (projects, life, shop, contact) on the right, on every page; the page it names gets `aria-current="page"`. No tab bar, nothing sticky. The redirect stubs (`nb-tides.html`, `on-site.html`, `unwrapped.html`) keep their single `opening … →` row. The homepage is still the hub; its sections link everything.
 - Every page ends with the universal footer: name, email, phone, then the manually maintained last-updated line. The footer is pinned to the viewport bottom on short pages (body is a flex column, footer has margin-top auto).
 - Page titles are `Page Name · Katsuma Onishi` with a middle dot. `index.html` is just `Katsuma Onishi`.
 - Every page has a `meta name="description"` (lowercase).

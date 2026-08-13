@@ -1,0 +1,256 @@
+/* =====================================================================
+   katsuma.ca — a plain document, in the voice of a resume.
+   One column, one family, quiet links, section names as small ruled
+   labels. No bars, no tiles, no glass: the page is just the page.
+   Light and dark follow the system. Prints clean.
+   ===================================================================== */
+
+:root {
+  --bg: #FFFFFF;
+  --ink: #1A1A1A;
+  --ink-2: #6E6E6E;
+  --rule: #E4E4E4;
+  --link: #1A56A0;
+  --wash: #F5F5F4;
+  --scrim: rgba(0, 0, 0, 0.92);
+  color-scheme: light dark;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #121212;
+    --ink: #E6E6E4;
+    --ink-2: #9A9A98;
+    --rule: #2B2B2B;
+    --link: #85ACDF;
+    --wash: #1B1B1B;
+  }
+}
+
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  background: var(--bg);
+  color: var(--ink);
+  font: 16px/1.65 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    "Helvetica Neue", Arial, sans-serif;
+  padding: 28px 22px 40px;
+  /* the whole site displays lowercase, the owner's quirk. do not "fix". */
+  text-transform: lowercase;
+}
+.page {
+  max-width: 42rem;
+  width: 100%;
+  margin: 0 auto;
+  flex: 1 0 auto;
+  display: flex;
+  flex-direction: column;
+}
+.page > * { flex: none; }
+
+/* ------------------------------------------------------------ header */
+.top {
+  max-width: 42rem;
+  margin: 0 auto 34px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 6px 18px;
+}
+.top .name {
+  font-weight: 700;
+  color: var(--ink);
+  text-decoration: none;
+  margin-right: auto;
+}
+.top nav { display: flex; flex-wrap: wrap; gap: 14px; }
+.top nav a {
+  color: var(--ink-2);
+  text-decoration: none;
+}
+.top nav a:hover, .top nav a:focus-visible { color: var(--ink); text-decoration: underline; }
+.top nav a[aria-current="page"] { color: var(--ink); }
+
+/* -------------------------------------------------------------- type */
+h1 {
+  font-size: 1.7rem;
+  line-height: 1.25;
+  font-weight: 700;
+  margin: 0 0 0.7rem;
+  letter-spacing: -0.01em;
+}
+/* section names the way a resume rules them: small, spaced, underlined
+   by a hairline that runs the full measure */
+h2 {
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.09em;
+  color: var(--ink-2);
+  border-bottom: 1px solid var(--rule);
+  padding-bottom: 7px;
+  margin: 2.6rem 0 0.9rem;
+}
+h3 { font-size: 1rem; font-weight: 600; margin: 1.4rem 0 0.4rem; }
+h4 { font-size: 0.95rem; font-weight: 600; margin: 1.3rem 0 0.3rem; }
+p { margin: 0 0 0.85rem; }
+a { color: var(--link); text-decoration: none; }
+a:hover, a:focus-visible { text-decoration: underline; }
+:focus-visible { outline: 2px solid var(--link); outline-offset: 2px; border-radius: 3px; }
+.lead { margin-bottom: 1.1rem; }
+.meta { color: var(--ink-2); font-size: 0.875rem; }
+ul { margin: 0 0 1rem; padding-left: 1.2rem; }
+li { margin-bottom: 0.35rem; }
+img { max-width: 100%; }
+
+/* ------------------------------------------------------- linked rows */
+/* a list of things: the link carries the name, the note follows in
+   grey on the same breath. */
+.rows { margin: 0 0 1rem; }
+.row {
+  display: block;
+  padding: 7px 0;
+  color: var(--ink);
+  text-decoration: none;
+}
+.row + .row { border-top: 1px solid var(--rule); }
+.row .row-t { color: var(--link); }
+.row:hover .row-t, .row:focus-visible .row-t { text-decoration: underline; }
+.row .row-s { color: var(--ink-2); font-size: 0.875rem; display: block; }
+@media (min-width: 560px) {
+  .row { display: flex; align-items: baseline; gap: 12px; }
+  .row .row-t { flex: none; }
+  .row .row-s { flex: 1; min-width: 0; }
+}
+
+/* items with a note under them (projects, shop) */
+.item { margin-bottom: 1.1rem; }
+.item-note { color: var(--ink-2); font-size: 0.875rem; margin: 0.2rem 0 0; }
+
+/* the open-the-app door on a project page */
+.btn-open {
+  display: inline-block;
+  border: 1px solid var(--link);
+  border-radius: 8px;
+  padding: 7px 14px;
+  margin: 0.4rem 0 1rem;
+  color: var(--link);
+  text-decoration: none;
+}
+.btn-open:hover, .btn-open:focus-visible { background: var(--wash); text-decoration: none; }
+.backlink { display: inline-block; margin-bottom: 1rem; color: var(--ink-2); }
+
+/* ------------------------------------------------------ life entries */
+.entries { margin-top: 0.4rem; }
+.entry { padding: 1.1rem 0; }
+.entry + .entry, .entry + * + .entry { border-top: 1px solid var(--rule); }
+.entry-title {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  font-size: 1rem;
+  font-weight: 600;
+  margin: 0 0 0.4rem;
+}
+/* the dotted leader between a title and its date, as on a menu or CV */
+.entry-title .leader {
+  flex: 1;
+  min-width: 24px;
+  border-bottom: 1px dotted var(--rule);
+  transform: translateY(-4px);
+}
+.entry-date { color: var(--ink-2); font-size: 0.875rem; font-weight: 400; flex: none; }
+.entry-place { color: var(--ink-2); font-size: 0.875rem; margin: -0.2rem 0 0.5rem; }
+.entry p { margin: 0 0 0.55rem; font-size: 0.95rem; }
+.entry p:last-child { margin-bottom: 0; }
+
+/* photos: three across, as they arrive in threes; other counts still flow */
+.photos {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 7px;
+  margin-top: 0.8rem;
+}
+.photos img {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+  border-radius: 6px;
+  cursor: zoom-in;
+  display: block;
+}
+
+/* sewing and mending projects share the entry voice */
+.project { padding: 1.1rem 0; }
+.project + .project { border-top: 1px solid var(--rule); }
+.project .meta { display: block; margin: 0 0 0.4rem; }
+.project p { margin: 0.6rem 0 0; font-size: 0.95rem; }
+
+/* ---------------------------------------------------------- lightbox */
+.lightbox {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  background: var(--scrim);
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+.lightbox.active { display: flex; }
+.lightbox img { max-width: 100%; max-height: 92vh; border-radius: 6px; }
+.lightbox button {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  background: rgba(255, 255, 255, 0.14);
+  color: #FFFFFF;
+  border: 0;
+  border-radius: 8px;
+  padding: 8px 14px;
+  font: inherit;
+  cursor: pointer;
+}
+
+/* --------------------------------------------- sticker mock circles */
+.mockups { display: flex; flex-wrap: wrap; align-items: center; gap: 14px; margin: 1rem 0; }
+.mock {
+  border: 1px solid var(--rule);
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  text-align: center;
+  color: var(--ink-2);
+  font-size: 0.7rem;
+  padding: 8px;
+}
+.mock-lg { width: 7.5rem; height: 7.5rem; }
+.mock-md { width: 6rem; height: 6rem; }
+.mock-sm { width: 3rem; height: 3rem; font-size: 0.55rem; }
+
+/* ------------------------------------------------------------ footer */
+footer {
+  /* pinned to the viewport bottom on short pages, after the content on
+     long ones; the :has rule keeps a minimum gap either way */
+  margin-top: auto;
+  padding-top: 1rem;
+}
+.page > :has(+ footer) { margin-bottom: 2.6rem; }
+footer {
+  border-top: 1px solid var(--rule);
+  color: var(--ink-2);
+  font-size: 0.8125rem;
+}
+footer p { margin: 0 0 0.3rem; }
+footer a { color: inherit; text-decoration: underline; text-decoration-color: var(--rule); }
+footer a:hover { color: var(--ink); }
+
+/* ------------------------------------------------------------- print */
+@media print {
+  body { padding: 0; font-size: 11pt; }
+  .top nav, .lightbox { display: none; }
+  a { color: inherit; text-decoration: none; }
+  .photos { break-inside: avoid; }
+}

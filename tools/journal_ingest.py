@@ -10,7 +10,7 @@ with a life@ prefix (forgiving about spacing, case, and repeated letters:
 the one required character, so ordinary journal entries can never leak
 onto the site). For each new entry it:
 
-  - takes the first 3 photos (0, 1, or 2 are fine too),
+  - takes the first 12 photos (any count is fine; threes fill rows),
   - converts them to web-sized webp pairs under images/life/<slug>/,
   - writes life/data/<slug>.json,
   - regenerates the entry cards in life.html between the journal markers.
@@ -41,7 +41,7 @@ PAGE = ROOT / "life.html"
 START = "<!-- journal:start -->"
 END = "<!-- journal:end -->"
 
-MAX_PHOTOS = 3
+MAX_PHOTOS = 12   # photos arrive in threes; four rows is plenty for one entry
 FULL_EDGE = 1600   # long edge of the tap-to-zoom image
 THUMB_EDGE = 700   # long edge of the card image
 IMAGE_EXTS = {".heic", ".jpeg", ".jpg", ".png"}
@@ -116,13 +116,20 @@ def convert_photo(src, dest_dir, index):
 
 
 def entry_card(entry):
-    """The .entry article for one data record, matching life.html markup."""
+    """The .entry article for one data record, matching life.html markup.
+
+    Journal-export records carry only a name and render as "life @ name".
+    Issue-posted records may carry a display "title" and a "place"; the
+    title replaces the life@ form and the place gets its own line."""
     slug = entry["slug"]
+    shown = entry.get("title") or "life @ {}".format(entry["name"])
     lines = [
         f'<article class="entry" id="{slug}">',
-        '    <h3 class="entry-title"><span>life @ {}</span><span class="leader"></span>'
-        '<span class="entry-date">{}</span></h3>'.format(entry["name"], month_year(entry["date"])),
+        '    <h3 class="entry-title"><span>{}</span><span class="leader"></span>'
+        '<span class="entry-date">{}</span></h3>'.format(html.escape(shown), month_year(entry["date"])),
     ]
+    if entry.get("place"):
+        lines.append(f'    <div class="entry-place">{html.escape(entry["place"])}</div>')
     for para in entry["summary"]:
         lines.append(f"    <p>{html.escape(para)}</p>")
     if entry["photos"]:

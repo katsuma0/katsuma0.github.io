@@ -2,41 +2,35 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-    <meta name="theme-color" content="#F2F2F7" media="(prefers-color-scheme: light)">
-    <meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="theme-color" content="#FFFFFF" media="(prefers-color-scheme: light)">
+    <meta name="theme-color" content="#121212" media="(prefers-color-scheme: dark)">
     <meta name="description" content="unwrapped turns your full spotify export into a listening dashboard.">
     <title>unwrapped · katsuma onishi</title>
     <link rel="icon" href="data:,">
-    <link rel="stylesheet" href="assets/ios.css">
-    <script src="assets/appearance.js"></script>
+    <link rel="stylesheet" href="assets/site.css">
 </head>
 <body>
 
-<header class="ios-header">
-    <div class="ios-header-row">
-        <a class="ios-avatar" href="index.html" aria-label="home">k</a>
-        <span class="ios-brand">katsuma.ca</span>
-        <div class="ios-header-actions">
-            <a class="ios-glass-btn" href="contact.html" aria-label="contact"><svg aria-hidden="true"><use href="assets/icons.svg#mail"/></svg></a>
-        </div>
-    </div>
+<header class="top">
+    <a class="name" href="index.html">katsuma onishi</a>
+    <nav>
+        <a href="apps.html">projects</a>
+        <a href="life.html">life</a>
+        <a href="shop.html">shop</a>
+        <a href="contact.html">contact</a>
+    </nav>
 </header>
 
-<main class="ios-page">
+<main class="page">
 
 <h1>Unwrapped</h1>
 <p class="meta">App · April 2026 · Claude Code</p>
-<div class="ios-group">
-    <a class="ios-row" href="https://katsuma0.github.io/spotify-unwrapped/">
-        <span class="ios-tile ios-tile--green"><svg aria-hidden="true"><use href="assets/icons.svg#chart"/></svg></span>
-        <span class="ios-row-body"><span class="ios-row-title">Open the app ↗</span></span>
-    </a>
-</div>
+<a class="btn-open" href="https://katsuma0.github.io/spotify-unwrapped/">open the app ↗</a>
 
 <p class="lead">Spotify will email you an export of everything you have ever listened to. This takes that export and turns it into a dashboard. Drop in the zip, or the files inside it, and you get your totals, your habits, and a pile of charts. It all runs in your browser.</p>
 
-<h4 class="ios-section-title">What it does</h4>
+<h2>What it does</h2>
 <ul>
     <li>Your headline numbers: streams, artists, tracks, active days, skip rate, and time spent on podcasts.</li>
     <li>A listening personality that sorts you into one of seven types, like Night Owl or Explorer, from your actual patterns.</li>
@@ -47,13 +41,13 @@
     <li>Light and dark mode. Tap the title to switch.</li>
 </ul>
 
-<h4 class="ios-section-title">Privacy</h4>
+<h2>Privacy</h2>
 <p>This is the whole point of it. Everything runs in your browser. Your export is read on your own device, nothing is uploaded, and there is no server to send it to. Even the zip is unpacked locally, using a feature built into the browser.</p>
 
-<h4 class="ios-section-title">Try it without your own data</h4>
+<h2>Try it without your own data</h2>
 <p>There are six sample listeners built in, each with five years of made-up history shaped to a personality, from a one-artist devotee to a podcast person. Tap one on the landing page to look around before you dig out your own export.</p>
 
-<h4 class="ios-section-title">Worth knowing</h4>
+<h2>Worth knowing</h2>
 <p>It is an early web version, built mobile first as the groundwork for a phone app later on. The extended export Spotify sends has more detail than the basic one, so a few of the stats only show up if you upload the fuller file.</p>
 
 <footer>
@@ -62,13 +56,6 @@
 </footer>
 
 </main>
-
-<nav class="ios-tabbar" aria-label="primary">
-    <a class="ios-tab" href="index.html"><svg aria-hidden="true"><use href="assets/icons.svg#home"/></svg><span>home</span></a>
-    <a class="ios-tab" href="apps.html" aria-current="page"><svg aria-hidden="true"><use href="assets/icons.svg#compass"/></svg><span>projects</span></a>
-    <a class="ios-tab" href="life.html"><svg aria-hidden="true"><use href="assets/icons.svg#leaf"/></svg><span>life</span></a>
-    <a class="ios-tab" href="contact.html"><svg aria-hidden="true"><use href="assets/icons.svg#mail"/></svg><span>contact</span></a>
-</nav>
 
 </body>
 </html>

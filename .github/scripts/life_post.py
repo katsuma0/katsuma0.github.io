@@ -19,6 +19,7 @@ import os
 import pathlib
 import re
 import sys
+import urllib.parse
 import urllib.request
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent.parent
@@ -79,12 +80,28 @@ def slugify(title, created_at):
     return created_at[0:4] + created_at[5:7] + "-" + s[:40]
 
 
+class _CrossHostRedirect(urllib.request.HTTPRedirectHandler):
+    """GitHub answers an asset request with a redirect to a signed storage
+    URL. Forwarding the API token there makes the storage host refuse the
+    request (400), so the auth header is dropped the moment a redirect
+    leaves the original host."""
+
+    def redirect_request(self, req, fp, code, msg, headers, newurl):
+        new = super().redirect_request(req, fp, code, msg, headers, newurl)
+        if new is not None and urllib.parse.urlsplit(newurl).netloc != urllib.parse.urlsplit(req.full_url).netloc:
+            new.remove_header("Authorization")
+        return new
+
+
+_OPENER = urllib.request.build_opener(_CrossHostRedirect)
+
+
 def fetch(url, dest):
     req = urllib.request.Request(url, headers={
         "User-Agent": "life-post",
         "Authorization": "Bearer " + os.environ.get("GH_TOKEN", ""),
     })
-    with urllib.request.urlopen(req, timeout=60) as r, open(dest, "wb") as f:
+    with _OPENER.open(req, timeout=60) as r, open(dest, "wb") as f:
         f.write(r.read())
 
 

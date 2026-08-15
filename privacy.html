@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="theme-color" content="#FFFFFF" media="(prefers-color-scheme: light)">
+    <meta name="theme-color" content="#121212" media="(prefers-color-scheme: dark)">
+    <meta name="description" content="privacy policy for the on-wildlife and on-site apps.">
+    <title>privacy · katsuma onishi</title>
+    <link rel="icon" href="data:,">
+    <link rel="stylesheet" href="assets/site.css">
+</head>
+<body>
+
+<header class="top">
+    <a class="name" href="index.html">katsuma onishi</a>
+    <nav>
+        <a href="apps.html">projects</a>
+        <a href="life.html">life</a>
+        <a href="shop.html">shop</a>
+        <a href="contact.html">contact</a>
+    </nav>
+</header>
+
+<main class="page">
+
+<h1>Privacy</h1>
+
+<p class="lead">This policy covers the on-wildlife and on-site apps, on the web and on iOS, and this
+website. It is written plainly because it is short: these apps are built so that there is almost
+nothing to say here.</p>
+
+<p class="meta">Last updated 15 August 2026. Contact: <a href="mailto:katsuma123@gmail.com">katsuma123@gmail.com</a>.</p>
+
+<h2>The short version</h2>
+
+<p>There are no accounts, no advertising, and no analytics. Nothing you write, rate, photograph or
+log is sent to me. It is written to storage on your own device and it stays there. I cannot read
+it, I cannot recover it for you, and I never see that it exists.</p>
+
+<h2>What the apps store, and where</h2>
+
+<p>Everything below is stored locally on your device, in your browser's IndexedDB and local
+storage, or inside the app's own container on iOS. None of it is transmitted anywhere by default.</p>
+
+<ul>
+    <li><strong>on-wildlife:</strong> the encounters you log, including species, date and time,
+        your notes, any photo you attach, and a location if you choose to add one. Your display
+        name and initial. Your settings, including units, language, theme and text size. Any bear
+        or hazard reports you place on your map.</li>
+    <li><strong>on-site:</strong> the campsites, campgrounds, trails and parks you rate, your
+        star ratings, notes, wishlist marks and photos. Your favourites. Your display name and
+        initial. Your settings.</li>
+</ul>
+
+<p>Your display name is used only to draw an initial in the corner of the app. It is never
+transmitted.</p>
+
+<h2>Permissions the apps ask for, and why</h2>
+
+<ul>
+    <li><strong>Location, while using the app.</strong> Only if you tap a control that needs it: to
+        tag a sighting with where you were, to centre the map on you, or to place a bear or hazard
+        report. Location is never collected in the background. If you decline, every other part of
+        both apps still works.</li>
+    <li><strong>Camera and photo library.</strong> Only when you attach a photo to a sighting or a
+        campsite. The photo is resized and stored on your device. It is not uploaded.</li>
+</ul>
+
+<h2>What leaves your device</h2>
+
+<p>Three ordinary things, and one optional thing.</p>
+
+<h3>Map tiles</h3>
+<p>When you open the Map, the app requests map images from CARTO, which renders OpenStreetMap data.
+When you turn on fishing zone boundaries, it requests those from the Government of Ontario's
+public GIS service. Like any request to any website, these carry your IP address and tell that
+server roughly which part of the map you are looking at. They do not carry your log, your notes,
+your photos or your name. Their own privacy terms apply to that request:
+<a href="https://carto.com/privacy/">carto.com/privacy</a> and
+<a href="https://www.ontario.ca/page/privacy-statement">ontario.ca privacy statement</a>.</p>
+
+<h3>Reference photos</h3>
+<p>on-wildlife can show a reference photo on a species page, fetched from iNaturalist. That request
+carries your IP address and which species you are reading about. You can turn reference photos off
+in More, and then no request is made. See
+<a href="https://www.inaturalist.org/pages/privacy">inaturalist.org privacy</a>.</p>
+
+<h3>Hosting</h3>
+<p>The web versions are served from GitHub Pages, which keeps ordinary server logs including IP
+addresses. See <a href="https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement">GitHub's privacy statement</a>.
+The iOS apps carry their files inside the app, so opening them makes no request at all.</p>
+
+<h3>The optional community layer, in on-wildlife only</h3>
+<p>on-wildlife has an off-by-default feature for people who run their own server. I do not operate
+one, and none is included. Nothing is shared unless you paste in a server address yourself and then
+switch sharing on. If you do:</p>
+<ul>
+    <li>Your coordinates are rounded to roughly a five kilometre grid before sending, so a
+        sighting cannot be traced to a nest, a den or your campsite.</li>
+    <li>The time is blurred to the hour.</li>
+    <li>Your name is never included.</li>
+    <li>A random token is included so that you, and only you, can delete what you sent.</li>
+</ul>
+<p>Because that server is yours, its handling of the data is governed by whoever runs it, not by me.
+The app gives you a "Delete my shared data" control that uses your token to remove everything you
+sent.</p>
+
+<h2>Third parties</h2>
+
+<p>There are no analytics SDKs, no advertising networks, no trackers, and no third-party code
+libraries that phone home. The only third parties involved are the map, reference photo and hosting
+services named above, and each receives only what is described there. I do not sell, rent or share
+personal data with anyone, because I do not hold any.</p>
+
+<h2>Keeping, deleting and taking your data with you</h2>
+
+<ul>
+    <li><strong>How long it is kept:</strong> for as long as you keep it. There is no expiry and no
+        server-side copy to expire.</li>
+    <li><strong>Deleting it:</strong> More, then Your data, then Reset all data. It asks twice, then
+        removes everything. Deleting the app from your device also removes it. On the web, clearing
+        site data for the app does the same.</li>
+    <li><strong>Withdrawing consent:</strong> turn the relevant thing off. Location can be revoked
+        in iOS Settings or your browser. Reference photos have a switch in More. Community sharing
+        has a switch, and a disconnect control that also forgets the server address.</li>
+    <li><strong>Taking it with you:</strong> More, then Your data, then Export my log writes a
+        single file containing everything you have saved. It is plain, readable JSON. Import reads
+        it back on any device.</li>
+</ul>
+
+<h2>Children</h2>
+
+<p>These apps are safe for a child to use, and nothing in them collects personal information from
+anyone, of any age. There is no sign-up, no profile, no messaging and no advertising.</p>
+
+<h2>Changes</h2>
+
+<p>If this policy changes, the date at the top changes with it, and the previous versions stay in
+the public git history of this site. If a change ever meant that something new left your device, it
+would be announced in the app before it took effect, and it would be off until you turned it on.</p>
+
+<h2>Not affiliated</h2>
+
+<p>These are independent apps. They are not made by, endorsed by, or affiliated with Ontario Parks,
+the Government of Ontario, Parks Canada, iNaturalist, OpenStreetMap, CARTO or Apple. Park names,
+place names and programme names are used to describe the places and rules they refer to.</p>
+
+<h2>Questions</h2>
+
+<p>Email <a href="mailto:katsuma123@gmail.com">katsuma123@gmail.com</a>. I answer.</p>
+
+<footer>
+    <p><a href="support.html">support</a> · <a href="terms.html">terms</a> · <a href="index.html">katsuma.ca</a></p>
+    <p>katsuma onishi · <a href="mailto:katsuma123@gmail.com">katsuma123@gmail.com</a></p>
+</footer>
+
+</main>
+
+</body>
+</html>

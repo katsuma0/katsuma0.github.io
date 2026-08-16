@@ -22,7 +22,7 @@ To preview, open the `.html` file directly or run any throwaway static server (t
 
 GitHub Pages user site from the root of `main`. Pushing to `main` is the deploy. The two workflows, `.github/workflows/journal-ingest.yml` and `.github/workflows/life-post.yml`, are the life page pipelines (see below); both only ever open pull requests, they never push to `main`. The owner merges every life PR by hand; that merge is the approval and the deploy, so nothing lands on the public site without the owner being the last one to push.
 
-Custom domain is `katsuma.ca` via the `CNAME` file. Because of that, every project repo with Pages also serves under it automatically: katsuma.ca/maritides, /on-camp, /on-fishing, /on-wildlife, /spotify-unwrapped. The other katsuma.* domains forward at GoDaddy: .org and .site to katsuma.ca, .shop and .store to katsuma.ca/shop, .life to katsuma.ca/life.
+Custom domain is `katsuma.ca` via the `CNAME` file. Because of that, every project repo with Pages also serves under it automatically: katsuma.ca/maritides, /on-site, /on-fishing, /on-wildlife, /spotify-unwrapped. Old /on-camp/... addresses fall through to `404.html`, which forwards them to /on-site/... keeping path, search and hash. The other katsuma.* domains forward at GoDaddy: .org and .site to katsuma.ca, .shop and .store to katsuma.ca/shop, .life to katsuma.ca/life.
 
 ## Layout
 

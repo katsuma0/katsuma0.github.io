@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="theme-color" content="#FFFFFF" media="(prefers-color-scheme: light)">
+    <meta name="theme-color" content="#121212" media="(prefers-color-scheme: dark)">
+    <title>not found · katsuma onishi</title>
+    <link rel="icon" href="data:,">
+    <link rel="stylesheet" href="/assets/site.css">
+    <script>
+    /* If the on-camp repo is ever renamed to on-site, its old /on-camp/...
+       addresses stop being a project site and fall through to this page.
+       Forward them to the same path under the new name, so old bookmarks
+       and installs keep opening the app. Until the rename, the project
+       site owns /on-camp/ and this page never sees those requests. */
+    (function () {
+        var p = location.pathname;
+        if (p.indexOf('/on-camp') === 0) {
+            location.replace('/on-site' + p.slice('/on-camp'.length) + location.search + location.hash);
+        }
+    })();
+    </script>
+</head>
+<body>
+
+<header class="top">
+    <a class="name" href="/index.html">katsuma onishi</a>
+    <nav>
+        <a href="/apps.html">projects</a>
+        <a href="/life.html">life</a>
+        <a href="/shop.html">shop</a>
+        <a href="/contact.html">contact</a>
+    </nav>
+</header>
+
+<main class="page">
+
+<h1>Not found</h1>
+
+<p class="lead">That page is not here. The things that are:</p>
+
+<div class="rows">
+    <a class="row" href="/apps.html"><span class="row-t">projects</span><span class="row-s">the apps and everything else</span></a>
+    <a class="row" href="/on-site/"><span class="row-t">on-site</span><span class="row-s">the campsite journal</span></a>
+    <a class="row" href="https://katsuma0.github.io/on-wildlife/"><span class="row-t">on-wildlife</span><span class="row-s">the field guide and journal</span></a>
+    <a class="row" href="/index.html"><span class="row-t">katsuma.ca</span><span class="row-s">the front page</span></a>
+</div>
+
+</main>
+
+</body>
+</html>

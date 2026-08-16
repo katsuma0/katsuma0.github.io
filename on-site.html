@@ -3,32 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <meta name="theme-color" content="#FFFFFF" media="(prefers-color-scheme: light)">
-    <meta name="theme-color" content="#121212" media="(prefers-color-scheme: dark)">
-    <meta http-equiv="refresh" content="0; url=/camp.html">
-    <title>on-site · katsuma onishi</title>
+    <title>on-site</title>
     <link rel="icon" href="data:,">
-    <link rel="stylesheet" href="assets/site.css">
+    <!-- katsuma.ca/on-site resolves to this file, so it must open the app.
+         It used to forward to camp.html, which is where the open-the-app
+         button lives, so the button looped back to its own page. -->
+    <meta http-equiv="refresh" content="0; url=/on-camp/">
+    <link rel="canonical" href="https://katsuma.ca/on-camp/">
+    <script>location.replace('/on-camp/');</script>
 </head>
 <body>
-
-<header class="top">
-    <a class="name" href="index.html">katsuma onishi</a>
-    <nav>
-        <a href="apps.html">projects</a>
-        <a href="life.html">life</a>
-        <a href="shop.html">shop</a>
-        <a href="contact.html">contact</a>
-    </nav>
-</header>
-
-<main class="page">
-
-<div class="rows">
-    <a class="row" href="/camp.html"><span class="row-t">opening on-site →</span></a>
-</div>
-
-</main>
-
+<p>opening on-site… <a href="/on-camp/">tap here if nothing happens</a></p>
 </body>
 </html>

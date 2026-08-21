@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="theme-color" content="#FFFFFF" media="(prefers-color-scheme: light)">
+    <meta name="theme-color" content="#121212" media="(prefers-color-scheme: dark)">
+    <meta name="description" content="the phone-side recorder for the road trip map. records the route while the page is open, then exports one small file per day.">
+    <title>road trip tracker · katsuma onishi</title>
+    <link rel="icon" href="data:,">
+    <link rel="stylesheet" href="assets/site.css">
+</head>
+<body>
+
+<header class="top">
+    <a class="name" href="index.html">katsuma onishi</a>
+    <nav>
+        <a href="apps.html">projects</a>
+        <a href="life.html">life</a>
+        <a href="shop.html">shop</a>
+        <a href="contact.html">contact</a>
+    </nav>
+</header>
+
+<main class="page">
+
+<a class="backlink" href="roadtrip.html">← road trip</a>
+
+<h1>Road trip tracker</h1>
+<p class="meta">Tool · records on this phone, publishes nothing by itself</p>
+
+<p class="lead">This page turns the phone into the trip recorder. Press start when you set off, leave the page open on the dash, and press stop when you park for the night. It keeps a GPS point roughly every hundred metres, saved on this phone only, until you export a day and push it to the site.</p>
+
+<p class="meta" id="trk-status">not recording</p>
+<button class="btn-open" id="trk-rec" type="button">start recording</button>
+<p class="meta" id="trk-today"></p>
+
+<h2>recorded days</h2>
+<div class="entries" id="trk-days"></div>
+
+<h2>publishing a day</h2>
+<ul>
+    <li>Fill in where you stayed, then export the day's JSON.</li>
+    <li>Get the file to the laptop (airdrop, email to yourself, whatever works).</li>
+    <li>Drop it in <span class="meta">trip/days/</span> in the site repo, exactly as downloaded, and push to main.</li>
+    <li>The <a href="roadtrip.html">road trip page</a> finds it by date and draws it. Delete the day here once it is published, to keep the phone's storage light.</li>
+</ul>
+
+<h2>good to know</h2>
+<ul>
+    <li>Phone browsers stop GPS the moment the page is in the background, so the page has to stay open and lit. It asks the screen to stay awake while recording — a dash mount and a charging cable are the way.</li>
+    <li>If the page reloads it picks recording back up on its own.</li>
+    <li>Fixes worse than ±100 m are ignored, and days roll over at midnight by themselves.</li>
+    <li>The GPX export is the same route in the format Strava and most map tools import.</li>
+</ul>
+
+<footer>
+    <p>katsuma onishi · <a href="mailto:katsuma123@gmail.com">katsuma123@gmail.com</a> · <a href="tel:+16475254859">647 525 4859</a></p>
+    <p>last updated: august 2026</p>
+</footer>
+
+</main>
+
+<script>
+(function () {
+    'use strict';
+
+    var PREFIX = 'roadtrip:';
+    var RECFLAG = 'roadtrip-recording';
+    var MIN_KM = 0.1;    // a new point every ~100 m
+    var MAX_ACC = 100;   // ignore fixes worse than ±100 m
+    var MAX_KMH = 250;   // faster than this between fixes is a gps jump, not the car
+
+    var statusEl = document.getElementById('trk-status');
+    var todayEl = document.getElementById('trk-today');
+    var recBtn = document.getElementById('trk-rec');
+    var daysEl = document.getElementById('trk-days');
+
+    var watchId = null, wakeLock = null, renderedDates = '';
+
+    function iso(d) {
+        return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') +
+            '-' + String(d.getDate()).padStart(2, '0');
+    }
+    function todayKey() { return iso(new Date()); }
+    function fmtDate(s) {
+        var p = s.split('-');
+        return new Date(+p[0], p[1] - 1, +p[2]).toLocaleDateString('en-ca', { month: 'short', day: 'numeric' });
+    }
+    function loadDay(date) {
+        try {
+            var raw = localStorage.getItem(PREFIX + date);
+            if (raw) return JSON.parse(raw);
+        } catch (e) {}
+        return { date: date, stay: '', points: [] };
+    }
+    function saveDay(day) { localStorage.setItem(PREFIX + day.date, JSON.stringify(day)); }
+    function allDates() {
+        var out = [];
+        for (var i = 0; i < localStorage.length; i++) {
+            var k = localStorage.key(i);
+            if (k && k.indexOf(PREFIX) === 0) out.push(k.slice(PREFIX.length));
+        }
+        return out.sort().reverse();
+    }
+    function havKm(a, b) {
+        var rad = Math.PI / 180;
+        var dLat = (b[0] - a[0]) * rad, dLon = (b[1] - a[1]) * rad;
+        var s = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+            Math.cos(a[0] * rad) * Math.cos(b[0] * rad) * Math.sin(dLon / 2) * Math.sin(dLon / 2);
+        return 2 * 6371 * Math.asin(Math.sqrt(s));
+    }
+    function dayKm(pts) {
+        var km = 0;
+        for (var i = 1; i < pts.length; i++) km += havKm(pts[i - 1], pts[i]);
+        return km;
+    }
+    function r5(n) { return Math.round(n * 1e5) / 1e5; }
+    function setStatus(t) { statusEl.textContent = t; }
+
+    function updateToday(day) {
+        day = day || loadDay(todayKey());
+        todayEl.textContent = day.points.length
+            ? 'today: ' + day.points.length + ' points · ' + dayKm(day.points).toFixed(1) + ' km'
+            : 'today: nothing yet';
+    }
+
+    function onFix(pos) {
+        var c = pos.coords;
+        if (c.accuracy > MAX_ACC) {
+            setStatus('recording · waiting for a better fix (±' + Math.round(c.accuracy) + ' m)');
+            return;
+        }
+        var day = loadDay(todayKey());
+        var p = [r5(c.latitude), r5(c.longitude), Math.round(pos.timestamp / 1000)];
+        if (day.points.length) {
+            var last = day.points[day.points.length - 1];
+            var km = havKm(last, p), dt = p[2] - last[2];
+            setStatus('recording · last fix ' +
+                new Date().toLocaleTimeString('en-ca', { hour: 'numeric', minute: '2-digit' }) +
+                ' · ±' + Math.round(c.accuracy) + ' m');
+            if (km < MIN_KM) { updateToday(day); return; }
+            if (dt > 0 && (km / dt) * 3600 > MAX_KMH) return;
+        } else {
+            setStatus('recording · first fix of the day');
+        }
+        day.points.push(p);
+        saveDay(day);
+        updateToday(day);
+        if (renderedDates.indexOf(day.date) === -1) renderDays();
+        else {
+            var stat = daysEl.querySelector('[data-stat="' + day.date + '"]');
+            if (stat) stat.textContent = Math.round(dayKm(day.points)) + ' km · ' + day.points.length + ' points';
+        }
+    }
+
+    function onErr(err) {
+        if (err.code === 1) {
+            setStatus('location permission denied — allow location for this site, then press start again');
+            stop();
+        } else {
+            setStatus('gps trouble: ' + String(err.message || 'no fix').toLowerCase() + ' — still trying');
+        }
+    }
+
+    function keepAwake() {
+        if (!navigator.wakeLock) return;
+        navigator.wakeLock.request('screen')
+            .then(function (lock) { wakeLock = lock; })
+            .catch(function () {});
+    }
+    function start() {
+        if (!navigator.geolocation) { setStatus('this browser has no geolocation'); return; }
+        watchId = navigator.geolocation.watchPosition(onFix, onErr, {
+            enableHighAccuracy: true, maximumAge: 5000, timeout: 60000
+        });
+        localStorage.setItem(RECFLAG, '1');
+        recBtn.textContent = 'stop recording';
+        setStatus('recording · waiting for the first fix…');
+        keepAwake();
+    }
+    function stop() {
+        if (watchId !== null) navigator.geolocation.clearWatch(watchId);
+        watchId = null;
+        localStorage.removeItem(RECFLAG);
+        if (wakeLock) { wakeLock.release().catch(function () {}); wakeLock = null; }
+        recBtn.textContent = 'start recording';
+        setStatus('not recording');
+    }
+    recBtn.addEventListener('click', function () {
+        if (watchId === null) start(); else stop();
+    });
+    document.addEventListener('visibilitychange', function () {
+        if (watchId !== null && document.visibilityState === 'visible') keepAwake();
+    });
+
+    function download(name, text, type) {
+        var a = document.createElement('a');
+        a.href = URL.createObjectURL(new Blob([text], { type: type }));
+        a.download = name;
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        setTimeout(function () { URL.revokeObjectURL(a.href); }, 4000);
+    }
+    function dayJson(day) {
+        return JSON.stringify({ date: day.date, stay: day.stay || '', points: day.points });
+    }
+    function dayGpx(day) {
+        var pts = day.points.map(function (p) {
+            return '<trkpt lat="' + p[0] + '" lon="' + p[1] + '"><time>' +
+                new Date(p[2] * 1000).toISOString() + '</time></trkpt>';
+        }).join('\n');
+        return '<?xml version="1.0" encoding="UTF-8"?>\n' +
+            '<gpx version="1.1" creator="katsuma.ca road trip tracker" xmlns="http://www.topografix.com/GPX/1/1">\n' +
+            '<trk><name>' + day.date + '</name><trkseg>\n' + pts + '\n</trkseg></trk>\n</gpx>\n';
+    }
+    function linklike(label, onClick) {
+        var b = document.createElement('button');
+        b.type = 'button';
+        b.className = 'linklike';
+        b.textContent = label;
+        b.addEventListener('click', onClick);
+        return b;
+    }
+
+    function renderDays() {
+        var dates = allDates();
+        renderedDates = dates.join(',');
+        daysEl.textContent = '';
+        if (!dates.length) {
+            var none = document.createElement('p');
+            none.className = 'meta';
+            none.textContent = 'no days recorded on this phone yet.';
+            daysEl.appendChild(none);
+            return;
+        }
+        dates.forEach(function (date) {
+            var day = loadDay(date);
+            var entry = document.createElement('div');
+            entry.className = 'entry';
+
+            var h = document.createElement('h3');
+            h.className = 'entry-title';
+            var t = document.createElement('span');
+            t.textContent = fmtDate(date) + (date === todayKey() ? ' (today)' : '');
+            var leader = document.createElement('span');
+            leader.className = 'leader';
+            var stat = document.createElement('span');
+            stat.className = 'entry-date';
+            stat.setAttribute('data-stat', date);
+            stat.textContent = Math.round(dayKm(day.points)) + ' km · ' + day.points.length + ' points';
+            h.append(t, leader, stat);
+            entry.appendChild(h);
+
+            var stayP = document.createElement('p');
+            var stayLabel = document.createElement('label');
+            var stayText = document.createElement('span');
+            stayText.className = 'meta';
+            stayText.textContent = 'stayed: ';
+            var stayIn = document.createElement('input');
+            stayIn.className = 'trip-stay';
+            stayIn.value = day.stay || '';
+            stayIn.placeholder = 'where you slept';
+            stayIn.addEventListener('change', function () {
+                var d = loadDay(date);
+                d.stay = stayIn.value.trim();
+                saveDay(d);
+            });
+            stayLabel.append(stayText, stayIn);
+            stayP.appendChild(stayLabel);
+            entry.appendChild(stayP);
+
+            var acts = document.createElement('p');
+            acts.append(
+                linklike('export json', function () {
+                    download(date + '.json', dayJson(loadDay(date)), 'application/json');
+                }),
+                ' · ',
+                linklike('export gpx', function () {
+                    download(date + '.gpx', dayGpx(loadDay(date)), 'application/gpx+xml');
+                }),
+                ' · ',
+                linklike('copy json', function () {
+                    navigator.clipboard.writeText(dayJson(loadDay(date)))
+                        .then(function () { setStatus('copied ' + date + ' to the clipboard'); })
+                        .catch(function () { setStatus('could not copy — use export instead'); });
+                }),
+                ' · ',
+                linklike('delete', function () {
+                    if (confirm('delete ' + date + ' from this phone?')) {
+                        localStorage.removeItem(PREFIX + date);
+                        renderDays();
+                        updateToday();
+                    }
+                })
+            );
+            entry.appendChild(acts);
+            daysEl.appendChild(entry);
+        });
+    }
+
+    renderDays();
+    updateToday();
+    if (localStorage.getItem(RECFLAG) === '1') start();
+})();
+</script>
+
+</body>
+</html>

@@ -27,23 +27,29 @@
 <a class="backlink" href="roadtrip.html">← road trip</a>
 
 <h1>Road trip tracker</h1>
-<p class="meta">Tool · records on this phone, publishes nothing by itself</p>
+<p class="meta">Tool · records and publishes the trip from this phone</p>
 
-<p class="lead">This page turns the phone into the trip recorder. Press start when you set off, leave the page open on the dash, and press stop when you park for the night. It keeps a GPS point roughly every hundred metres, saved on this phone only, until you export a day and push it to the site.</p>
+<p class="lead">This page turns the phone into the trip recorder. Press start when you set off, leave the page open on the dash, and press stop when you park for the night. It keeps a GPS point roughly every hundred metres, and with a github token saved below it publishes each day to the site by itself — no laptop needed.</p>
 
 <p class="meta" id="trk-status">not recording</p>
 <button class="btn-open" id="trk-rec" type="button">start recording</button>
 <p class="meta" id="trk-today"></p>
+<p class="meta" id="trk-pub"></p>
 
 <h2>recorded days</h2>
 <div class="entries" id="trk-days"></div>
 
-<h2>publishing a day</h2>
+<h2>publishing</h2>
+<p>With a github token saved here, publishing runs itself: the day goes up every hour while you drive, again when you press stop, and again when you fill in where you stayed. Each publish is one commit to <span class="meta">trip/days/</span> made straight from this phone, and the <a href="roadtrip.html">road trip page</a> shows it within a minute or two. Any day also has a publish button for pushing it right now.</p>
+<p><label><span class="meta">github token: </span><input type="password" class="trip-stay" id="trk-token" placeholder="github_pat_…" autocomplete="off"></label></p>
+<p class="meta" id="trk-token-state"></p>
+<p><label><input type="checkbox" id="trk-autopub"> publish automatically while recording</label></p>
+<p class="meta">To make one: github → settings → developer settings → fine-grained personal access tokens → generate new token. Repository access: only katsuma0.github.io. Repository permissions: contents, read and write. Give it an expiry a little past the trip. The token is stored only in this phone's browser and is sent only to api.github.com.</p>
+
+<h3>by hand, if you'd rather</h3>
 <ul>
-    <li>Fill in where you stayed, then export the day's JSON.</li>
-    <li>Get the file to the laptop (airdrop, email to yourself, whatever works).</li>
-    <li>Drop it in <span class="meta">trip/days/</span> in the site repo, exactly as downloaded, and push to main.</li>
-    <li>The <a href="roadtrip.html">road trip page</a> finds it by date and draws it. Delete the day here once it is published, to keep the phone's storage light.</li>
+    <li>Export the day's JSON, get it to the laptop (airdrop, email to yourself), drop it in <span class="meta">trip/days/</span> in the site repo exactly as downloaded, and push to main.</li>
+    <li>Either way, delete a day here once it is on the site, to keep the phone's storage light.</li>
 </ul>
 
 <h2>good to know</h2>
@@ -67,16 +73,24 @@
 
     var PREFIX = 'roadtrip:';
     var RECFLAG = 'roadtrip-recording';
+    var TOKKEY = 'roadtrip-token';
+    var AUTOPUB = 'roadtrip-autopub';
     var MIN_KM = 0.1;    // a new point every ~100 m
     var MAX_ACC = 100;   // ignore fixes worse than ±100 m
     var MAX_KMH = 250;   // faster than this between fixes is a gps jump, not the car
+    var PUB_MS = 60 * 60 * 1000;   // auto-publish every hour while recording
+    var API = 'https://api.github.com/repos/katsuma0/katsuma0.github.io/contents/trip/days/';
 
     var statusEl = document.getElementById('trk-status');
     var todayEl = document.getElementById('trk-today');
     var recBtn = document.getElementById('trk-rec');
     var daysEl = document.getElementById('trk-days');
+    var pubEl = document.getElementById('trk-pub');
+    var tokenIn = document.getElementById('trk-token');
+    var tokenState = document.getElementById('trk-token-state');
+    var autoPubCb = document.getElementById('trk-autopub');
 
-    var watchId = null, wakeLock = null, renderedDates = '';
+    var watchId = null, wakeLock = null, renderedDates = '', pubTimer = null, pubBusy = false;
 
     function iso(d) {
         return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') +
@@ -147,8 +161,12 @@
         day.points.push(p);
         saveDay(day);
         updateToday(day);
-        if (renderedDates.indexOf(day.date) === -1) renderDays();
-        else {
+        if (renderedDates.indexOf(day.date) === -1) {
+            // a new day just began mid-recording: push yesterday's final shape up
+            var prev = allDates().filter(function (d) { return d < day.date; })[0];
+            if (prev) publishDay(prev, true);
+            renderDays();
+        } else {
             var stat = daysEl.querySelector('[data-stat="' + day.date + '"]');
             if (stat) stat.textContent = Math.round(dayKm(day.points)) + ' km · ' + day.points.length + ' points';
         }
@@ -178,6 +196,7 @@
         recBtn.textContent = 'stop recording';
         setStatus('recording · waiting for the first fix…');
         keepAwake();
+        startAutoPub();
     }
     function stop() {
         if (watchId !== null) navigator.geolocation.clearWatch(watchId);
@@ -186,12 +205,106 @@
         if (wakeLock) { wakeLock.release().catch(function () {}); wakeLock = null; }
         recBtn.textContent = 'start recording';
         setStatus('not recording');
+        stopAutoPub();
+        publishDay(todayKey(), true);
     }
     recBtn.addEventListener('click', function () {
         if (watchId === null) start(); else stop();
     });
     document.addEventListener('visibilitychange', function () {
         if (watchId !== null && document.visibilityState === 'visible') keepAwake();
+    });
+
+    // -------------------------------------------------- publishing
+    function token() { return localStorage.getItem(TOKKEY) || ''; }
+    function autoPubOn() { return token() && localStorage.getItem(AUTOPUB) !== '0'; }
+    function setPub(t) { pubEl.textContent = t; }
+    function b64utf8(s) {
+        var bytes = new TextEncoder().encode(s), bin = '';
+        for (var i = 0; i < bytes.length; i++) bin += String.fromCharCode(bytes[i]);
+        return btoa(bin);
+    }
+    function ghFetch(url, opts) {
+        opts = opts || {};
+        opts.headers = {
+            'Authorization': 'Bearer ' + token(),
+            'Accept': 'application/vnd.github+json'
+        };
+        return fetch(url, opts);
+    }
+    function putDay(day, sha) {
+        var body = {
+            message: 'trip: publish ' + day.date,
+            branch: 'main',
+            content: b64utf8(dayJson(day))
+        };
+        if (sha) body.sha = sha;
+        return ghFetch(API + day.date + '.json', { method: 'PUT', body: JSON.stringify(body) });
+    }
+    function fileSha(date) {
+        return ghFetch(API + date + '.json?ref=main')
+            .then(function (r) { return r.ok ? r.json().then(function (j) { return j.sha; }) : null; });
+    }
+    function publishDay(date, quiet) {
+        if (!token()) {
+            if (!quiet) setPub('no github token saved — see publishing below, or export by hand');
+            return Promise.resolve(false);
+        }
+        var day = loadDay(date);
+        if (!day.points.length || pubBusy) return Promise.resolve(false);
+        pubBusy = true;
+        setPub('publishing ' + date + '…');
+        return fileSha(date)
+            .then(function (sha) { return putDay(day, sha); })
+            .then(function (r) {
+                // the sha can go stale if something else pushed; refetch once
+                if (r.status === 409 || r.status === 422) {
+                    return fileSha(date).then(function (sha) { return putDay(day, sha); });
+                }
+                return r;
+            })
+            .then(function (r) {
+                pubBusy = false;
+                if (r.ok) {
+                    setPub('published ' + date + ' · on the map in a minute or two');
+                    return true;
+                }
+                return r.json().catch(function () { return {}; }).then(function (j) {
+                    setPub('publish failed (' + r.status + ') ' +
+                        String(j.message || '').toLowerCase() +
+                        ' — the day is still safe on this phone');
+                    return false;
+                });
+            })
+            .catch(function () {
+                pubBusy = false;
+                setPub('publish failed — no connection? the day is still safe on this phone');
+                return false;
+            });
+    }
+    function startAutoPub() {
+        stopAutoPub();
+        if (autoPubOn()) pubTimer = setInterval(function () { publishDay(todayKey(), true); }, PUB_MS);
+    }
+    function stopAutoPub() {
+        if (pubTimer !== null) { clearInterval(pubTimer); pubTimer = null; }
+    }
+    function updateTokenState() {
+        tokenState.textContent = token()
+            ? 'token saved on this phone · publishing is on'
+            : 'no token — publishing by hand only';
+        autoPubCb.checked = autoPubOn();
+    }
+    tokenIn.addEventListener('change', function () {
+        var t = tokenIn.value.trim();
+        if (t) localStorage.setItem(TOKKEY, t);
+        else localStorage.removeItem(TOKKEY);
+        updateTokenState();
+        if (watchId !== null) startAutoPub();
+    });
+    autoPubCb.addEventListener('change', function () {
+        localStorage.setItem(AUTOPUB, autoPubCb.checked ? '1' : '0');
+        if (watchId !== null) startAutoPub();
     });
 
     function download(name, text, type) {
@@ -266,6 +379,7 @@
                 var d = loadDay(date);
                 d.stay = stayIn.value.trim();
                 saveDay(d);
+                publishDay(date, true);
             });
             stayLabel.append(stayText, stayIn);
             stayP.appendChild(stayLabel);
@@ -273,6 +387,10 @@
 
             var acts = document.createElement('p');
             acts.append(
+                linklike('publish', function () {
+                    publishDay(date, false);
+                }),
+                ' · ',
                 linklike('export json', function () {
                     download(date + '.json', dayJson(loadDay(date)), 'application/json');
                 }),
@@ -302,6 +420,7 @@
 
     renderDays();
     updateToday();
+    updateTokenState();
     if (localStorage.getItem(RECFLAG) === '1') start();
 })();
 </script>

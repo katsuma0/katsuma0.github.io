@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="theme-color" content="#FFFFFF" media="(prefers-color-scheme: light)">
+    <meta name="theme-color" content="#121212" media="(prefers-color-scheme: dark)">
+    <meta name="description" content="a linear regression analysis of used car prices, rebuilt with the full toolkit: box-cox, diagnostics, robust inference, and honest out-of-sample validation.">
+    <meta property="og:title" content="linear regression car price analysis">
+    <meta property="og:description" content="a linear regression analysis of used car prices, rebuilt with the full toolkit: box-cox, diagnostics, robust inference, and honest out-of-sample validation.">
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https://katsuma.ca/projects/linearregressioncarpriceanalysis/">
+    <meta property="og:image" content="https://katsuma.ca/projects/linearregressioncarpriceanalysis/figures/light/09-actual-vs-predicted.png">
+    <meta name="twitter:card" content="summary_large_image">
+    <link rel="canonical" href="https://katsuma.ca/projects/linearregressioncarpriceanalysis/">
+    <title>linear regression car price analysis · katsuma onishi</title>
+    <link rel="icon" href="data:,">
+    <link rel="stylesheet" href="assets/report.css">
+</head>
+<body>
+
+<header class="top">
+    <a class="name" href="https://katsuma.ca">katsuma onishi</a>
+    <nav>
+        <a href="https://katsuma.ca/apps.html">projects</a>
+        <a href="https://katsuma.ca/life.html">life</a>
+        <a href="https://katsuma.ca/contact.html">contact</a>
+    </nav>
+</header>
+
+<main class="page">
+
+<h1>Analyzing and Predicting Used Car Prices, Take Two</h1>
+<p class="meta">project · august 2026 · python, statsmodels · <a href="https://github.com/katsuma0/linearregressioncarpriceanalysis">source on github</a> · <a href="https://katsuma0.github.io/used-car-price-project/">the 2025 version</a></p>
+
+<p class="lead">in march 2025 i built <a href="https://katsuma0.github.io/used-car-price-project/">my first linear regression project</a>: a model that predicts what a used car should sell for, trained on craigslist listings. it worked, and i was proud of it. it also cut every corner i didn't yet know existed. this is the same project done again with the full toolkit from my mcmaster stats courses (stats 3a03, math 3mb3) — the transformation chosen by box-cox instead of by truncating the data, every assumption checked instead of assumed, every claim carrying a confidence interval, and every headline number measured on listings the model never saw.</p>
+
+<div class="tiles">
+    <div class="tile">
+        <div class="t-label">listings modeled</div>
+        <div class="t-value">72,120</div>
+        <div class="t-note">de-duplicated, from 426,880 raw</div>
+    </div>
+    <div class="tile">
+        <div class="t-label">r² (held-out, log price)</div>
+        <div class="t-value">0.78</div>
+        <div class="t-note up">2025 version: 0.69, in-sample</div>
+    </div>
+    <div class="tile">
+        <div class="t-label">median error</div>
+        <div class="t-value">$1,835</div>
+        <div class="t-note up">2025 spec on same data: $3,032</div>
+    </div>
+    <div class="tile">
+        <div class="t-label">95% interval coverage</div>
+        <div class="t-value">95.3%</div>
+        <div class="t-note">measured on 14,405 held-out cars</div>
+    </div>
+</div>
+
+<h2>contents</h2>
+<ol class="toc">
+    <li><a href="#why">why do it again</a></li>
+    <li><a href="#data">the data, cleaned honestly</a></li>
+    <li><a href="#explore">what the data looks like</a></li>
+    <li><a href="#boxcox">letting box-cox choose the transformation</a></li>
+    <li><a href="#model">three models, two nested tests</a></li>
+    <li><a href="#assumptions">checking the assumptions</a></li>
+    <li><a href="#predict">how well it predicts</a></li>
+    <li><a href="#effects">what moves the price</a></li>
+    <li><a href="#depreciation">the depreciation curve</a></li>
+    <li><a href="#cars">six cars, including my dream car</a></li>
+    <li><a href="#limits">what i'd still improve</a></li>
+    <li><a href="#reproduce">reproduce it</a></li>
+    <li><a href="#references">references</a></li>
+</ol>
+
+<h2 id="why">why do it again</h2>
+
+<p>the 2025 version got the big things right: real data, a sensible set of predictors, a train/test split, and honest writing about where it failed. but rereading it after finishing my degree, three things stood out.</p>
+
+<ul>
+    <li><strong>it counted the same cars many times.</strong> craigslist sellers cross-post one car in several cities. 40% of the raw rows are exact duplicates on year, make, model, price, and odometer. duplicate rows aren't independent observations, and independence is the assumption every standard error in a regression rests on.</li>
+    <li><strong>it solved skewness by deleting the right tail.</strong> capping prices at the 95th percentile ($44,500) made the histogram look nicer — by removing every luxury car from the data. that's why the old model missed my dream car, a lexus is f, by 31%: it had never been allowed to see a car like it. the textbook fix for right-skew isn't truncation, it's a transformation, and there's a formal tool for choosing one.</li>
+    <li><strong>it stopped at r².</strong> no residual plots, no leverage, no multicollinearity check, no confidence intervals, no prediction intervals. the model's error was quoted as a single number (±$3,781) when the honest answer is a distribution.</li>
+</ul>
+
+<div class="tbl-wrap" tabindex="0" role="region" aria-label="comparison of the 2025 version and this version">
+<table>
+    <thead>
+    <tr><td></td><th scope="col">2025 version</th><th scope="col">this version</th></tr>
+    </thead>
+    <tbody>
+    <tr><td>response</td><td>price in dollars</td><td>log(price), chosen by box-cox</td></tr>
+    <tr><td>duplicate listings</td><td>kept</td><td>removed (171,428 rows)</td></tr>
+    <tr><td>luxury cars</td><td>deleted above $44,500</td><td>kept to $125,000</td></tr>
+    <tr><td>classic cars</td><td>mixed in (back to 1980)</td><td>scoped out (1996+); they appreciate, not depreciate</td></tr>
+    <tr><td>diagnostics</td><td>—</td><td>residuals, q-q, scale-location, leverage, cook's distance, vif, breusch-pagan</td></tr>
+    <tr><td>inference</td><td>p-values from default standard errors</td><td>heteroskedasticity-robust (hc1) standard errors, intervals and tests</td></tr>
+    <tr><td>model choice</td><td>one model</td><td>three nested models compared with formal tests, aic, and cross-validation</td></tr>
+    <tr><td>uncertainty</td><td>one mae number</td><td>95% prediction intervals, coverage verified out of sample</td></tr>
+    <tr><td>headline numbers</td><td>in-sample</td><td>held-out test set + 5-fold cross-validation</td></tr>
+    </tbody>
+</table>
+</div>
+
+<h2 id="data">the data, cleaned honestly</h2>
+
+<p>the data is the same <a href="https://www.kaggle.com/datasets/austinreese/craigslist-carstrucks-data">kaggle snapshot of craigslist listings</a> (426,880 rows, april–may 2021) scraped by austin reese. instead of one big filter, every cleaning decision is applied one step at a time and logged, so the whole funnel is auditable — the table below is generated straight from the pipeline. rows missing any of the duplicate-key fields are left alone at the first step: a duplicate you can't verify isn't a duplicate.</p>
+
+<div class="tbl-wrap" tabindex="0" role="region" aria-label="cleaning steps table">
+<table>
+    <thead>
+    <tr><th scope="col">step</th><th scope="col">why</th><th scope="col" class="num">rows kept</th><th scope="col" class="num">removed</th></tr>
+    </thead>
+    <tbody>
+    <tr><td>raw listings</td><td>kaggle export, april–may 2021</td><td class="num">426,880</td><td class="num">—</td></tr>
+    <tr><td>de-duplicate reposts</td><td>same year/make/model/price/odometer posted in several cities is one car, not many</td><td class="num">255,452</td><td class="num">171,428</td></tr>
+    <tr><td>price $1,000–$125,000</td><td>$0 means "call for price"; the $3.7 billion tundra is a typo. luxury cars stay in</td><td class="num">227,408</td><td class="num">28,044</td></tr>
+    <tr><td>odometer 100–400,000 mi</td><td>zero and ten-million-mile readings are data entry errors</td><td class="num">221,266</td><td class="num">6,142</td></tr>
+    <tr><td>model year 1996+</td><td>older cars are collector cars; they appreciate, which is a different pricing regime</td><td class="num">206,883</td><td class="num">14,383</td></tr>
+    <tr><td>fuel gas/diesel/hybrid</td><td>"other" is unlabeled; the few "electric" rows are mostly mislabeled gas cars</td><td class="num">196,891</td><td class="num">9,992</td></tr>
+    <tr><td>transmission automatic/manual</td><td>"other" is unlabeled, not a category</td><td class="num">187,620</td><td class="num">9,271</td></tr>
+    <tr><td>title clean/rebuilt/salvage</td><td>lien, missing and parts-only listings aren't straightforward sales</td><td class="num">183,620</td><td class="num">4,000</td></tr>
+    <tr><td>known body type, no buses</td><td>unlabeled body types dropped; buses aren't passenger cars</td><td class="num">131,882</td><td class="num">51,738</td></tr>
+    <tr><td>no motorcycles</td><td>the harley-davidsons still standing at this step are motorcycles in a car dataset</td><td class="num">131,854</td><td class="num">28</td></tr>
+    <tr><td>complete cases</td><td>rows missing any modeling variable</td><td class="num">72,147</td><td class="num">59,707</td></tr>
+    <tr class="hl"><td>brands with 100+ listings</td><td>can't estimate a brand effect from 14 alfa romeos, 7 ferraris and 6 aston martins</td><td class="num">72,120</td><td class="num">27</td></tr>
+    </tbody>
+</table>
+</div>
+<p class="tbl-note">the biggest judgment call is complete cases: requiring cylinders, condition and drive costs 60k rows. the trade is deliberate — those variables earn their keep in the model, and the alternative (imputing or "not stated" levels) is on the future-work list.</p>
+
+<p>the final sample: 72,120 listings, 34 brands, model years 1996–2022, prices $1,000 to $125,000. about 2.4% of these cars sit above the old $44,500 cap — the segment the 2025 model was never allowed to learn.</p>
+
+<h2 id="explore">what the data looks like</h2>
+
+<p>asking prices are strongly right-skewed (skewness 2.46): median $9,000, mean $12,857, and a long tail of trucks and luxury cars. on a log scale the same distribution is nearly symmetric (skewness −0.03). that's the first hint that the model should think in percentages, not dollars.</p>
+
+<figure>
+    <picture>
+        <source media="print" srcset="figures/light/01-price-distribution.png">
+        <source media="(prefers-color-scheme: dark)" srcset="figures/dark/01-price-distribution.png">
+        <img src="figures/light/01-price-distribution.png" alt="two histograms: asking price is strongly right-skewed in dollars, and near-symmetric on a log scale" width="1633" height="690">
+    </picture>
+    <figcaption>the same 72,120 asking prices, in dollars and in logs. skewness drops from 2.46 to −0.03.</figcaption>
+</figure>
+
+<p>price against age and against mileage, with price on a log scale. the median line falls roughly straight for the first decade — which on a log axis means a constant <em>percentage</em> drop per year — then flattens: old cars stop losing value once they're cheap.</p>
+
+<figure>
+    <picture>
+        <source media="print" srcset="figures/light/02-price-vs-age.png">
+        <source media="(prefers-color-scheme: dark)" srcset="figures/dark/02-price-vs-age.png">
+        <img src="figures/light/02-price-vs-age.png" alt="hexbin plot of price versus vehicle age with the median falling from about 46 thousand dollars new to about 5 thousand at 20 years" width="1463" height="825">
+    </picture>
+    <figcaption>price vs age at listing. each hexagon is a bundle of listings; the orange line is the median at each age.</figcaption>
+</figure>
+
+<figure>
+    <picture>
+        <source media="print" srcset="figures/light/03-price-vs-odometer.png">
+        <source media="(prefers-color-scheme: dark)" srcset="figures/dark/03-price-vs-odometer.png">
+        <img src="figures/light/03-price-vs-odometer.png" alt="hexbin plot of price versus odometer, median falling smoothly with mileage" width="1463" height="825">
+    </picture>
+    <figcaption>price vs odometer. same shape: a steady percentage decline, flattening at high mileage.</figcaption>
+</figure>
+
+<p>brands sort themselves before any model is fit — porsche's median asking price is six times saturn's. (ram and gmc rank high not because trucks are luxurious but because their listings <em>are</em> trucks; the regression later separates the truck effect from the brand effect.)</p>
+
+<figure>
+    <picture>
+        <source media="print" srcset="figures/light/04-brand-medians.png">
+        <source media="(prefers-color-scheme: dark)" srcset="figures/dark/04-brand-medians.png">
+        <img src="figures/light/04-brand-medians.png" alt="dot plot of median asking price for 34 brands, from saturn around 4 thousand dollars to porsche around 24 thousand" width="1540" height="1441">
+    </picture>
+    <figcaption>median asking price by brand, with listing counts. raw medians — no model yet.</figcaption>
+</figure>
+
+<p>the 2025 version's correlation analysis, redone on the log scale it should have used: log(price) correlates with age at −0.63 and odometer at −0.53 (stronger than the −0.55 and −0.48 in dollar space), with cylinders a mild +0.24. age and odometer are themselves correlated (+0.55) — cars age and accumulate miles together — which is exactly why the regression, not the correlation table, gets the last word on who does what.</p>
+
+<figure>
+    <picture>
+        <source media="print" srcset="figures/light/05-correlations.png">
+        <source media="(prefers-color-scheme: dark)" srcset="figures/dark/05-correlations.png">
+        <img src="figures/light/05-correlations.png" alt="correlation matrix of price, log price, age, odometer and cylinders" width="1188" height="978">
+    </picture>
+    <figcaption>pearson correlations. blue positive, red negative.</figcaption>
+</figure>
+
+<h2 id="boxcox">letting box-cox choose the transformation</h2>
+
+<p>the 2025 write-up ended with "i would like to apply a natural logarithm to the price variable". this version starts there, but doesn't take the log on faith. the box-cox procedure fits the full covariate model at every power transformation of the response — λ = 1 is untransformed dollars, λ = 0 is the log — and profiles the likelihood.</p>
+
+<figure>
+    <picture>
+        <source media="print" srcset="figures/light/06-boxcox.png">
+        <source media="(prefers-color-scheme: dark)" srcset="figures/dark/06-boxcox.png">
+        <img src="figures/light/06-boxcox.png" alt="box-cox profile log-likelihood peaking at lambda 0.18, with lambda 0 marked" width="1544" height="744">
+    </picture>
+    <figcaption>profile log-likelihood of the box-cox parameter, fit within the full model on the training split.</figcaption>
+</figure>
+
+<p>the mle is λ̂ = 0.18 with a razor-thin 95% interval of (0.175, 0.180) — with 57,715 observations, the likelihood can tell apart values of λ that are practically identical, so the interval excludes both 0 and 1. the honest reading follows the textbook advice: λ = 1 (dollars) is emphatically rejected; λ̂ sits near zero; and among nearby values, λ = 0 is the one with an interpretation — coefficients become percentage effects on price. i use the log, and let the diagnostics section judge whether it was enough.</p>
+
+<h2 id="model">three models, two nested tests</h2>
+
+<p>three specifications, each an answer to "what did the change buy?". m1 is the 2025 model refit on the improved sample; m2 changes the response to log(price) and adds drive wheels (a variable the 2025 version threw away); m3 adds a quadratic age term, because the depreciation curve visibly flattens. all three are fit by ols on the same 80% training split (seed 138, same as 2025), with the same 20% held out.</p>
+
+<pre>log(price) = β₀ + β₁·age + β₂·age² + β₃·odometer + β₄·cylinders
+           + brand + condition + fuel + title + transmission + body type + drive + ε</pre>
+
+<div class="tbl-wrap" tabindex="0" role="region" aria-label="model comparison table">
+<table>
+    <thead>
+    <tr><th scope="col">model</th><th scope="col">response</th><th scope="col" class="num">params</th><th scope="col" class="num">r²</th><th scope="col" class="num">adj. r²</th><th scope="col" class="num">aic</th></tr>
+    </thead>
+    <tbody>
+    <tr><td>m1 — the 2025 spec</td><td>dollars</td><td class="num">57</td><td class="num">0.670</td><td class="num">0.669</td><td class="num">1,177,230</td></tr>
+    <tr><td>m2 — log price, + drive</td><td>log</td><td class="num">59</td><td class="num">0.766</td><td class="num">0.766</td><td class="num">53,625</td></tr>
+    <tr class="hl"><td>m3 — m2 + age²</td><td>log</td><td class="num">60</td><td class="num">0.772</td><td class="num">0.772</td><td class="num">52,129</td></tr>
+    </tbody>
+</table>
+</div>
+<p class="tbl-note">r² is not comparable between the dollar and log rows (different response scales) — the out-of-sample comparison below is the fair one. aic is comparable only between m2 and m3.</p>
+
+<p>the additions are tested formally, the way nested models should be. because breusch-pagan (next section) rejects constant error variance, both tests are run as wald tests on the heteroskedasticity-robust (hc1) covariance; the classical partial f-tests, which assume the rejected constant variance, agree on both counts.</p>
+
+<ul>
+    <li><strong>curvature.</strong> adding age² : robust wald f(1, 57,655) = 986.0, p &lt; 2.2×10⁻¹⁶ (classical partial f = 1,515.7). the depreciation curve genuinely bends — the constant-percentage-per-year story is too simple.</li>
+    <li><strong>brand.</strong> dropping all 33 brand dummies from m3: robust wald f(33, 57,655) = 223.6, p &lt; 2.2×10⁻¹⁶ (classical f = 210.4). who made the car matters even after age, mileage, size and body type are held fixed.</li>
+</ul>
+
+<p>multicollinearity, the thing correlation tables can't adjudicate, is checked with variance inflation factors on m2: the largest is 2.87 (4wd), and no term exceeds the usual concern threshold of 5 (full table in <a href="data/vif.csv">vif.csv</a>). age and odometer are correlated, but not enough to destabilize the coefficients.</p>
+
+<h2 id="assumptions">checking the assumptions</h2>
+
+<p>this is the section the 2025 version didn't have. the residual plots below are the before-and-after argument for the log transformation: in dollar space (m1, top row) the residuals fan out as fitted values grow — textbook heteroskedasticity — and the q-q plot bends hard away from normal in both tails. in log space (m3, bottom row) the residual band is level and the q-q plot hugs the line through the central 99%+ of the data, with modest heavy tails.</p>
+
+<figure>
+    <picture>
+        <source media="print" srcset="figures/light/07-residuals-raw-vs-log.png">
+        <source media="(prefers-color-scheme: dark)" srcset="figures/dark/07-residuals-raw-vs-log.png">
+        <img src="figures/light/07-residuals-raw-vs-log.png" alt="four diagnostic panels comparing the dollar model's funnel-shaped residuals and bent q-q plot with the log model's level residual band and near-straight q-q plot" width="1893" height="1531">
+    </picture>
+    <figcaption>residuals vs fitted and normal q-q, for the dollar model (top) and the log model (bottom). a 6,000-listing sample is plotted; the statistics use all 57,715.</figcaption>
+</figure>
+
+<figure>
+    <picture>
+        <source media="print" srcset="figures/light/08-final-diagnostics.png">
+        <source media="(prefers-color-scheme: dark)" srcset="figures/dark/08-final-diagnostics.png">
+        <img src="figures/light/08-final-diagnostics.png" alt="scale-location plot with a level trend line, and residuals versus leverage with no influential points" width="1917" height="771">
+    </picture>
+    <figcaption>final model: scale-location (orange line = rolling median spread) and residuals vs leverage.</figcaption>
+</figure>
+
+<p>the formal version of the same story:</p>
+
+<ul>
+    <li><strong>heteroskedasticity.</strong> breusch-pagan rejects constant variance for both models (with n = 57,715 it detects even trivial patterns; the lm statistic falls by more than half from m1 to m3, 3,400 → 1,593). the remedy is not to pretend otherwise: every standard error, confidence interval, p-value and nested-model test quoted in this report uses heteroskedasticity-robust (hc1) covariance, so the inference doesn't lean on the rejected assumption.</li>
+    <li><strong>influence.</strong> the largest cook's distance in the training fit is 0.003 — far below even the most conservative rule of thumb. with 57,715 observations, no single craigslist ad moves the model.</li>
+    <li><strong>normality.</strong> mild heavy tails remain in the log model. with this sample size the coefficient inference is protected by the central limit theorem; where normality actually matters is the prediction intervals, so instead of trusting it i measure their coverage below.</li>
+</ul>
+
+<h2 id="predict">how well it predicts</h2>
+
+<p>every number in this section is computed on the 14,405 held-out listings, with 5-fold cross-validation on the training split as a second opinion. predictions from the log models are converted back to dollars with duan's smearing estimator (a naive exp() would be biased low; the smearing factor here is 1.071).</p>
+
+<div class="tbl-wrap" tabindex="0" role="region" aria-label="held-out test metrics table">
+<table>
+    <thead>
+    <tr><th scope="col">held-out test set</th><th scope="col" class="num">mae</th><th scope="col" class="num">median ae</th><th scope="col" class="num">mape</th><th scope="col" class="num">rmse</th><th scope="col" class="num">r² (dollars)</th></tr>
+    </thead>
+    <tbody>
+    <tr><td>m1 — the 2025 spec</td><td class="num">$4,265</td><td class="num">$3,032</td><td class="num">58.2%</td><td class="num">$6,587</td><td class="num">0.667</td></tr>
+    <tr><td>m2 — log + drive</td><td class="num">$3,266</td><td class="num">$1,868</td><td class="num">33.7%</td><td class="num">$5,806</td><td class="num">0.741</td></tr>
+    <tr class="hl"><td>m3 — final</td><td class="num">$3,300</td><td class="num">$1,835</td><td class="num">33.3%</td><td class="num">$6,023</td><td class="num">0.722</td></tr>
+    </tbody>
+</table>
+</div>
+<p class="tbl-note">cross-validation agrees: mae $4,236 / $3,215 / $3,250, mape 58.3% / 34.1% / 33.7% for m1 / m2 / m3.</p>
+
+<p>the log transformation, not extra complexity, does the heavy lifting: on identical data the 2025 specification's typical (median) error is $3,032, and thinking in percentages cuts it to $1,835 — 39% smaller — while mape drops from 58% to 33%. between m2 and m3 the choice depends on the loss you care about: m3 is better in log space (aic 52,129 vs 53,625), on median error and on mape; m2 edges it on the mean-type dollar metrics (mae, rmse, dollar r²), which are dominated by the priciest cars. i take m3 as the final model — its errors are smaller for the typical car, and its quadratic term is what makes the depreciation curve below believable — and report the comparison so the trade-off is visible.</p>
+
+<figure>
+    <picture>
+        <source media="print" srcset="figures/light/12-model-comparison.png">
+        <source media="(prefers-color-scheme: dark)" srcset="figures/dark/12-model-comparison.png">
+        <img src="figures/light/12-model-comparison.png" alt="bar charts of mean and median absolute error for the three models on the held-out test set" width="1828" height="690">
+    </picture>
+    <figcaption>held-out error, mean and median. the log models (m2, m3) cut the typical error by more than a third.</figcaption>
+</figure>
+
+<figure>
+    <picture>
+        <source media="print" srcset="figures/light/09-actual-vs-predicted.png">
+        <source media="(prefers-color-scheme: dark)" srcset="figures/dark/09-actual-vs-predicted.png">
+        <img src="figures/light/09-actual-vs-predicted.png" alt="hexbin of predicted versus actual price for held-out listings, concentrated along the diagonal across two orders of magnitude" width="1257" height="1048">
+    </picture>
+    <figcaption>predicted vs actual for the held-out set, both axes log-scaled. the 2025 version's plot bent away from this line at both ends; modeling in logs straightens it.</figcaption>
+</figure>
+
+<p>the part i care most about: <strong>uncertainty that means what it says.</strong> the final model's 95% prediction intervals, built in log space and exponentiated, cover the true price for 95.3% of the 14,405 held-out cars — within a third of a point of nominal. coverage holds across the price range, from 93.4% in the cheapest quartile of predictions to 97.2% in the priciest. the intervals are honest and they are wide (the upper bound is typically ~4.4× the lower): a single regression on ad-listed features genuinely cannot pin a used car's price much tighter, and pretending otherwise is what a point forecast does.</p>
+
+<h2 id="effects">what moves the price</h2>
+
+<p>because the response is log(price), each coefficient converts to a percentage effect on price, holding everything else fixed. all intervals below are 95%, from robust standard errors. these are associations in 2021 craigslist asking prices, not causal effects — a diesel badge can't be bolted onto a corolla to raise its value 82%.</p>
+
+<figure>
+    <picture>
+        <source media="print" srcset="figures/light/10-key-effects.png">
+        <source media="(prefers-color-scheme: dark)" srcset="figures/dark/10-key-effects.png">
+        <img src="figures/light/10-key-effects.png" alt="dot and interval chart of percentage effects on price for the non-brand coefficients, from diesel plus 82 percent to condition salvage minus 40 percent" width="1703" height="1318">
+    </picture>
+    <figcaption>percentage effect on asking price with 95% confidence intervals. blue = raises price, red = lowers it.</figcaption>
+</figure>
+
+<ul>
+    <li><strong>every year of age costs about 11.8% of the price</strong> (ci 11.5–12.1) when the car is new, easing to roughly 8% per year at age ten and under 5% by age twenty — that's the age² term flattening the curve.</li>
+    <li><strong>every 10,000 miles costs a further 3.3%</strong> (ci 3.2–3.4), independent of age.</li>
+    <li><strong>diesel is the biggest premium outside the brand effects: +82%</strong> (ci 79–85). in 2021, used diesel pickups were their own seller's market.</li>
+    <li><strong>the manual transmission premium the 2025 version spotted survives the rebuild: +15.8%</strong> (ci 14.0–17.5). automatics took over the commodity market; the manuals that remain are enthusiasts' cars.</li>
+    <li><strong>a branded history is expensive:</strong> a rebuilt title costs 16.5%, a salvage title 17.6%, and cars whose <em>condition</em> is salvage lose 40%.</li>
+    <li><strong>honesty check:</strong> not every coefficient earns a headline. the hatchback effect (+1.4%, ci −0.2 to +2.9, p = 0.08) is not statistically distinguishable from zero; the hybrid premium is real but small (+2.8%, ci 0.5–5.2); and self-reported "new" condition adds a noisy +6.6% (ci 0.5–13.1) — less than "excellent" does. a report that only prints impressive coefficients is advertising, not analysis.</li>
+</ul>
+
+<p>brand effects, now measured against an otherwise identical ford rather than as raw medians: porsche commands +110%, lexus +55%, toyota +39% — while fiat (−24%) and mercury (−22%) sit at the bottom. the 2025 version's "price boosters" table mixed brand prestige with body type; holding body type fixed is what separates "porsches are expensive" from "trucks are expensive".</p>
+
+<figure>
+    <picture>
+        <source media="print" srcset="figures/light/11-brand-effects.png">
+        <source media="(prefers-color-scheme: dark)" srcset="figures/dark/11-brand-effects.png">
+        <img src="figures/light/11-brand-effects.png" alt="dot and interval chart of brand premiums versus ford, from fiat at minus 24 percent to porsche at plus 110 percent" width="1522" height="1411">
+    </picture>
+    <figcaption>price premium vs an otherwise identical ford, 95% confidence intervals. full table in <a href="data/coefs_final.csv">coefs_final.csv</a>.</figcaption>
+</figure>
+
+<h2 id="depreciation">the depreciation curve</h2>
+
+<p>the model's age terms, drawn as a curve for a concrete car (a 4-cylinder automatic toyota sedan, clean title, good condition, carrying the median mileage for its age): it sheds half its nearly-new value by year five, and by year twelve it's a $6,000 car. this is the shape the quadratic term buys — the 2025 model's straight line in dollar space couldn't fall fast early and flatten late at the same time.</p>
+
+<figure>
+    <picture>
+        <source media="print" srcset="figures/light/13-depreciation-curve.png">
+        <source media="(prefers-color-scheme: dark)" srcset="figures/dark/13-depreciation-curve.png">
+        <img src="figures/light/13-depreciation-curve.png" alt="predicted price of a typical toyota sedan falling from about 32 thousand dollars at age zero to under 5 thousand past age 15" width="1538" height="795">
+    </picture>
+    <figcaption>predicted asking price by age for a typical gas toyota sedan, at the median mileage for each age.</figcaption>
+</figure>
+
+<h2 id="cars">six cars, including my dream car</h2>
+
+<p>the 2025 write-up tested the model on three cars i found on autotrader: a corolla, a rav4, and the lexus is f i still daydream about. those three are re-scored below — but scoring 2025 canadian listings with a model of the april–may 2021 us market mixes two questions: is the model good, and has the market moved? (it has.) so the fair test comes first: the same three archetypes scored against 2021 listings the model didn't fit. the corolla and rav4 come straight from the held-out test split. the dataset's only real is f landed on the training side of the split, so it's scored leave-one-out: the model is refit without that listing before predicting it — out of sample by construction (and with the largest cook's distance anywhere at 0.003, removing one row barely moves the fit anyway).</p>
+
+<div class="tbl-wrap" tabindex="0" role="region" aria-label="example car predictions table">
+<table>
+    <thead>
+    <tr><th scope="col">car</th><th scope="col" class="num">actual</th><th scope="col" class="num">predicted</th><th scope="col" class="num">95% interval</th><th scope="col" class="num">error</th></tr>
+    </thead>
+    <tbody>
+    <tr><td colspan="5" style="color:var(--ink-2)">2021 listings, out of sample — the in-market test</td></tr>
+    <tr><td>2015 toyota corolla le, 125k mi</td><td class="num">$9,990</td><td class="num">$12,357</td><td class="num">$5,478 – $24,293</td><td class="num">+24%</td></tr>
+    <tr><td>2017 toyota rav4, 27k mi</td><td class="num">$23,991</td><td class="num">$30,498</td><td class="num">$13,520 – $59,959</td><td class="num">+27%</td></tr>
+    <tr><td>2008 lexus is f, 53k mi (leave-one-out)</td><td class="num">$34,999</td><td class="num">$17,750</td><td class="num">$7,867 – $34,907</td><td class="num">−49%</td></tr>
+    <tr><td colspan="5" style="color:var(--ink-2)">2025 autotrader listings — four years of market drift</td></tr>
+    <tr><td>2015 toyota corolla, 82k mi</td><td class="num">$10,048</td><td class="num">$8,366</td><td class="num">$3,709 – $16,448</td><td class="num">−17%</td></tr>
+    <tr><td>2022 toyota rav4, 56k mi</td><td class="num">$20,944</td><td class="num">$26,523</td><td class="num">$11,757 – $52,145</td><td class="num">+27%</td></tr>
+    <tr><td>2009 lexus is f, 51k mi</td><td class="num">$29,332</td><td class="num">$12,421</td><td class="num">$5,505 – $24,427</td><td class="num">−58%</td></tr>
+    </tbody>
+</table>
+</div>
+<p class="tbl-note">the 2025 version fed the corolla's odometer in kilometres into a model expecting miles; the re-scores above use the converted 82k miles.</p>
+
+<figure>
+    <picture>
+        <source media="print" srcset="figures/light/14-example-cars.png">
+        <source media="(prefers-color-scheme: dark)" srcset="figures/dark/14-example-cars.png">
+        <img src="figures/light/14-example-cars.png" alt="dot and interval chart of six cars showing predictions, actual prices and 95 percent prediction intervals; four actuals fall inside their intervals, and both lexus is f listings sit above theirs — the 2008 car only just" width="1773" height="913">
+    </picture>
+    <figcaption>predictions (blue) vs actual prices (orange) with 95% prediction intervals (gray bands).</figcaption>
+</figure>
+
+<p>the toyotas behave: both corollas and both rav4s fall inside their intervals, even across four years of market drift. the is f does not behave, twice — four of the six actual prices land inside their intervals, and both misses are the same car. the 2021 is f's $34,999 asking price sits ninety-two dollars above its interval's upper edge; the 2025 listing sits about $4,900 above its. and this time the model can't blame the data. the reason is visible in the model's own structure: to a manufacturer-level regression, an is f is "a 13-year-old 8-cylinder lexus sedan", i.e. a used ls 460. the 500-horsepower badge lives in the <code>model</code> column, which carries 9,650 distinct values and stayed out of this regression. the honest conclusion isn't that the car is mispriced — it's that a limited-production performance car's value <em>is</em> its model name, and a brand-level model has a measurable ceiling there. (the 2025 version "did better" on the is f — 31% off instead of 58% on the same autotrader listing — but by accident: its straight-line depreciation overvalued all old cars, which happened to flatter the one old car that actually holds its value.)</p>
+
+<h2 id="limits">what i'd still improve</h2>
+
+<ul>
+    <li><strong>model-level effects.</strong> the is f problem. random effects or partial pooling over the ~9,600-value model column (or even a curated "enthusiast car" flag) would price special cars without exploding the design matrix.</li>
+    <li><strong>asking vs selling.</strong> craigslist prices are asks, not transactions. every effect here is an effect on what sellers hope, measured precisely.</li>
+    <li><strong>a time index.</strong> the model is a snapshot of april–may 2021 — the start of the wildest used-car market in memory. a multi-period dataset with a month index would separate the car from the market and make the autotrader comparison clean.</li>
+    <li><strong>missingness.</strong> complete-case filtering cost 60k rows; condition, cylinders and drive missingness is unlikely to be random. explicit "not stated" levels or imputation would test how much that choice matters.</li>
+    <li><strong>region.</strong> the state column sat unused; rust-belt and sun-belt cars price differently, and a 4wd truck is worth more in montana than in florida (an interaction, which is the next tool in the box).</li>
+</ul>
+
+<h2 id="reproduce">reproduce it</h2>
+
+<p>everything on this page — every number, table and figure, in both color schemes — is generated by one pipeline in the <a href="https://github.com/katsuma0/linearregressioncarpriceanalysis">repository</a>:</p>
+
+<pre>data/raw/vehicles.csv        # kaggle export (1.4 gb, see readme for link)
+analysis/clean.py            # the attrition table above
+analysis/model.py            # fits, box-cox, nested tests, vif, robust inference
+analysis/diagnostics.py      # residual and influence figures (run model.py first)
+analysis/validate.py         # held-out metrics, cv, interval coverage, the six cars
+analysis/eda.py, results_figs.py, style.py
+python analysis/run_all.py   # raw csv in, report assets out</pre>
+
+<p>the cleaned modeling table ships with the repo as <code>data/cars_clean.parquet</code>, so everything after the cleaning stage can be reproduced without the 1.4 gb download.</p>
+
+<h2 id="references">references</h2>
+
+<ul>
+    <li>austin reese, <a href="https://www.kaggle.com/datasets/austinreese/craigslist-carstrucks-data">used cars dataset</a> (craigslist listings, kaggle)</li>
+    <li>course material from stats 3a03 (applied regression) and math 3mb3 (mathematical modelling), mcmaster university</li>
+    <li>box &amp; cox (1964), "an analysis of transformations"; duan (1983), "smearing estimate: a nonparametric retransformation method"</li>
+    <li>seabold &amp; perktold, <a href="https://www.statsmodels.org/">statsmodels</a>; hunter, <a href="https://matplotlib.org/">matplotlib</a>; mckinney, <a href="https://pandas.pydata.org/">pandas</a></li>
+    <li><a href="https://katsuma0.github.io/used-car-price-project/">the 2025 version of this project</a>, kept as-is: it's the "before" picture</li>
+</ul>
+
+<footer>
+    <p>katsuma onishi · <a href="mailto:katsuma123@gmail.com">katsuma123@gmail.com</a></p>
+    <p>last updated: august 2026</p>
+</footer>
+
+</main>
+</body>
+</html>

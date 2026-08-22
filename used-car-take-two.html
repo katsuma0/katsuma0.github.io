@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="theme-color" content="#FFFFFF" media="(prefers-color-scheme: light)">
+    <meta name="theme-color" content="#121212" media="(prefers-color-scheme: dark)">
+    <meta name="description" content="the used car price model rebuilt with the full applied-regression toolkit: box-cox, diagnostics, robust inference, and prediction intervals that hold up out of sample.">
+    <title>used car price analysis, take two · katsuma onishi</title>
+    <link rel="icon" href="data:,">
+    <link rel="stylesheet" href="assets/site.css">
+</head>
+<body>
+
+<header class="top">
+    <a class="name" href="index.html">katsuma onishi</a>
+    <nav>
+        <a href="apps.html">projects</a>
+        <a href="life.html">life</a>
+        <a href="shop.html">shop</a>
+        <a href="contact.html">contact</a>
+    </nav>
+</header>
+
+<main class="page">
+
+<h1>Used Car Price Analysis, Take Two</h1>
+<p class="meta">Project · August 2026 · Python, statsmodels</p>
+
+<a class="btn-open" href="projects/linearregressioncarpriceanalysis/">Read the write-up ↗</a>
+
+<p class="lead">My <a href="used-car.html">first linear regression project</a>, done again properly. Same craigslist data, but de-duplicated, kept out to $125,000 instead of truncated at $44,500, and modeled in log-price — the transformation chosen by Box-Cox rather than by deleting the histogram's tail. Every assumption gets checked, every claim carries a confidence interval, and every headline number is measured on 14,391 listings the model never saw.</p>
+
+<h2>What improved</h2>
+<p>On identical held-out data, the 2025 specification's typical error is $3,032; the rebuilt model's is $1,835. Its 95% prediction intervals cover the true price 95.3% of the time — uncertainty that means what it says. The write-up re-scores the three autotrader cars from the original, including the Lexus IS F the old model missed by 31%, and is honest about what a brand-level model still can't see: the dataset's one real IS F, scored leave-one-out, misses its interval by ninety-two dollars — its badge is worth more than any regression on ad features can know.</p>
+
+<h2>What it taught me</h2>
+<p>The techniques from STATS 3A03 aren't decoration — each one changed a conclusion. Box-Cox picked the response scale, partial F-tests justified the depreciation curve's shape, robust standard errors kept the inference honest after Breusch-Pagan rejected constant variance, and out-of-sample interval coverage was the difference between quoting an error and standing behind one.</p>
+
+<footer>
+    <p>katsuma onishi · <a href="mailto:katsuma123@gmail.com">katsuma123@gmail.com</a> · <a href="tel:+16475254859">647 525 4859</a></p>
+    <p>last updated: august 2026</p>
+</footer>
+
+</main>
+</body>
+</html>

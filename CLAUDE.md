@@ -8,6 +8,8 @@ Main pages: `index.html`, `apps.html`, `sewing-projects.html`, `shop.html`, `con
 
 App and project detail pages, all linked from `apps.html`: `tides.html`, `wildlife.html`, `fishing.html`, `camp.html`, `spotify.html`, `used-car.html`, `carbon-cycle.html`, `dsa.html`. They use a `backlink` to Projects, an `Open the app ↗` button for apps, and `h4` section headings. Display names are the brand names (On-Site is `camp.html`, On-Fishing is `fishing.html`, On-Wildlife is `wildlife.html`, Maritides is `tides.html`, Unwrapped is `spotify.html`); the filenames are older than the names and stay.
 
+Road trip pages: `roadtrip.html` is the public trip map for the Markham → Vancouver drive (Leaflet 1.9.4 and OpenStreetMap tiles from CDN, the only pages that load an external library). It probes `trip/days/<YYYY-MM-DD>.json` from its `TRIP_START` constant through today, no manifest, and draws one coloured polyline per day plus a day-by-day log (distance, driving time, `stay`, optional `notes`). `roadtrip-tracker.html` is the phone-side recorder: while open it logs a GPS point about every 100 m to localStorage (accuracy- and jump-filtered, wake lock held, auto-resumes on reload, days keyed by local date), holds the per-day "stayed:" field, and exports each day as `<date>.json` (or GPX for Strava). Publishing a day = drop the exported file in `trip/days/` unchanged and push. Day file shape: `{"date", "stay", "points": [[lat, lon, unixSeconds], ...]}`; a hand-added `"notes"` string also renders. Previewing `roadtrip.html` needs a static server (it fetches), not file://.
+
 Redirect stubs for short URLs: `unwrapped.html` (to `/spotify-unwrapped/`), `nb-tides.html` (to `/maritides/`), and `on-site.html` (to `/camp.html`, kept so old links to the removed On-Site hub page still land somewhere).
 
 `on-stores.html` is the sticker storefront, branded meishi stickers (all physical goods, cards, stickers, wallets, sell under the meishi brand; every sticker sold has an NFC tag inside; prices match Ontario Parks, not undercut). Its circle mockups are pure CSS (`.mockups`/`.mock`), placeholders until commissioned art exists. `business/` holds the private business plan and pitch; it is gitignored and must never be committed to this public repo. Detail pages must never share a name with one of my app repos, because a page named like a repo shadows that repo's project site path on katsuma.ca (that is why the tides detail page is `tides.html`, not `maritides.html`).
@@ -35,6 +37,7 @@ images/sewing/<slug>/1.jpeg, 2.jpeg, ...        originals, shown by the lightbox
 images/sewing/<slug>/1-thumb.jpeg, ...          700px grid thumbnails, made with sips
 images/life/<slug>/1.webp, 1-thumb.webp, ...    life photos, written by the journal pipeline
 life/data/<slug>.json                           one record per life entry, the pipeline's source of truth
+trip/days/<YYYY-MM-DD>.json                     one road trip day, exported by roadtrip-tracker.html
 tools/journal_ingest.py                         Apple Journal export -> life entries
 .github/workflows/journal-ingest.yml            release published -> ingest -> pull request
 ```
@@ -85,7 +88,7 @@ To change or remove a published entry: edit or delete its
 - Sewing entries: `div.project` with `h3` title, `p.meta` date, `div.photos` grid, then description. Newest first, directly after the lead paragraph.
 - Apps entries in `apps.html`: `div.item` with linked `h3`, `p.meta` (`App · Month Year · Claude Code` or `Project · Month Year · Tool`), summary, `More →` button. Newest first.
 - Photo grids reference `-thumb.jpeg` files; the lightbox swaps `-thumb.jpeg` back to `.jpeg` for the original. A new photo needs both files. Thumbnail: `sips -Z 700 -s format jpeg -s formatOptions 55 N.jpeg --out N-thumb.jpeg`. The first project's photos load eagerly, everything below gets `loading="lazy"`.
-- The only JavaScript is about forty lines of lightbox code inlined at the bottom of `sewing-projects.html`. It makes grid images keyboard-focusable, opens on click or Enter/Space, closes on Escape, overlay click, or the Close button, and restores focus. It stays after the markup it operates on. Do not move it to a shared file.
+- JavaScript stays inlined at the bottom of the page it belongs to, after the markup it operates on; do not move it to a shared file. There are three pages with any: the ~forty-line lightbox in `sewing-projects.html` (grid images keyboard-focusable, opens on click or Enter/Space, closes on Escape, overlay click, or the Close button, restores focus), and the two road trip pages (`roadtrip.html`, `roadtrip-tracker.html`), which are also the only pages allowed an external library (pinned Leaflet from unpkg, with SRI hashes).
 - The emails on `contact.html` are written out literally (katsuma123@gmail.com, katsuma@meishi.shop). That was a deliberate August 2026 decision replacing the old anti-scraper obfuscation; do not re-obfuscate.
 
 ## Known issues, not urgent

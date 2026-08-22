@@ -1,0 +1,59 @@
+term,vif
+"C(manufacturer, Treatment('ford'))[T.acura]",1.0829383083252422
+"C(manufacturer, Treatment('ford'))[T.audi]",1.1541507593633606
+"C(manufacturer, Treatment('ford'))[T.bmw]",1.3197065358376943
+"C(manufacturer, Treatment('ford'))[T.buick]",1.108234245007052
+"C(manufacturer, Treatment('ford'))[T.cadillac]",1.1237882108436228
+"C(manufacturer, Treatment('ford'))[T.chevrolet]",1.5799494561150624
+"C(manufacturer, Treatment('ford'))[T.chrysler]",1.1993221872652928
+"C(manufacturer, Treatment('ford'))[T.dodge]",1.2247777938163606
+"C(manufacturer, Treatment('ford'))[T.fiat]",1.0331123721811153
+"C(manufacturer, Treatment('ford'))[T.gmc]",1.2023399979518576
+"C(manufacturer, Treatment('ford'))[T.honda]",1.5729511521537296
+"C(manufacturer, Treatment('ford'))[T.hyundai]",1.2097582530091489
+"C(manufacturer, Treatment('ford'))[T.infiniti]",1.081202030903857
+"C(manufacturer, Treatment('ford'))[T.jaguar]",1.0406599655547182
+"C(manufacturer, Treatment('ford'))[T.jeep]",1.4330019488191017
+"C(manufacturer, Treatment('ford'))[T.kia]",1.1636034842110972
+"C(manufacturer, Treatment('ford'))[T.lexus]",1.1495918260949374
+"C(manufacturer, Treatment('ford'))[T.lincoln]",1.063957728861371
+"C(manufacturer, Treatment('ford'))[T.mazda]",1.1291864708425328
+"C(manufacturer, Treatment('ford'))[T.mercedes-benz]",1.2412385492165192
+"C(manufacturer, Treatment('ford'))[T.mercury]",1.0489159961388144
+"C(manufacturer, Treatment('ford'))[T.mini]",1.0943559281393591
+"C(manufacturer, Treatment('ford'))[T.mitsubishi]",1.0547570455323607
+"C(manufacturer, Treatment('ford'))[T.nissan]",1.3589903244436063
+"C(manufacturer, Treatment('ford'))[T.pontiac]",1.073782019529387
+"C(manufacturer, Treatment('ford'))[T.porsche]",1.044488184346512
+"C(manufacturer, Treatment('ford'))[T.ram]",1.2418875036098316
+"C(manufacturer, Treatment('ford'))[T.rover]",1.0549816035891906
+"C(manufacturer, Treatment('ford'))[T.saturn]",1.038249202231542
+"C(manufacturer, Treatment('ford'))[T.subaru]",1.5059192212025736
+"C(manufacturer, Treatment('ford'))[T.toyota]",1.61196200623862
+"C(manufacturer, Treatment('ford'))[T.volkswagen]",1.2101061434972438
+"C(manufacturer, Treatment('ford'))[T.volvo]",1.081066211256624
+"C(condition, Treatment('good'))[T.excellent]",1.3780238242318832
+"C(condition, Treatment('good'))[T.fair]",1.1029546000261523
+"C(condition, Treatment('good'))[T.like new]",1.3788560290966512
+"C(condition, Treatment('good'))[T.new]",1.0208431602503896
+"C(condition, Treatment('good'))[T.salvage]",1.0657406215227265
+"C(fuel, Treatment('gas'))[T.diesel]",1.2022110149650223
+"C(fuel, Treatment('gas'))[T.hybrid]",1.111519853807865
+"C(title_status, Treatment('clean'))[T.rebuilt]",1.026937355998622
+"C(title_status, Treatment('clean'))[T.salvage]",1.0701844459160421
+"C(transmission, Treatment('automatic'))[T.manual]",1.1517175002053925
+"C(type, Treatment('sedan'))[T.SUV]",2.200578819420968
+"C(type, Treatment('sedan'))[T.convertible]",1.226673697746309
+"C(type, Treatment('sedan'))[T.coupe]",1.2493665278310782
+"C(type, Treatment('sedan'))[T.hatchback]",1.2435667404868136
+"C(type, Treatment('sedan'))[T.mini-van]",1.2130797873832153
+"C(type, Treatment('sedan'))[T.offroad]",1.0913735436584813
+"C(type, Treatment('sedan'))[T.pickup]",1.9775633680706133
+"C(type, Treatment('sedan'))[T.truck]",2.471049800262977
+"C(type, Treatment('sedan'))[T.van]",1.1868925752337913
+"C(type, Treatment('sedan'))[T.wagon]",1.194150327031467
+"C(drive, Treatment('fwd'))[T.4wd]",2.873211187877527
+"C(drive, Treatment('fwd'))[T.rwd]",2.0359419266259176
+age,1.7815474439431276
+odo10k,1.698166656146086
+cylinders,2.3315623218184305

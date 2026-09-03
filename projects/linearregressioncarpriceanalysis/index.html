@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="theme-color" content="#FFFFFF" media="(prefers-color-scheme: light)">
+    <meta name="theme-color" content="#121212" media="(prefers-color-scheme: dark)">
+    <meta name="description" content="what should a used car cost? a linear regression story: 72,120 craigslist listings, a model that prices the typical car within $1,835, and one dream car it can't crack.">
+    <meta property="og:title" content="linear regression car price analysis">
+    <meta property="og:description" content="what should a used car cost? a linear regression story: 72,120 craigslist listings, a model that prices the typical car within $1,835, and one dream car it can't crack.">
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https://katsuma.ca/projects/linearregressioncarpriceanalysis/">
+    <meta property="og:image" content="https://katsuma.ca/projects/linearregressioncarpriceanalysis/figures/light/09-actual-vs-predicted.png">
+    <meta name="twitter:card" content="summary_large_image">
+    <link rel="canonical" href="https://katsuma.ca/projects/linearregressioncarpriceanalysis/">
+    <title>linear regression car price analysis · katsuma onishi</title>
+    <link rel="icon" href="data:,">
+    <link rel="stylesheet" href="assets/report.css">
+</head>
+<body>
+
+<header class="top">
+    <a class="name" href="https://katsuma.ca">katsuma onishi</a>
+    <nav>
+        <a href="https://katsuma.ca/apps.html">projects</a>
+        <a href="https://katsuma.ca/life.html">life</a>
+        <a href="https://katsuma.ca/contact.html">contact</a>
+    </nav>
+</header>
+
+<main class="page">
+
+<h1>Analyzing and Predicting Used Car Prices, Take Two</h1>
+<p class="meta">project · august 2026 · python, statsmodels · <a href="technical.html">full technical write-up</a> · <a href="https://github.com/katsuma0/linearregressioncarpriceanalysis">source on github</a> · <a href="https://katsuma0.github.io/used-car-price-project/">the 2025 version</a></p>
+
+<p class="lead">what should a used car actually cost? in 2025 i built <a href="https://katsuma0.github.io/used-car-price-project/">my first linear regression</a> to answer that. this is the do-over, with everything i learned finishing my stats degree at mcmaster — same question, same craigslist data, a much more honest answer. the short story is below; the <a href="technical.html">full technical write-up</a> has every test and assumption for the curious.</p>
+
+<div class="tiles">
+    <div class="tile">
+        <div class="t-label">listings modeled</div>
+        <div class="t-value">72,120</div>
+        <div class="t-note">cleaned from 426,880 raw ads</div>
+    </div>
+    <div class="tile">
+        <div class="t-label">typical miss</div>
+        <div class="t-value">$1,835</div>
+        <div class="t-note up">old approach: $3,032</div>
+    </div>
+    <div class="tile">
+        <div class="t-label">price range hit rate</div>
+        <div class="t-value">95.3%</div>
+        <div class="t-note">on 14,405 cars it never saw</div>
+    </div>
+    <div class="tile">
+        <div class="t-label">dream car verdict</div>
+        <div class="t-value">missed</div>
+        <div class="t-note">and that's the interesting part</div>
+    </div>
+</div>
+
+<h2 id="intro">the setup</h2>
+
+<p>the data is 426,880 craigslist car ads from spring 2021. raw craigslist is messy: the same car posted in five cities, $0 "call for price" ads, a $3.7 billion pickup truck. after removing 171,428 duplicate reposts and the junk, 72,120 real listings remain — and this time the expensive cars stay in. (the 2025 version deleted everything over $44,500 to make the data look nicer, which is exactly why it couldn't price anything interesting.) each listing has the asking price plus the basics: age, mileage, brand, body type, condition, title history, transmission, drivetrain.</p>
+
+<figure>
+    <picture>
+        <source media="print" srcset="figures/light/02-price-vs-age.png">
+        <source media="(prefers-color-scheme: dark)" srcset="figures/dark/02-price-vs-age.png">
+        <img src="figures/light/02-price-vs-age.png" alt="cloud of listings showing price falling as cars age, from a median around 46 thousand dollars when new to about 5 thousand at 20 years" width="1463" height="825">
+    </picture>
+    <figcaption><strong>the whole story in one picture: cars lose value fast, then stop.</strong> each hexagon is a bundle of listings, darker = more of them; the orange line is the typical price at each age.</figcaption>
+</figure>
+
+<p>notice the drop isn't a straight line — a car loses a huge slice of its value early, then the curve flattens. that shape is why the model thinks in <strong>percentages, not dollars</strong>: knocking $2,000 off matters a lot on a $6,000 civic and barely registers on a $60,000 truck. (the formal tool for this decision is called box-cox, and it agrees — details in the <a href="technical.html#boxcox">technical write-up</a>.)</p>
+
+<h2 id="analysis">the model, and how good it is</h2>
+
+<p>the model is a linear regression: it learns how much each feature — age, mileage, brand, body type, condition, title, transmission, drivetrain — adds or subtracts from the price, all at once. i trained it on 80% of the listings and graded it on the 14,405 it had never seen. no peeking.</p>
+
+<figure>
+    <picture>
+        <source media="print" srcset="figures/light/09-actual-vs-predicted.png">
+        <source media="(prefers-color-scheme: dark)" srcset="figures/dark/09-actual-vs-predicted.png">
+        <img src="figures/light/09-actual-vs-predicted.png" alt="predicted versus actual price for over 14 thousand unseen listings, hugging the diagonal line from 1 thousand to over 100 thousand dollars" width="1257" height="1048">
+    </picture>
+    <figcaption><strong>on cars it never saw, predictions hug the "perfect" line</strong> — from $1,000 beaters to $100,000+ trucks. the typical miss is $1,835; the old approach missed by $3,032 on the exact same cars.</figcaption>
+</figure>
+
+<p>one more thing the 2025 version didn't have: <strong>every prediction comes with a price range, not just a number.</strong> the ranges are built to catch the true price 95% of the time — and on the unseen cars they caught it 95.3% of the time. an accuracy claim you can check is worth ten you can't.</p>
+
+<h2 id="effects">what actually moves the price</h2>
+
+<p>because the model holds everything else equal, it can separate questions that raw averages mix up — like "are trucks expensive, or are truck <em>brands</em> expensive?" (answer: trucks. being a ram or gmc adds little once the model knows it's a truck.)</p>
+
+<figure>
+    <picture>
+        <source media="print" srcset="figures/light/15-key-effects-story.png">
+        <source media="(prefers-color-scheme: dark)" srcset="figures/dark/15-key-effects-story.png">
+        <img src="figures/light/15-key-effects-story.png" alt="chart of price effects: diesel plus 82 percent, off-roader plus 72, truck plus 51, down through minus 12 percent per year of age, minus 17 for a rebuilt title and minus 40 for fair condition" width="1904" height="1010">
+    </picture>
+    <figcaption><strong>blue raises the price, red lowers it.</strong> every effect is measured with everything else held equal — a diesel version of the same truck, a rebuilt-title version of the same corolla.</figcaption>
+</figure>
+
+<ul>
+    <li><strong>work capability is worth the most:</strong> diesel +82%, off-roaders +72%, trucks +51%. in 2021, capability was its own currency.</li>
+    <li><strong>the stick-shift premium is real:</strong> +16%. commodity cars went automatic; the manuals left behind are enthusiasts' cars.</li>
+    <li><strong>history is expensive:</strong> a rebuilt title costs 17%, and a seller admitting "fair" condition costs 40%.</li>
+    <li><strong>brands matter on top of all that:</strong> an otherwise identical car is worth about twice as much wearing a porsche badge as a ford one, +55% as a lexus, +39% as a toyota. (full brand chart in the <a href="technical.html#effects">technical write-up</a>.)</li>
+</ul>
+
+<p>put the age effects together and you get the depreciation curve every car buyer feels: <strong>half the value gone by year five</strong>, a $6,000 car by year twelve.</p>
+
+<figure>
+    <picture>
+        <source media="print" srcset="figures/light/13-depreciation-curve.png">
+        <source media="(prefers-color-scheme: dark)" srcset="figures/dark/13-depreciation-curve.png">
+        <img src="figures/light/13-depreciation-curve.png" alt="predicted price of a typical toyota sedan falling from about 32 thousand dollars new to under 5 thousand past age 15, with the halfway point marked at year five" width="1538" height="795">
+    </picture>
+    <figcaption><strong>the model's depreciation curve for a typical toyota sedan.</strong> steep early, flat late — which is why "buy a three-year-old car" is real advice.</figcaption>
+</figure>
+
+<h2 id="cars">the road test: six real cars, including my dream car</h2>
+
+<p>numbers on a chart are one thing; real cars are the fun part. i scored six: a corolla, a rav4, and the lexus is f i daydream about — once each from 2021 listings the model never fit, and once each from the 2025 autotrader ads i tested in the original project.</p>
+
+<figure>
+    <picture>
+        <source media="print" srcset="figures/light/14-example-cars.png">
+        <source media="(prefers-color-scheme: dark)" srcset="figures/dark/14-example-cars.png">
+        <img src="figures/light/14-example-cars.png" alt="six cars with predictions, actual prices and price ranges; the corollas and rav4s land inside their ranges, both lexus is f listings sit above theirs" width="1773" height="913">
+    </picture>
+    <figcaption><strong>blue dot = model's prediction, orange diamond = real asking price, gray band = the model's 95% range.</strong> the everyday cars behave. the is f doesn't — twice.</figcaption>
+</figure>
+
+<p>both corollas and both rav4s land inside their ranges. the is f escapes its range in both years — the 2021 car by just ninety-two dollars, the 2025 one by miles. and the model's excuse is actually the lesson: all it can see is "a 13-year-old 8-cylinder lexus sedan," so it prices a sensible used luxury car. it has no way to know the is f is a 500-horsepower collector's item, because that lives in the model name — a column with 9,650 different values this regression doesn't use. <strong>some cars are worth what their badge means, and no spreadsheet column carries that.</strong></p>
+
+<h2 id="summary">what i learned</h2>
+
+<ul>
+    <li><strong>fix the scale, not the data.</strong> the 2025 version deleted expensive cars to tame a skewed histogram. thinking in percentages instead kept every car and cut the typical error from $3,032 to $1,835 — on identical data.</li>
+    <li><strong>only trust numbers earned on unseen cars.</strong> every headline here comes from listings the model never trained on, and predictions carry ranges that provably hold 95% of the time.</li>
+    <li><strong>know what your model can't see.</strong> the is f miss isn't a bug to hide — it's a measured boundary: brand-level features price everyday cars well and special cars poorly. pricing the badge itself is the next project.</li>
+</ul>
+
+<p class="meta">want the rigor? the <a href="technical.html">full technical write-up</a> has the cleaning log, box-cox, the diagnostics, robust inference, and all fourteen figures — and everything regenerates from one pipeline in the <a href="https://github.com/katsuma0/linearregressioncarpriceanalysis">repository</a>. data: <a href="https://www.kaggle.com/datasets/austinreese/craigslist-carstrucks-data">used cars dataset</a> by austin reese. built on coursework from stats 3a03 and math 3mb3, mcmaster university.</p>
+
+<footer>
+    <p>katsuma onishi · <a href="mailto:katsuma123@gmail.com">katsuma123@gmail.com</a></p>
+    <p>last updated: august 2026</p>
+</footer>
+
+</main>
+</body>
+</html>

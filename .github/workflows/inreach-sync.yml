@@ -1,0 +1,41 @@
+# pulls the garmin inreach mapshare track into trip/days/ every hour.
+# this is the one workflow allowed to push to main, and it only ever
+# touches trip/days/*.json - the owner's own device generates the data.
+name: inreach sync
+
+on:
+  schedule:
+    - cron: "20 * * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: inreach-sync
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: pull the mapshare feed into trip/days
+        env:
+          INREACH_MAPSHARE: ${{ vars.INREACH_MAPSHARE }}
+          INREACH_PASSWORD: ${{ secrets.INREACH_PASSWORD }}
+        run: python3 tools/inreach_sync.py
+
+      - name: commit any new track points
+        run: |
+          if [ -n "$(git status --porcelain -- trip/days)" ]; then
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git add trip/days
+            git commit -m "trip: sync inreach track"
+            git pull --rebase origin main
+            git push origin HEAD:main
+          else
+            echo "no new points"
+          fi

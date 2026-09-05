@@ -38,7 +38,7 @@
 <div class="entries" id="trip-days"></div>
 
 <h2>how this works</h2>
-<p>The phone rides on the dash running <a href="roadtrip-tracker.html">a small tracker page</a> that logs a GPS point every hundred metres or so, and publishes each day to this site's repo by itself — hourly while driving, and again when the day ends. Each day is one small JSON file; this page looks for those files and draws whatever it finds, so the map runs about an hour behind the car. Built with Claude Code, Leaflet, and OpenStreetMap tiles.</p>
+<p>The route comes from a Garmin inReach Mini 2 in the car, pinging a satellite every few minutes — it works where there is no cell signal at all. An hourly job folds those pings into one small JSON file per day in this site's repo, and this page draws whatever it finds, so the map runs an hour or so behind the car; the marker with the white ring is the latest ping. There is also <a href="roadtrip-tracker.html">a phone tracker page</a> as a finer-grained backup recorder. Built with Claude Code, Leaflet, and OpenStreetMap tiles.</p>
 
 <footer>
     <p>katsuma onishi · <a href="mailto:katsuma123@gmail.com">katsuma123@gmail.com</a> · <a href="tel:+16475254859">647 525 4859</a></p>
@@ -57,6 +57,10 @@
     // edit if the departure day moves. missing days are skipped quietly.
     var TRIP_START = '2026-08-21';
     var MAX_DAYS = 90;
+
+    // the mapshare name (the XXXX in share.garmin.com/XXXX); when set, the
+    // page links garmin's own live map next to the last-ping time
+    var MAPSHARE = '';
 
     var PALETTE = ['#1A56A0', '#B4531E', '#0E7490', '#7C3AED', '#BE185D',
         '#4D7C0F', '#B91C1C', '#4338CA', '#A21CAF', '#A16207'];
@@ -196,8 +200,30 @@
         if (map && lines.length) {
             map.fitBounds(L.featureGroup(lines).getBounds().pad(0.06));
         }
+
+        // where the car is now: the newest point of the newest day
+        var lastPts = days[days.length - 1].points;
+        var here = lastPts[lastPts.length - 1];
+        var ago = Math.max(60, Math.round(Date.now() / 1000) - here[2]);
+        var agoText = ago < 3600 ? Math.round(ago / 60) + ' minutes ago'
+            : ago < 172800 ? Math.round(ago / 3600) + ' hours ago'
+            : Math.round(ago / 86400) + ' days ago';
         totalsEl.textContent = days.length + (days.length === 1 ? ' day' : ' days') +
-            ' on the road · ' + Math.round(totalKm).toLocaleString('en-ca') + ' km so far';
+            ' on the road · ' + Math.round(totalKm).toLocaleString('en-ca') +
+            ' km so far · last ping ' + agoText;
+        if (MAPSHARE) {
+            totalsEl.appendChild(document.createTextNode(' · '));
+            var live = document.createElement('a');
+            live.href = 'https://share.garmin.com/' + MAPSHARE;
+            live.textContent = 'watch live on garmin →';
+            totalsEl.appendChild(live);
+        }
+        if (map) {
+            L.circleMarker([here[0], here[1]], {
+                radius: 8, weight: 3, color: '#FFFFFF',
+                fillColor: PALETTE[(days.length - 1) % PALETTE.length], fillOpacity: 1
+            }).addTo(map).bindPopup('the car, as of ' + agoText.replace(' ago', '') + ' back');
+        }
     }
 })();
 </script>

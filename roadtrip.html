@@ -27,18 +27,12 @@
 <main class="page">
 
 <h1>Road trip</h1>
-<p class="meta">Markham → Vancouver · August 2026</p>
-
-<p class="lead">Driving from Markham to Vancouver, drawn as it happens. My phone records the route while we drive, and every published day becomes one line on the map. Tap a day below to zoom in on it.</p>
+<p class="meta">Markham → Vancouver</p>
 
 <div id="trip-map" class="trip-map"></div>
-<p class="meta" id="trip-totals">loading the trip…</p>
+<p class="meta" id="trip-totals">loading…</p>
 
-<h2>day by day</h2>
 <div class="entries" id="trip-days"></div>
-
-<h2>how this works</h2>
-<p>The route comes from a Garmin inReach Mini 2 in the car, pinging a satellite every few minutes — it works where there is no cell signal at all. An hourly job folds those pings into one small JSON file per day in this site's repo, and this page draws whatever it finds, so the map runs an hour or so behind the car; the marker with the white ring is the latest ping. There is also <a href="roadtrip-tracker.html">a phone tracker page</a> as a finer-grained backup recorder. Built with Claude Code, Leaflet, and OpenStreetMap tiles.</p>
 
 <footer>
     <p>katsuma onishi · <a href="mailto:katsuma123@gmail.com">katsuma123@gmail.com</a> · <a href="tel:+16475254859">647 525 4859</a></p>
@@ -134,7 +128,7 @@
 
     function render(days) {
         if (!days.length) {
-            totalsEl.textContent = 'nothing on the map yet — the first day shows up once it is recorded and pushed.';
+            totalsEl.textContent = 'nothing on the map yet.';
             return;
         }
         var lines = [], totalKm = 0;
@@ -208,9 +202,9 @@
         var agoText = ago < 3600 ? Math.round(ago / 60) + ' minutes ago'
             : ago < 172800 ? Math.round(ago / 3600) + ' hours ago'
             : Math.round(ago / 86400) + ' days ago';
-        totalsEl.textContent = days.length + (days.length === 1 ? ' day' : ' days') +
-            ' on the road · ' + Math.round(totalKm).toLocaleString('en-ca') +
-            ' km so far · last ping ' + agoText;
+        totalsEl.textContent = 'last ping ' + agoText + ' · ' +
+            days.length + (days.length === 1 ? ' day' : ' days') + ' · ' +
+            Math.round(totalKm).toLocaleString('en-ca') + ' km';
         if (MAPSHARE) {
             totalsEl.appendChild(document.createTextNode(' · '));
             var live = document.createElement('a');

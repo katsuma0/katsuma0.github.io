@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="theme-color" content="#FFFFFF" media="(prefers-color-scheme: light)">
+    <meta name="theme-color" content="#121212" media="(prefers-color-scheme: dark)">
+    <meta name="description" content="The website for Silly Spaces, events that connect people.">
+    <title>Silly Spaces · Katsuma Onishi</title>
+    <link rel="icon" href="data:,">
+    <link rel="stylesheet" href="/assets/site.css">
+</head>
+<body>
+
+<header class="top">
+    <a class="name" href="/">Katsuma Onishi</a>
+    <nav>
+        <a href="/projects/" aria-current="page">Projects</a>
+        <a href="/art-projects/">Art Projects</a>
+        <a href="/contact/">Contact</a>
+    </nav>
+</header>
+
+<main class="page">
+
+<h1>Silly Spaces</h1>
+<p class="meta">Project · September 2026 · Web dev</p>
+<a class="btn-open" href="https://sillyspaces.com">Open the site ↗</a>
+
+<p class="lead">The website for Silly Spaces, a group that runs silly events in interesting places so people who might never meet have an excuse to break the ice. If the idea is silly, everyone is a newbie.</p>
+
+<h2>What I built</h2>
+<ul>
+    <li>One page with upcoming events, members, a join form, a gallery of past events, and a FAQ. Upcoming events hide themselves once their date has passed.</li>
+    <li>The join form drops each sign-up into a Google Sheet, so there is no server to run.</li>
+    <li>A page per past event, built by a small Python script from a folder of photos and a short text file.</li>
+    <li>A hidden upload page for my phone. Pick the photos, it shrinks them, and it opens a pull request. A GitHub Action builds the event page, and merging it puts the event on the site.</li>
+</ul>
+
+<h2>How it is put together</h2>
+<p>Plain HTML, one stylesheet, and one script, with no framework.</p>
+
+<footer>
+    <p>Katsuma Onishi</p>
+    <p>Last updated: October 2026</p>
+</footer>
+
+</main>
+
+</body>
+</html>

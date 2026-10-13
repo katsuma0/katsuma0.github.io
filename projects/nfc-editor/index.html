@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="theme-color" content="#FFFFFF" media="(prefers-color-scheme: light)">
+    <meta name="theme-color" content="#121212" media="(prefers-color-scheme: dark)">
+    <meta name="description" content="NFC Editor, a free iPhone app for reading, writing and editing NFC tags.">
+    <title>NFC Editor · Katsuma Onishi</title>
+    <link rel="icon" href="data:,">
+    <link rel="stylesheet" href="/assets/site.css">
+</head>
+<body>
+
+<header class="top">
+    <a class="name" href="/">Katsuma Onishi</a>
+    <nav>
+        <a href="/projects/" aria-current="page">Projects</a>
+        <a href="/art-projects/">Art Projects</a>
+        <a href="/contact/">Contact</a>
+    </nav>
+</header>
+
+<main class="page">
+
+<h1>NFC Editor</h1>
+<p class="meta">App · October 2026 · Claude Code</p>
+<a class="btn-open" href="https://github.com/katsuma0/nfc-editor">View on GitHub ↗</a>
+
+<p class="lead">A native iPhone app for reading, writing, and editing NFC tags. It does what the usual tag apps do, including the parts they charge for, and it stays free.</p>
+
+<h2>What it does</h2>
+<ul>
+    <li>Read. Hold a tag to the top of the phone and see the chip type, serial number, memory layout, the records on it, a page by page memory dump, whether a password is set, the scan counter, and the NXP signature.</li>
+    <li>Write. Text, links, contact cards, Wi-Fi networks, Bluetooth devices, locations, social profiles, and more. Several records on one tag, in any order. It shows the byte count before you tap, reads the tag back afterwards to confirm the write, and can lock the tag if you ask it to.</li>
+    <li>Tools. Erase, copy one tag to another, lock, edit memory one page at a time, set or remove a password, send raw commands, and write a saved dump back to a tag.</li>
+    <li>Saved tags and write profiles, searchable, and exportable as JSON.</li>
+</ul>
+
+<h2>Privacy</h2>
+<p>No accounts, no analytics, and nothing leaves the phone. It uses Apple's Core NFC and nothing else.</p>
+
+<h2>Worth knowing</h2>
+<p>iOS gives apps no way to read MIFARE Classic data blocks or to pretend to be a tag, so it does not do either. A Classic tag still shows its serial number. It is written in Swift and the source is on GitHub under the MIT license.</p>
+
+<footer>
+    <p>Katsuma Onishi</p>
+    <p>Last updated: October 2026</p>
+</footer>
+
+</main>
+
+</body>
+</html>

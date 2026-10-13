@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="theme-color" content="#FFFFFF" media="(prefers-color-scheme: light)">
+    <meta name="theme-color" content="#121212" media="(prefers-color-scheme: dark)">
+    <meta name="description" content="satellite ai, asking an ai from places with no cell signal using iphone satellite texting.">
+    <title>satellite ai · katsuma onishi</title>
+    <link rel="icon" href="data:,">
+    <link rel="stylesheet" href="assets/site.css">
+</head>
+<body>
+
+<header class="top">
+    <a class="name" href="index.html">katsuma onishi</a>
+    <nav>
+        <a href="apps.html" aria-current="page">projects</a>
+        <a href="contact.html">contact</a>
+    </nav>
+</header>
+
+<main class="page">
+
+<h1>Satellite AI</h1>
+<p class="meta">Project · October 2026 · Python</p>
+
+
+<p class="lead">A way to ask an AI from somewhere with no cell signal, using the satellite texting already built into iPhones.</p>
+
+<h2>How it works</h2>
+<p>You type a question in the app. It gets compressed, encrypted, and sent as a satellite text to a relay phone back home. The relay has internet, so it decrypts the question, asks Claude for a short answer, encrypts that, and texts it back. You paste the reply into the app and read it. Satellite texts are short, so every character counts: a 74 character question goes out as 90, since encryption adds about 30 and compression wins some of that back.</p>
+
+<h2>Scores</h2>
+<p>Text "follow leafs" and the relay sends updates as the game goes: each goal and the final for hockey, each period for basketball and football. Scores are looked up, never written by the AI.</p>
+
+<h2>Worth knowing</h2>
+<p>It is a working mock, not a finished app. The message format, a relay that runs on a laptop, and a web version of the app that walks through the whole round trip all work. There is no iOS app yet, and the relay does not read messages on its own yet. The code is private for now.</p>
+
+<footer>
+    <p>katsuma onishi</p>
+    <p>last updated: october 2026</p>
+</footer>
+
+</main>
+
+</body>
+</html>

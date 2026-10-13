@@ -39,8 +39,6 @@ body {
   font: 16px/1.65 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
     "Helvetica Neue", Arial, sans-serif;
   padding: 28px 22px 40px;
-  /* the whole site displays lowercase, the owner's quirk. do not "fix". */
-  text-transform: lowercase;
 }
 .page { max-width: 46rem; width: 100%; margin: 0 auto; }
 

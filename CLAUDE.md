@@ -40,11 +40,11 @@ images/sewing/<slug>/1-thumb.jpeg, ...          700px grid thumbnails, made with
 ## Conventions
 
 - The design is a plain document in the voice of a resume: one column at a 42rem measure, the system sans stack, quiet blue links, section names as small ruled `h2` labels, light and dark via `prefers-color-scheme`. Everything lives in `assets/site.css` (tokens at the top, components below); no hex outside the token block. `styleguide.html` is the contract; keep components matching it. No bars, no tiles, no glass, no app chrome of any kind.
-- Everything displays lowercase, enforced by `text-transform: lowercase` on `body` and lowercase `<title>`/meta description text. Not a single uppercase letter anywhere. That is the owner's quirk, do not "fix" it.
-- Navigation is text: `header.top` carries the name (the way home) on the left and two links (projects, contact) on the right, on every page; the page it names gets `aria-current="page"`. No tab bar, nothing sticky. The redirect stubs (`nb-tides.html`, `on-site.html`, `unwrapped.html`) keep their single `opening … →` row. The homepage is still the hub; its sections link everything.
+- Normal sentence case and proper punctuation everywhere: names, nav, titles, descriptions, and body copy are written properly capitalized in the source. The old all-lowercase look was retired in October 2026; do not bring back `text-transform: lowercase`.
+- Navigation is text: `header.top` carries the name (the way home) on the left and three links (Projects, Art Projects, Contact) on the right, on every page; the page it names gets `aria-current="page"`. No tab bar, nothing sticky. The redirect stubs (`nb-tides.html`, `on-site.html`, `unwrapped.html`) keep their single `opening … →` row. The homepage is the bio, then a `.rows` list of the three links (no section descriptions), then the footer.
 - Every page ends with the universal footer: name, then the manually maintained last-updated line. The footer is pinned to the viewport bottom on short pages (body is a flex column, footer has margin-top auto).
 - Page titles are `Page Name · Katsuma Onishi` with a middle dot. `index.html` is just `Katsuma Onishi`.
-- Every page has a `meta name="description"` (lowercase).
+- Every page has a `meta name="description"`.
 - Sewing entries: `div.project` with `h3` title, `p.meta` date, `div.photos` grid, then description. Newest first, directly after the lead paragraph.
 - Apps entries in `apps.html`: `div.item` with linked `h3`, `p.meta` (`App · Month Year · Claude Code` or `Project · Month Year · Tool`), summary, `More →` button. Newest first.
 - Photo grids reference `-thumb.jpeg` files; the lightbox swaps `-thumb.jpeg` back to `.jpeg` for the original. A new photo needs both files. Thumbnail: `sips -Z 700 -s format jpeg -s formatOptions 55 N.jpeg --out N-thumb.jpeg`. The first project's photos load eagerly, everything below gets `loading="lazy"`.

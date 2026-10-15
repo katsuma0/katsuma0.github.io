@@ -122,9 +122,12 @@ img { max-width: 100%; }
   .row .row-t { flex: none; }
   .row .row-s { flex: 1; min-width: 0; }
 }
+/* a plain list: no rules between rows (home links, contact) */
+.rows.plain .row + .row { border-top: 0; }
+.rows.plain p.row { display: block; margin: 0; }
 
-/* items with a note under them (projects, shop) */
-.item { margin-bottom: 1.1rem; }
+/* items with a note under them (projects); the title is the link */
+.item { margin-bottom: 2rem; }
 .item-note { color: var(--ink-2); font-size: 0.875rem; margin: 0.2rem 0 0; }
 
 /* the open-the-app door on a project page */

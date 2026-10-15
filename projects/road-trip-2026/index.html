@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="theme-color" content="#FFFFFF" media="(prefers-color-scheme: light)">
+    <meta name="theme-color" content="#121212" media="(prefers-color-scheme: dark)">
+    <meta name="description" content="A map of a drive from Markham to British Columbia and back, September to October 2026.">
+    <title>Road Trip 2026 · Katsuma Onishi</title>
+    <link rel="icon" href="data:,">
+    <link rel="stylesheet" href="/assets/site.css">
+</head>
+<body>
+
+<header class="top">
+    <a class="name" href="/">Katsuma Onishi</a>
+    <nav>
+        <a href="/projects/" aria-current="page">Projects</a>
+        <a href="/art-projects/">Art Projects</a>
+        <a href="/contact/">Contact</a>
+    </nav>
+</header>
+
+<main class="page">
+
+<h1>Road Trip 2026</h1>
+<p class="meta">Project · October 2026 · Python</p>
+<a class="btn-open" href="https://katsuma.ca/roadtrip-2026/">Open the map ↗</a>
+
+<p class="lead">A map of my drive from Markham to British Columbia and back, September 5 to October 8, 2026. The line comes from the track my inReach logged every ten minutes along the way.</p>
+
+<h2>The trip in numbers</h2>
+<ul>
+    <li>11,127 km over 34 days, about 191 hours of it moving.</li>
+    <li>The highest point was 1,660 m. The farthest point was 3,362 km from home.</li>
+    <li>A table of every day, with distance, moving time, and climbing.</li>
+</ul>
+
+<h2>How it is made</h2>
+<p>A small Python script reads the track and works out the numbers, then writes one page with a Leaflet map. It ignores the little jumps a parked device makes, smooths the elevation before counting the climbing, and breaks the line wherever the device went quiet for more than six hours, so a gap never gets counted as driving. There are four of those, the longest about 16 hours.</p>
+
+<h2>Privacy</h2>
+<p>The trip starts and ends at home, so every point within a kilometre and a half of the start is cut before the page is built.</p>
+
+<footer>
+    <p>Katsuma Onishi</p>
+    <p>Last updated: October 2026</p>
+</footer>
+
+</main>
+
+</body>
+</html>

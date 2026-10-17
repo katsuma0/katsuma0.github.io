@@ -25,11 +25,11 @@
 
 <h1>Privacy</h1>
 
-<p class="lead">This policy covers the On-Wildlife and On-Site apps, on the web and on iOS, and this
-website. It is written plainly because it is short: these apps are built so that there is almost
+<p class="lead">This policy covers the On-Wildlife and On-Site apps, on the web and on iPhone and
+iPad, and this website. It is written plainly because it is short: these apps are built so that there is almost
 nothing to say here.</p>
 
-<p class="meta">Last updated 15 August 2026. Contact: <a href="/contact/">my contact page</a>.</p>
+<p class="meta">Last updated 17 October 2026. Contact: <a href="/contact/">my contact page</a>.</p>
 
 <h2>The short version</h2>
 
@@ -40,7 +40,8 @@ it, I cannot recover it for you, and I never see that it exists.</p>
 <h2>What the apps store, and where</h2>
 
 <p>Everything below is stored locally on your device, in your browser's IndexedDB and local
-storage, or inside the app's own container on iOS. None of it is transmitted anywhere by default.</p>
+storage, or inside the app's own container on iPhone and iPad. None of it is transmitted anywhere by
+default.</p>
 
 <ul>
     <li><strong>On-Wildlife:</strong> the encounters you log, including species, date and time,
@@ -55,31 +56,43 @@ storage, or inside the app's own container on iOS. None of it is transmitted any
 <p>Your display name is used only to draw an initial in the corner of the app. It is never
 transmitted.</p>
 
+<p><strong>Home Screen search, On-Site on iPhone and iPad.</strong> So you can find a park by
+searching from the Home Screen, On-Site adds the names and regions of the parks in its guide to your
+device's own search index. Your ratings, notes and photos are never added, and the index never leaves
+your device. You can turn this off for On-Site in the Settings app.</p>
+
 <h2>Permissions the apps ask for, and why</h2>
 
 <ul>
-    <li><strong>Location, while using the app.</strong> Only if you tap a control that needs it: to
-        tag a sighting with where you were, to centre the map on you, or to place a bear or hazard
-        report. Location is never collected in the background. If you decline, every other part of
-        both apps still works.</li>
+    <li><strong>Location, in On-Wildlife only, while using the app.</strong> Only if you tap a
+        control that needs it: to tag a sighting with where you were, to centre the map on you, or to
+        place a bear or hazard report. Location is never collected in the background. If you decline,
+        every other part of the app still works. On-Site never asks for your location.</li>
     <li><strong>Camera and photo library.</strong> Only when you attach a photo to a sighting or a
-        campsite. The photo is resized and stored on your device. It is not uploaded.</li>
+        campsite. The photo is resized and stored on your device. It is not uploaded. On-Site on
+        iPhone and iPad also asks before it saves a photo to your library, which it does only when
+        you choose to save one.</li>
 </ul>
 
 <h2>What leaves your device</h2>
 
-<p>Three ordinary things, and one optional thing.</p>
+<p><strong>From On-Site, nothing.</strong> The iPhone and iPad app makes no network requests of its
+own and works the same in airplane mode. A link to an official park page or to this site opens in
+Safari. The web version only loads its own files, from GitHub Pages (see Hosting below). A backup
+you export goes only where you send it.</p>
 
-<h3>Map tiles</h3>
-<p>When you open the Map, the app requests map images from CARTO, which renders OpenStreetMap data.
-When you turn on fishing zone boundaries, it requests those from the Government of Ontario's
-public GIS service. Like any request to any website, these carry your IP address and tell that
+<p><strong>From On-Wildlife,</strong> three ordinary things, and one optional thing.</p>
+
+<h3>Map tiles, in On-Wildlife</h3>
+<p>When you open the Map, the app requests map images from Esri, which draws them from Esri, HERE,
+Garmin and OpenStreetMap data. When you turn on fishing zone boundaries, it requests those from the
+Government of Ontario's public GIS service. Like any request to any website, these carry your IP address and tell that
 server roughly which part of the map you are looking at. They do not carry your log, your notes,
 your photos or your name. Their own privacy terms apply to that request:
-<a href="https://carto.com/privacy/">carto.com/privacy</a> and
+<a href="https://www.esri.com/en-us/privacy/privacy-statements/privacy-statement">Esri's privacy statement</a> and
 <a href="https://www.ontario.ca/page/privacy-statement">Ontario.ca privacy statement</a>.</p>
 
-<h3>Reference photos</h3>
+<h3>Reference photos, in On-Wildlife</h3>
 <p>On-Wildlife can show a reference photo on a species page, fetched from iNaturalist. That request
 carries your IP address and which species you are reading about. You can turn reference photos off
 in More, and then no request is made. See
@@ -88,7 +101,8 @@ in More, and then no request is made. See
 <h3>Hosting</h3>
 <p>The web versions are served from GitHub Pages, which keeps ordinary server logs including IP
 addresses. See <a href="https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement">GitHub's privacy statement</a>.
-The iOS apps carry their files inside the app, so opening them makes no request at all.</p>
+The iPhone and iPad apps carry their files inside the app, so opening them makes no request at
+all.</p>
 
 <h3>The optional community layer, in On-Wildlife only</h3>
 <p>On-Wildlife has an off-by-default feature for people who run their own server. I do not operate
@@ -109,7 +123,8 @@ sent.</p>
 
 <p>There are no analytics SDKs, no advertising networks, no trackers, and no third-party code
 libraries that phone home. The only third parties involved are the map, reference photo and hosting
-services named above, and each receives only what is described there. I do not sell, rent or share
+services named above, and each receives only what is described there. On-Site uses none of them
+except GitHub Pages, for its web version. I do not sell, rent or share
 personal data with anyone, because I do not hold any.</p>
 
 <h2>Keeping, deleting and taking your data with you</h2>
@@ -117,21 +132,23 @@ personal data with anyone, because I do not hold any.</p>
 <ul>
     <li><strong>How long it is kept:</strong> for as long as you keep it. There is no expiry and no
         server-side copy to expire.</li>
-    <li><strong>Deleting it:</strong> More, then Your data, then Reset all data. It asks twice, then
-        removes everything. Deleting the app from your device also removes it. On the web, clearing
-        site data for the app does the same.</li>
-    <li><strong>Withdrawing consent:</strong> turn the relevant thing off. Location can be revoked
-        in iOS Settings or your browser. Reference photos have a switch in More. Community sharing
-        has a switch, and a disconnect control that also forgets the server address.</li>
-    <li><strong>Taking it with you:</strong> More, then Your data, then Export my log writes a
-        single file containing everything you have saved. It is plain, readable JSON. Import reads
-        it back on any device.</li>
+    <li><strong>Deleting it:</strong> More, then Your data, then Reset all data. It asks you to
+        confirm, then removes everything. Deleting the app from your device also removes it. On the
+        web, clearing site data for the app does the same.</li>
+    <li><strong>Withdrawing consent:</strong> turn the relevant thing off. Location, camera and
+        photo access can be revoked in the Settings app or your browser. Reference photos have a
+        switch in More. Community sharing has a switch, and a disconnect control that also forgets
+        the server address.</li>
+    <li><strong>Taking it with you:</strong> More, then Your data, then Export a backup (On-Site)
+        or Export my log (On-Wildlife) writes a single file containing everything you have saved. It
+        is plain, readable JSON. Importing it reads it back on any device: On-Site's import replaces
+        what is on that device, and On-Wildlife's adds to it, skipping anything already saved.</li>
 </ul>
 
 <h2>Children</h2>
 
 <p>These apps are safe for a child to use, and nothing in them collects personal information from
-anyone, of any age. There is no sign-up, no profile, no messaging and no advertising.</p>
+anyone, of any age. There is no sign-up, no public profile, no messaging and no advertising.</p>
 
 <h2>Changes</h2>
 
@@ -142,7 +159,7 @@ would be announced in the app before it took effect, and it would be off until y
 <h2>Not affiliated</h2>
 
 <p>These are independent apps. They are not made by, endorsed by, or affiliated with Ontario Parks,
-the Government of Ontario, Parks Canada, iNaturalist, OpenStreetMap, CARTO or Apple. Park names,
+the Government of Ontario, Parks Canada, iNaturalist, OpenStreetMap, Esri or Apple. Park names,
 place names and programme names are used to describe the places and rules they refer to.</p>
 
 <h2>Questions</h2>

@@ -12,7 +12,7 @@ Project detail pages live under `/projects/<name>/`: same-spot (repo camera-over
 
 Short-URL redirect stubs: `unwrapped.html` (to `/spotify-unwrapped/`) and `nb-tides.html` (to `/maritides/`).
 
-`business/` is gitignored and must never be committed to this public repo. Never create a top-level page or folder named like one of my app repos (on-site, on-fishing, on-wildlife, maritides, spotify-unwrapped, roadtrip-2026), because it would shadow that repo's project site at katsuma.ca/<repo>/. Nesting under `/projects/` is safe.
+`business/` is gitignored and must never be committed to this public repo. Never create a top-level page or folder named like one of my app repos (on-site, on-fishing, on-wildlife, maritides, spotify-unwrapped, roadtrip-2026, shop), because it would shadow that repo's project site at katsuma.ca/<repo>/. Nesting under `/projects/` is safe.
 
 ## No build step
 
@@ -24,7 +24,7 @@ To preview, open the `.html` file directly or run any throwaway static server (t
 
 GitHub Pages user site from the root of `main`. Pushing to `main` is the deploy. The owner merges every PR by hand; that merge is the approval and the deploy, so nothing lands on the public site without the owner being the last one to push. Never merge to `main` yourself.
 
-Custom domain is `katsuma.ca` via the `CNAME` file. Because of that, every project repo with Pages also serves under it automatically: katsuma.ca/maritides, /on-site, /on-fishing, /on-wildlife, /spotify-unwrapped. Old /on-camp/... addresses fall through to `404.html`, which forwards them to /on-site/... keeping path, search and hash. The other katsuma.* domains forward at GoDaddy. The shop and life pages were removed in October 2026, so the .shop, .store, and .life forwards should point at katsuma.ca itself.
+Custom domain is `katsuma.ca` via the `CNAME` file. Because of that, every project repo with Pages also serves under it automatically: katsuma.ca/maritides, /on-site, /on-fishing, /on-wildlife, /spotify-unwrapped, /shop. Old /on-camp/... addresses fall through to `404.html`, which forwards them to /on-site/... keeping path, search and hash. The other katsuma.* domains forward at GoDaddy. The old shop and life pages were removed in October 2026. The shop came back in November 2026 as its own repo, `shop` (formerly sticker-shop), served at katsuma.ca/shop/, so the .shop and .store forwards should point there and .life at katsuma.ca itself.
 
 ## Layout
 
@@ -46,7 +46,7 @@ images/sewing/<slug>/1-thumb.jpeg, ...          700px grid thumbnails, made with
 
 - The design is a plain document in the voice of a resume: one column at a 42rem measure, the system sans stack, quiet blue links, section names as small ruled `h2` labels, light and dark via `prefers-color-scheme`. Everything lives in `assets/site.css` (tokens at the top, components below); no hex outside the token block. `styleguide.html` is the contract; keep components matching it. No bars, no tiles, no glass, no app chrome of any kind.
 - Normal sentence case and proper punctuation everywhere: names, nav, titles, descriptions, and body copy are written properly capitalized in the source. The old all-lowercase look was retired in October 2026; do not bring back `text-transform: lowercase`.
-- Navigation is text: `header.top` carries the name (the way home) on the left and three links (Projects, Art Projects, Contact) on the right, on every page; the page it names gets `aria-current="page"`. No tab bar, nothing sticky. Redirect stubs carry no nav, just a single continue row. The homepage is the bio, then a `.rows.plain` list of the three links (no section descriptions, no rules between them), then the footer. Contact uses the same `.rows.plain` list, with each label in plain text and only the address as the link.
+- Navigation is text: `header.top` carries the name (the way home) on the left and three links (Projects, Art Projects, Contact) on the right, on every page; the page it names gets `aria-current="page"`. No tab bar, nothing sticky. Redirect stubs carry no nav, just a single continue row. The homepage is the bio, then a `.rows.plain` list of the three links plus Shop (no section descriptions, no rules between them), then the footer. Contact uses the same `.rows.plain` list, with each label in plain text and only the address as the link.
 - Every page ends with the universal footer: name, then the manually maintained last-updated line. The footer is pinned to the viewport bottom on short pages (body is a flex column, footer has margin-top auto).
 - Page titles are `Page Name · Katsuma Onishi` with a middle dot. `index.html` is just `Katsuma Onishi`.
 - Every page has a `meta name="description"`.

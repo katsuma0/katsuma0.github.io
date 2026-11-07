@@ -33,7 +33,7 @@
 <h1>Analyzing and Predicting Used Car Prices, Pt. 2 — The Technical Write-Up</h1>
 <p class="meta">Project · August 2026 · Python, statsmodels · <a href="./">Back to the short version</a> · <a href="https://github.com/katsuma0/linearregressioncarpriceanalysis">Source on GitHub</a> · <a href="https://katsuma0.github.io/used-car-price-project/">The 2025 version</a></p>
 
-<p class="lead">This is the full, assumption-by-assumption version of the write-up; the <a href="./">short version</a> tells the same story in a five-minute read. In March 2025 I built <a href="https://katsuma0.github.io/used-car-price-project/">my first linear regression project</a>: a model that predicts what a used car should sell for, trained on Craigslist listings. It worked, and I was proud of it. It also cut every corner I didn't yet know existed. This is the same project done again with the full toolkit from my McMaster stats courses (stats 3a03, math 3mb3) — the transformation chosen by Box-Cox instead of by truncating the data, every assumption checked instead of assumed, every claim carrying a confidence interval, and every headline number measured on listings the model never saw.</p>
+<p class="lead">This is the full, assumption-by-assumption version of the write-up; the <a href="./">short version</a> tells the same story in a five-minute read. In March 2025 I built <a href="https://katsuma0.github.io/used-car-price-project/">my first linear regression project</a>: a model that predicts what a used car should sell for, trained on Craigslist listings. It worked, and I was proud of it. It also cut every corner I didn't yet know existed. This is the same project done again with the full toolkit from my McMaster stats courses (STATS 3A03, MATH 3MB3) — the transformation chosen by Box-Cox instead of by truncating the data, every assumption checked instead of assumed, every claim carrying a confidence interval, and every headline number measured on listings the model never saw.</p>
 
 <div class="tiles">
     <div class="tile">
@@ -106,7 +106,7 @@
 
 <h2 id="data">The data, cleaned honestly</h2>
 
-<p>The data is the same <a href="https://www.kaggle.com/datasets/austinreese/craigslist-carstrucks-data">Kaggle snapshot of Craigslist listings</a> (426,880 rows, April–may 2021) scraped by Austin Reese. Instead of one big filter, every cleaning decision is applied one step at a time and logged, so the whole funnel is auditable — the table below is generated straight from the pipeline. Rows missing any of the duplicate-key fields are left alone at the first step: a duplicate you can't verify isn't a duplicate.</p>
+<p>The data is the same <a href="https://www.kaggle.com/datasets/austinreese/craigslist-carstrucks-data">Kaggle snapshot of Craigslist listings</a> (426,880 rows, April–May 2021) scraped by Austin Reese. Instead of one big filter, every cleaning decision is applied one step at a time and logged, so the whole funnel is auditable — the table below is generated straight from the pipeline. Rows missing any of the duplicate-key fields are left alone at the first step: a duplicate you can't verify isn't a duplicate.</p>
 
 <div class="tbl-wrap" tabindex="0" role="region" aria-label="cleaning steps table">
 <table>
@@ -114,7 +114,7 @@
     <tr><th scope="col">Step</th><th scope="col">Why</th><th scope="col" class="num">Rows kept</th><th scope="col" class="num">Removed</th></tr>
     </thead>
     <tbody>
-    <tr><td>Raw listings</td><td>Kaggle export, April–may 2021</td><td class="num">426,880</td><td class="num">—</td></tr>
+    <tr><td>Raw listings</td><td>Kaggle export, April–May 2021</td><td class="num">426,880</td><td class="num">—</td></tr>
     <tr><td>De-duplicate reposts</td><td>Same year/make/model/price/odometer posted in several cities is one car, not many</td><td class="num">255,452</td><td class="num">171,428</td></tr>
     <tr><td>Price $1,000–$125,000</td><td>$0 means "call for price"; the $3.7 billion Tundra is a typo. Luxury cars stay in</td><td class="num">227,408</td><td class="num">28,044</td></tr>
     <tr><td>Odometer 100–400,000 mi</td><td>Zero and ten-million-mile readings are data entry errors</td><td class="num">221,266</td><td class="num">6,142</td></tr>
@@ -172,7 +172,7 @@
     <picture>
         <source media="print" srcset="figures/light/04-brand-medians.png">
         <source media="(prefers-color-scheme: dark)" srcset="figures/dark/04-brand-medians.png">
-        <img src="figures/light/04-brand-medians.png" alt="Dot plot of median asking price for 34 brands, from saturn around 4 thousand dollars to porsche around 24 thousand" width="1540" height="1441">
+        <img src="figures/light/04-brand-medians.png" alt="Dot plot of median asking price for 34 brands, from Saturn around 4 thousand dollars to Porsche around 24 thousand" width="1540" height="1441">
     </picture>
     <figcaption>Median asking price by brand, with listing counts. Raw medians — no model yet.</figcaption>
 </figure>
@@ -196,7 +196,7 @@
     <picture>
         <source media="print" srcset="figures/light/06-boxcox.png">
         <source media="(prefers-color-scheme: dark)" srcset="figures/dark/06-boxcox.png">
-        <img src="figures/light/06-boxcox.png" alt="Box-cox profile log-likelihood peaking at lambda 0.18, with lambda 0 marked" width="1544" height="744">
+        <img src="figures/light/06-boxcox.png" alt="Box-Cox profile log-likelihood peaking at lambda 0.18, with lambda 0 marked" width="1544" height="744">
     </picture>
     <figcaption>Profile log-likelihood of the Box-Cox parameter, fit within the full model on the training split.</figcaption>
 </figure>
@@ -227,8 +227,8 @@
 <p>The additions are tested formally, the way nested models should be. Because Breusch-Pagan (next section) rejects constant error variance, both tests are run as Wald tests on the heteroskedasticity-robust (HC1) covariance; the classical partial F-tests, which assume the rejected constant variance, agree on both counts.</p>
 
 <ul>
-    <li><strong>Curvature.</strong> Adding age² : robust Wald f(1, 57,655) = 986.0, p &lt; 2.2×10⁻¹⁶ (classical partial f = 1,515.7). The depreciation curve genuinely bends — the constant-percentage-per-year story is too simple.</li>
-    <li><strong>Brand.</strong> Dropping all 33 brand dummies from M3: robust Wald f(33, 57,655) = 223.6, p &lt; 2.2×10⁻¹⁶ (classical f = 210.4). Who made the car matters even after age, mileage, size and body type are held fixed.</li>
+    <li><strong>Curvature.</strong> Adding age²: robust Wald F(1, 57,655) = 986.0, p &lt; 2.2×10⁻¹⁶ (classical partial F = 1,515.7). The depreciation curve genuinely bends — the constant-percentage-per-year story is too simple.</li>
+    <li><strong>Brand.</strong> Dropping all 33 brand dummies from M3: robust Wald F(33, 57,655) = 223.6, p &lt; 2.2×10⁻¹⁶ (classical F = 210.4). Who made the car matters even after age, mileage, size and body type are held fixed.</li>
 </ul>
 
 <p>Multicollinearity, the thing correlation tables can't adjudicate, is checked with variance inflation factors on M2: the largest is 2.87 (4WD), and no term exceeds the usual concern threshold of 5 (full table in <a href="data/vif.csv">VIF.csv</a>). Age and odometer are correlated, but not enough to destabilize the coefficients.</p>
@@ -241,7 +241,7 @@
     <picture>
         <source media="print" srcset="figures/light/07-residuals-raw-vs-log.png">
         <source media="(prefers-color-scheme: dark)" srcset="figures/dark/07-residuals-raw-vs-log.png">
-        <img src="figures/light/07-residuals-raw-vs-log.png" alt="Four diagnostic panels comparing the dollar model's funnel-shaped residuals and bent q-q plot with the log model's level residual band and near-straight q-q plot" width="1893" height="1531">
+        <img src="figures/light/07-residuals-raw-vs-log.png" alt="Four diagnostic panels comparing the dollar model's funnel-shaped residuals and bent Q-Q plot with the log model's level residual band and near-straight Q-Q plot" width="1893" height="1531">
     </picture>
     <figcaption>Residuals vs fitted and normal Q-Q, for the dollar model (top) and the log model (bottom). A 6,000-listing sample is plotted; the statistics use all 57,715.</figcaption>
 </figure>
@@ -258,7 +258,7 @@
 <p>The formal version of the same story:</p>
 
 <ul>
-    <li><strong>Heteroskedasticity.</strong> Breusch-Pagan rejects constant variance for both models (with n = 57,715 it detects even trivial patterns; the lm statistic falls by more than half from M1 to M3, 3,400 → 1,593). The remedy is not to pretend otherwise: every standard error, confidence interval, p-value and nested-model test quoted in this report uses heteroskedasticity-robust (HC1) covariance, so the inference doesn't lean on the rejected assumption.</li>
+    <li><strong>Heteroskedasticity.</strong> Breusch-Pagan rejects constant variance for both models (with n = 57,715 it detects even trivial patterns; the LM statistic falls by more than half from M1 to M3, 3,400 → 1,593). The remedy is not to pretend otherwise: every standard error, confidence interval, p-value and nested-model test quoted in this report uses heteroskedasticity-robust (HC1) covariance, so the inference doesn't lean on the rejected assumption.</li>
     <li><strong>Influence.</strong> The largest Cook's distance in the training fit is 0.003 — far below even the most conservative rule of thumb. With 57,715 observations, no single Craigslist ad moves the model.</li>
     <li><strong>Normality.</strong> Mild heavy tails remain in the log model. With this sample size the coefficient inference is protected by the central limit theorem; where normality actually matters is the prediction intervals, so instead of trusting it I measure their coverage below.</li>
 </ul>
@@ -270,7 +270,7 @@
 <div class="tbl-wrap" tabindex="0" role="region" aria-label="held-out test metrics table">
 <table>
     <thead>
-    <tr><th scope="col">Held-out test set</th><th scope="col" class="num">MAE</th><th scope="col" class="num">Median ae</th><th scope="col" class="num">MAPE</th><th scope="col" class="num">RMSE</th><th scope="col" class="num">R² (dollars)</th></tr>
+    <tr><th scope="col">Held-out test set</th><th scope="col" class="num">MAE</th><th scope="col" class="num">Median AE</th><th scope="col" class="num">MAPE</th><th scope="col" class="num">RMSE</th><th scope="col" class="num">R² (dollars)</th></tr>
     </thead>
     <tbody>
     <tr><td>M1 — the 2025 spec</td><td class="num">$4,265</td><td class="num">$3,032</td><td class="num">58.2%</td><td class="num">$6,587</td><td class="num">0.667</td></tr>
@@ -331,7 +331,7 @@
     <picture>
         <source media="print" srcset="figures/light/11-brand-effects.png">
         <source media="(prefers-color-scheme: dark)" srcset="figures/dark/11-brand-effects.png">
-        <img src="figures/light/11-brand-effects.png" alt="Dot and interval chart of brand premiums versus ford, from fiat at minus 24 percent to porsche at plus 110 percent" width="1522" height="1411">
+        <img src="figures/light/11-brand-effects.png" alt="Dot and interval chart of brand premiums versus Ford, from Fiat at minus 24 percent to Porsche at plus 110 percent" width="1522" height="1411">
     </picture>
     <figcaption>Price premium vs an otherwise identical Ford, 95% confidence intervals. Full table in <a href="data/coefs_final.csv">coefs_final.csv</a>.</figcaption>
 </figure>
@@ -344,14 +344,14 @@
     <picture>
         <source media="print" srcset="figures/light/13-depreciation-curve.png">
         <source media="(prefers-color-scheme: dark)" srcset="figures/dark/13-depreciation-curve.png">
-        <img src="figures/light/13-depreciation-curve.png" alt="Predicted price of a typical toyota sedan falling from about 32 thousand dollars at age zero to under 5 thousand past age 15" width="1538" height="795">
+        <img src="figures/light/13-depreciation-curve.png" alt="Predicted price of a typical Toyota sedan falling from about 32 thousand dollars at age zero to under 5 thousand past age 15" width="1538" height="795">
     </picture>
     <figcaption>Predicted asking price by age for a typical gas Toyota sedan, at the median mileage for each age.</figcaption>
 </figure>
 
 <h2 id="cars">Six cars, including my dream car</h2>
 
-<p>The 2025 write-up tested the model on three cars I found on Autotrader: a Corolla, a RAV4, and the Lexus IS F I still daydream about. Those three are re-scored below — but scoring 2025 Canadian listings with a model of the April–may 2021 us market mixes two questions: is the model good, and has the market moved? (It has.) So the fair test comes first: the same three archetypes scored against 2021 listings the model didn't fit. The Corolla and RAV4 come straight from the held-out test split. The dataset's only real is f landed on the training side of the split, so it's scored leave-one-out: the model is refit without that listing before predicting it — out of sample by construction (and with the largest Cook's distance anywhere at 0.003, removing one row barely moves the fit anyway).</p>
+<p>The 2025 write-up tested the model on three cars I found on Autotrader: a Corolla, a RAV4, and the Lexus IS F I still daydream about. Those three are re-scored below — but scoring 2025 Canadian listings with a model of the April–May 2021 US market mixes two questions: is the model good, and has the market moved? (It has.) So the fair test comes first: the same three archetypes scored against 2021 listings the model didn't fit. The Corolla and RAV4 come straight from the held-out test split. The dataset's only real IS F landed on the training side of the split, so it's scored leave-one-out: the model is refit without that listing before predicting it — out of sample by construction (and with the largest Cook's distance anywhere at 0.003, removing one row barely moves the fit anyway).</p>
 
 <div class="tbl-wrap" tabindex="0" role="region" aria-label="example car predictions table">
 <table>
@@ -360,7 +360,7 @@
     </thead>
     <tbody>
     <tr><td colspan="5" style="color:var(--ink-2)">2021 listings, out of sample — the in-market test</td></tr>
-    <tr><td>2015 Toyota Corolla le, 125k mi</td><td class="num">$9,990</td><td class="num">$12,357</td><td class="num">$5,478 – $24,293</td><td class="num">+24%</td></tr>
+    <tr><td>2015 Toyota Corolla LE, 125k mi</td><td class="num">$9,990</td><td class="num">$12,357</td><td class="num">$5,478 – $24,293</td><td class="num">+24%</td></tr>
     <tr><td>2017 Toyota RAV4, 27k mi</td><td class="num">$23,991</td><td class="num">$30,498</td><td class="num">$13,520 – $59,959</td><td class="num">+27%</td></tr>
     <tr><td>2008 Lexus IS F, 53k mi (leave-one-out)</td><td class="num">$34,999</td><td class="num">$17,750</td><td class="num">$7,867 – $34,907</td><td class="num">−49%</td></tr>
     <tr><td colspan="5" style="color:var(--ink-2)">2025 Autotrader listings — four years of market drift</td></tr>
@@ -376,19 +376,19 @@
     <picture>
         <source media="print" srcset="figures/light/14-example-cars.png">
         <source media="(prefers-color-scheme: dark)" srcset="figures/dark/14-example-cars.png">
-        <img src="figures/light/14-example-cars.png" alt="Dot and interval chart of six cars showing predictions, actual prices and 95 percent prediction intervals; four actuals fall inside their intervals, and both lexus is f listings sit above theirs — the 2008 car only just" width="1773" height="913">
+        <img src="figures/light/14-example-cars.png" alt="Dot and interval chart of six cars showing predictions, actual prices and 95 percent prediction intervals; four actuals fall inside their intervals, and both Lexus IS F listings sit above theirs — the 2008 car only just" width="1773" height="913">
     </picture>
     <figcaption>Predictions (blue) vs actual prices (orange) with 95% prediction intervals (gray bands).</figcaption>
 </figure>
 
-<p>The Toyotas behave: both Corollas and both RAV4s fall inside their intervals, even across four years of market drift. The IS F does not behave, twice — four of the six actual prices land inside their intervals, and both misses are the same car. The 2021 is F's $34,999 asking price sits ninety-two dollars above its interval's upper edge; the 2025 listing sits about $4,900 above its. And this time the model can't blame the data. The reason is visible in the model's own structure: to a manufacturer-level regression, an is f is "a 13-year-old 8-cylinder Lexus sedan", I.e. A used ls 460. The 500-horsepower badge lives in the <code>model</code> column, which carries 9,650 distinct values and stayed out of this regression. The honest conclusion isn't that the car is mispriced — it's that a limited-production performance car's value <em>is</em> its model name, and a brand-level model has a measurable ceiling there. (The 2025 version "did better" on the IS F — 31% off instead of 58% on the same Autotrader listing — but by accident: its straight-line depreciation overvalued all old cars, which happened to flatter the one old car that actually holds its value.)</p>
+<p>The Toyotas behave: both Corollas and both RAV4s fall inside their intervals, even across four years of market drift. The IS F does not behave, twice — four of the six actual prices land inside their intervals, and both misses are the same car. The 2021 IS F's $34,999 asking price sits ninety-two dollars above its interval's upper edge; the 2025 listing sits about $4,900 above its. And this time the model can't blame the data. The reason is visible in the model's own structure: to a manufacturer-level regression, an IS F is "a 13-year-old 8-cylinder Lexus sedan", i.e. a used LS 460. The 500-horsepower badge lives in the <code>model</code> column, which carries 9,650 distinct values and stayed out of this regression. The honest conclusion isn't that the car is mispriced — it's that a limited-production performance car's value <em>is</em> its model name, and a brand-level model has a measurable ceiling there. (The 2025 version "did better" on the IS F — 31% off instead of 58% on the same Autotrader listing — but by accident: its straight-line depreciation overvalued all old cars, which happened to flatter the one old car that actually holds its value.)</p>
 
 <h2 id="limits">What I'd still improve</h2>
 
 <ul>
     <li><strong>Model-level effects.</strong> The IS F problem. Random effects or partial pooling over the ~9,600-value model column (or even a curated "enthusiast car" flag) would price special cars without exploding the design matrix.</li>
     <li><strong>Asking vs selling.</strong> Craigslist prices are asks, not transactions. Every effect here is an effect on what sellers hope, measured precisely.</li>
-    <li><strong>A time index.</strong> The model is a snapshot of April–may 2021 — the start of the wildest used-car market in memory. A multi-period dataset with a month index would separate the car from the market and make the Autotrader comparison clean.</li>
+    <li><strong>A time index.</strong> The model is a snapshot of April–May 2021 — the start of the wildest used-car market in memory. A multi-period dataset with a month index would separate the car from the market and make the Autotrader comparison clean.</li>
     <li><strong>Missingness.</strong> Complete-case filtering cost 60k rows; condition, cylinders and drive missingness is unlikely to be random. Explicit "not stated" levels or imputation would test how much that choice matters.</li>
     <li><strong>Region.</strong> The state column sat unused; rust-belt and sun-belt cars price differently, and a 4WD truck is worth more in Montana than in Florida (an interaction, which is the next tool in the box).</li>
 </ul>
@@ -397,7 +397,7 @@
 
 <p>Everything on this page — every number, table and figure, in both color schemes — is generated by one pipeline in the <a href="https://github.com/katsuma0/linearregressioncarpriceanalysis">repository</a>:</p>
 
-<pre>data/raw/vehicles.csv        # kaggle export (1.4 gb, see readme for link)
+<pre>data/raw/vehicles.csv        # kaggle export (1.4 GB, see readme for link)
 analysis/clean.py            # the attrition table above
 analysis/model.py            # fits, box-cox, nested tests, vif, robust inference
 analysis/diagnostics.py      # residual and influence figures (run model.py first)
@@ -405,21 +405,21 @@ analysis/validate.py         # held-out metrics, cv, interval coverage, the six 
 analysis/eda.py, results_figs.py, style.py
 python analysis/run_all.py   # raw csv in, report assets out</pre>
 
-<p>The cleaned modeling table ships with the repo as <code>data/cars_clean.parquet</code>, so everything after the cleaning stage can be reproduced without the 1.4 gb download.</p>
+<p>The cleaned modeling table ships with the repo as <code>data/cars_clean.parquet</code>, so everything after the cleaning stage can be reproduced without the 1.4 GB download.</p>
 
 <h2 id="references">References</h2>
 
 <ul>
     <li>Austin Reese, <a href="https://www.kaggle.com/datasets/austinreese/craigslist-carstrucks-data">used cars dataset</a> (Craigslist listings, Kaggle)</li>
     <li>Course material from STATS 3A03 (Applied Regression) and MATH 3MB3 (Mathematical Modelling), McMaster University</li>
-    <li>Box &amp; cox (1964), "an analysis of transformations"; Duan (1983), "smearing estimate: a nonparametric retransformation method"</li>
-    <li>Seabold &amp; Perktold, <a href="https://www.statsmodels.org/">statsmodels</a>; hunter, <a href="https://matplotlib.org/">matplotlib</a>; McKinney, <a href="https://pandas.pydata.org/">pandas</a></li>
+    <li>Box &amp; Cox (1964), "An analysis of transformations"; Duan (1983), "Smearing estimate: A nonparametric retransformation method"</li>
+    <li>Seabold &amp; Perktold, <a href="https://www.statsmodels.org/">statsmodels</a>; Hunter, <a href="https://matplotlib.org/">matplotlib</a>; McKinney, <a href="https://pandas.pydata.org/">pandas</a></li>
     <li><a href="https://katsuma0.github.io/used-car-price-project/">The 2025 version of this project</a>, kept as-is: it's the "before" picture</li>
 </ul>
 
 <footer>
     <p>Katsuma Onishi</p>
-    <p>Last updated: August 2026</p>
+    <p>Last updated: November 2026</p>
 </footer>
 
 </main>

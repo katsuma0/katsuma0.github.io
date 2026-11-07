@@ -115,7 +115,8 @@ img { max-width: 100%; }
 }
 .row + .row { border-top: 1px solid var(--rule); }
 .row .row-t { color: var(--link); }
-.row:hover .row-t, .row:focus-visible .row-t { text-decoration: underline; }
+.row:hover, .row:focus-visible { text-decoration: none; }
+.row .row-t:hover, .row:focus-visible .row-t { text-decoration: underline; }
 .row .row-s { color: var(--ink-2); font-size: 0.875rem; display: block; }
 @media (min-width: 560px) {
   .row { display: flex; align-items: baseline; gap: 12px; }

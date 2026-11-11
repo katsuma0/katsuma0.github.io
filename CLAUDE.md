@@ -4,11 +4,11 @@
 
 My personal site, served at katsuma.ca. Hand-written HTML pages, no blog engine.
 
-Every page is a folder with an `index.html`, so URLs are clean: `/` (home), `/projects/`, `/sewing-projects/`, `/contact/`. All internal links and asset paths are root-absolute (`/assets/site.css`, `/images/...`, `/projects/`), never relative, so a page works at any folder depth.
+Every page is a folder with an `index.html`, so URLs are clean: `/` (home), `/projects/`, `/sewing/`, `/contact/`. All internal links and asset paths are root-absolute (`/assets/site.css`, `/images/...`, `/projects/`), never relative, so a page works at any folder depth.
 
 `privacy.html`, `support.html`, and `terms.html` are deliberately unlinked from the site but must stay live: the On-Site and On-Wildlife apps link to them from inside the apps, and their App Store submissions use them as the privacy and support URLs. They point to `/contact/` instead of listing an email.
 
-Only the apps with an app or web app to open (maritides, on-site, on-wildlife, on-fishing, unwrapped), plus satellite-ai (no link out) and carbon-cycle (unlisted), keep a detail page under `/projects/<name>/`. Every other entry on the projects page links straight to its destination, and its old folder (same-spot, nfc-editor, road-trip-2026, silly-spaces, used-car-take-two, used-car, dsa-cryptosystem) is now a redirect stub to that destination (November 2026). The full car report is at `/projects/linearregressioncarpriceanalysis/`. Satellite AI's repo is private, so its page has no link out. They use a `backlink` to Projects, an `Open the app ↗` button for apps, and `h4` section headings. `/art-projects/` is a redirect stub to `/sewing-projects/` (renamed November 2026). The old flat filenames (`apps.html`, `sewing-projects.html`, `contact.html`, `wildlife.html`, `camp.html`, `tides.html`, and the rest) are now redirect stubs to the new folders. Keep them: app repos, App Store listings, and old bookmarks link to them.
+Only the apps with an app or web app to open (maritides, on-site, on-wildlife, on-fishing, unwrapped), plus satellite-ai (no link out) and carbon-cycle (unlisted), keep a detail page under `/projects/<name>/`. Every other entry on the projects page links straight to its destination, and its old folder (same-spot, nfc-editor, road-trip-2026, silly-spaces, used-car-take-two, used-car, dsa-cryptosystem) is now a redirect stub to that destination (November 2026). The full car report is at `/projects/linearregressioncarpriceanalysis/`. Satellite AI's repo is private, so its page has no link out. They use a `backlink` to Projects, an `Open the app ↗` button for apps, and `h4` section headings. `/art-projects/` and `/sewing-projects/` are redirect stubs to `/sewing/` (renamed November 2026). The old flat filenames (`apps.html`, `sewing-projects.html`, `contact.html`, `wildlife.html`, `camp.html`, `tides.html`, and the rest) are now redirect stubs to the new folders. Keep them: app repos, App Store listings, and old bookmarks link to them.
 
 Short-URL redirect stubs: `unwrapped.html` (to `/spotify-unwrapped/`) and `nb-tides.html` (to `/maritides/`).
 
@@ -31,7 +31,7 @@ Custom domain is `katsuma.ca` via the `CNAME` file. Because of that, every proje
 ```
 index.html, 404.html         home and not-found
 projects/<name>/index.html    projects page and project detail pages
-sewing-projects/index.html    sewing projects
+sewing/index.html             sewing
 contact/index.html            contact
 privacy.html, support.html, terms.html   app policy pages, unlinked, fixed URLs
 *.html (other)                redirect stubs for old addresses
@@ -46,14 +46,14 @@ images/sewing/<slug>/1-thumb.jpeg, ...          700px grid thumbnails, made with
 
 - The design is a plain document in the voice of a resume: one column at a 42rem measure, the system sans stack, quiet blue links, section names as small ruled `h2` labels, light and dark via `prefers-color-scheme`. Everything lives in `assets/site.css` (tokens at the top, components below); no hex outside the token block. `styleguide.html` is the contract; keep components matching it. No bars, no tiles, no glass, no app chrome of any kind.
 - Normal sentence case and proper punctuation everywhere: names, nav, titles, descriptions, and body copy are written properly capitalized in the source. The old all-lowercase look was retired in October 2026; do not bring back `text-transform: lowercase`.
-- Navigation is text: `header.top` carries the name (the way home) on the left and three links (Projects, Sewing, Contact) spread evenly across the rest of the line, on every page; the page it names gets `aria-current="page"`. No tab bar, nothing sticky. Redirect stubs carry no nav, just a single continue row. The homepage is just the bio, then the footer; the site does not link the shop (removed November 2026). Contact uses the same `.rows.plain` list, with each label in plain text and only the address as the link.
+- Navigation is text: `header.top` carries the name (the way home) on the left and three links (Projects, Sewing, Contact) right after it, all left-aligned with a small gap, on every page; the page it names gets `aria-current="page"`. No tab bar, nothing sticky. Redirect stubs carry no nav, just a single continue row. The homepage is just the bio, then the footer; the site does not link the shop (removed November 2026). Contact uses the same `.rows.plain` list, with each label in plain text and only the address as the link.
 - Every page ends with the universal footer: name, then the manually maintained last-updated line. The footer is pinned to the viewport bottom on short pages (body is a flex column, footer has margin-top auto).
 - Page titles are `Page Name · Katsuma Onishi` with a middle dot. `index.html` is just `Katsuma Onishi`.
 - Every page has a `meta name="description"`.
 - Sewing entries match the projects page: `div.item` with a `p.row` title row (title in ink, since it is not a link, then the date in grey), the description as `p.item-note`, then the `div.photos` grid. Newest first, directly after the lead paragraph.
 - Apps entries in `projects/index.html`: `div.item` with a linked title row carrying the meta (`App · Month Year · Claude Code` or `Project · Month Year · Tool`), then the summary. No More button; the title is the link, and items are spaced 2rem apart instead. Roughly newest first, with On-Site ahead of the other On- apps by the owner's choice.
 - Photo grids reference `-thumb.jpeg` files; the lightbox swaps `-thumb.jpeg` back to `.jpeg` for the original. A new photo needs both files. Thumbnail: `sips -Z 700 -s format jpeg -s formatOptions 55 N.jpeg --out N-thumb.jpeg`. The first project's photos load eagerly, everything below gets `loading="lazy"`.
-- The only JavaScript is about forty lines of lightbox code inlined at the bottom of `sewing-projects/index.html`. It makes grid images keyboard-focusable, opens on click or Enter/Space, closes on Escape, overlay click, or the Close button, and restores focus. It stays after the markup it operates on. Do not move it to a shared file.
+- The only JavaScript is about forty lines of lightbox code inlined at the bottom of `sewing/index.html`. It makes grid images keyboard-focusable, opens on click or Enter/Space, closes on Escape, overlay click, or the Close button, and restores focus. It stays after the markup it operates on. Do not move it to a shared file.
 - The only place an email appears is the top row of `contact/index.html`. No email or phone number anywhere else, footers included (October 2026 decision).
 
 ## Known issues, not urgent

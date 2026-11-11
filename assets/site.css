@@ -71,6 +71,8 @@ body {
 }
 .top nav a:hover, .top nav a:focus-visible { color: var(--ink); text-decoration: underline; }
 .top nav a[aria-current="page"] { color: var(--ink); }
+/* on a phone the name takes its own line and the links sit under it */
+@media (max-width: 559px) { .top .name { flex-basis: 100%; } }
 
 /* -------------------------------------------------------------- type */
 h1 {
@@ -184,11 +186,9 @@ img { max-width: 100%; }
   display: block;
 }
 
-/* sewing and mending projects share the entry voice */
-.project { padding: 1.1rem 0; }
-.project + .project { border-top: 1px solid var(--rule); }
-.project .meta { display: block; margin: 0 0 0.4rem; }
-.project p { margin: 0.6rem 0 0; font-size: 0.95rem; }
+/* sewing entries are items too; the title is not a link, so it takes ink */
+p.row { margin: 0; }
+p.row .row-t { color: var(--ink); }
 
 /* ---------------------------------------------------------- lightbox */
 .lightbox {

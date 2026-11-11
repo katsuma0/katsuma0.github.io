@@ -52,6 +52,7 @@ body {
 /* ------------------------------------------------------------ header */
 .top {
   max-width: 42rem;
+  width: 100%;
   margin: 0 auto 34px;
   display: flex;
   flex-wrap: wrap;
@@ -62,9 +63,9 @@ body {
   font-weight: 700;
   color: var(--ink);
   text-decoration: none;
-  margin-right: auto;
 }
-.top nav { display: flex; flex-wrap: wrap; gap: 14px; }
+/* the three links share the rest of the line, evenly spaced */
+.top nav { flex: 1; display: flex; justify-content: space-evenly; gap: 14px; }
 .top nav a {
   color: var(--ink-2);
   text-decoration: none;

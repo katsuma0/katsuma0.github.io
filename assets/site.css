@@ -185,11 +185,9 @@ img { max-width: 100%; }
   display: block;
 }
 
-/* sewing and mending projects share the entry voice */
-.project { padding: 1.1rem 0; }
-.project + .project { border-top: 1px solid var(--rule); }
-.project .meta { display: block; margin: 0 0 0.4rem; }
-.project p { margin: 0.6rem 0 0; font-size: 0.95rem; }
+/* sewing entries are items too; the title is not a link, so it takes ink */
+p.row { margin: 0; }
+p.row .row-t { color: var(--ink); }
 
 /* ---------------------------------------------------------- lightbox */
 .lightbox {

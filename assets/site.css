@@ -52,26 +52,27 @@ body {
 /* ------------------------------------------------------------ header */
 .top {
   max-width: 42rem;
-  width: 100%;
   margin: 0 auto 34px;
   display: flex;
   flex-wrap: wrap;
   align-items: baseline;
-  gap: 6px 28px;
+  gap: 6px 18px;
 }
 .top .name {
   font-weight: 700;
   color: var(--ink);
   text-decoration: none;
+  margin-right: auto;
 }
-/* the three links follow the name, left-aligned, a small gap apart */
-.top nav { display: flex; flex-wrap: wrap; gap: 18px; }
+.top nav { display: flex; flex-wrap: wrap; gap: 14px; }
 .top nav a {
   color: var(--ink-2);
   text-decoration: none;
 }
 .top nav a:hover, .top nav a:focus-visible { color: var(--ink); text-decoration: underline; }
 .top nav a[aria-current="page"] { color: var(--ink); }
+/* on a phone the name takes its own line and the links sit under it */
+@media (max-width: 559px) { .top .name { flex-basis: 100%; } }
 
 /* -------------------------------------------------------------- type */
 h1 {

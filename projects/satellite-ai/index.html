@@ -3,20 +3,103 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <meta http-equiv="refresh" content="0; url=https://github.com/katsuma0/satellite-ai">
-    <link rel="canonical" href="https://github.com/katsuma0/satellite-ai">
-    <title>Moved · Katsuma Onishi</title>
+    <meta name="theme-color" content="#FFFFFF" media="(prefers-color-scheme: light)">
+    <meta name="theme-color" content="#121212" media="(prefers-color-scheme: dark)">
+    <meta name="description" content="Satellite AI, a concept for texting an AI model over the iPhone's satellite messaging when you're off-grid.">
+    <title>Satellite AI Concept · Katsuma Onishi</title>
     <link rel="icon" href="data:,">
     <link rel="stylesheet" href="/assets/site.css">
-    <script>location.replace("https://github.com/katsuma0/satellite-ai");</script>
 </head>
 <body>
 
+<header class="top">
+    <a class="name" href="/">Katsuma Onishi</a>
+    <nav>
+        <a href="/projects/">Projects</a>
+        <a href="/sewing/">Sewing</a>
+        <a href="/contact/">Contact</a>
+    </nav>
+</header>
+
 <main class="page">
 
-<div class="rows">
-    <a class="row" href="https://github.com/katsuma0/satellite-ai"><span class="row-t">This page moved. Continue →</span></a>
+<a class="backlink" href="/projects/">← Projects</a>
+
+<h1>Satellite AI Concept</h1>
+<p class="meta">Project · October 2026</p>
+<a class="btn-open" href="https://www.icloud.com/shortcuts/c1e7b92d98e847148b42ebc46584f04e">Get the shortcut ↗</a>
+<a class="btn-open" href="https://github.com/katsuma0/satellite-ai">GitHub ↗</a>
+
+<p class="lead">How to build a free Satellite AI using iPhone's satellite texting feature.</p>
+
+<h2>Why I made it</h2>
+<p>During a five-week road trip to the west coast, I spent longer without cell service than I ever had before.</p>
+<p>That trip was also the first time I used Apple's Messages via satellite. With a clear view of the sky, it worked far better than I expected, and it became my main way of keeping friends and family updated on where I was.</p>
+<p>That gave me the idea for this project. If an iPhone can send and receive texts over satellite, then those texts can be answered by an AI. With a relay set up at home, you can ask an AI questions even when you're completely off-grid.</p>
+
+<h2>How it works</h2>
+<p>The setup uses two iPhones:</p>
+<ul>
+    <li><strong>Field phone:</strong> the iPhone you bring with you off-grid. It sends questions over satellite.</li>
+    <li><strong>Relay phone:</strong> a second iPhone left at home with an internet connection. It receives the questions and answers them.</li>
+</ul>
+<p>The relay phone runs an Apple Shortcuts automation that:</p>
+<ol>
+    <li>Catches the incoming message from the field phone</li>
+    <li>Sends it to an AI model</li>
+    <li>Sends the AI's reply back to the field phone</li>
+</ol>
+<p>From the field phone, it works like texting any other contact.</p>
+
+<h2>Requirements</h2>
+<h4>Field phone</h4>
+<ul>
+    <li>iPhone 14 or newer with Messages via satellite</li>
+    <li>A recent iOS version</li>
+    <li>Located in a country where the feature is offered</li>
+</ul>
+<p>When you're out of coverage, the satellite interface appears in Messages, and you text the relay phone your question like any other message. It only works outside cellular and Wi-Fi coverage with a clear view of the sky, and messages take longer to send than regular texts, so short messages work best.</p>
+
+<h4>Relay phone</h4>
+<ul>
+    <li>Any spare iPhone that can run Shortcut automations</li>
+    <li>Its own Apple Account (free), so the two phones can text each other</li>
+    <li>Left at home, plugged in and connected to Wi-Fi</li>
+</ul>
+<p>The relay phone does not need to be awake. The automation runs in the background when a message arrives.</p>
+
+<h2>Setup</h2>
+<ol>
+    <li>On the relay phone, open the template shortcut: <a href="https://www.icloud.com/shortcuts/c1e7b92d98e847148b42ebc46584f04e">Get the Satellite AI Shortcut</a>.</li>
+    <li>Tap <strong>Add Shortcut</strong>.</li>
+    <li>Replace the placeholder address <code>test@icloud.com</code> with the field phone's phone number or Apple Account email. It appears in two places: the <strong>Sender</strong> filter in the trigger, and the recipient in the <strong>Send</strong> action.</li>
+    <li>Make sure <strong>Automation</strong> is on and <strong>Confirm Before Run</strong> is off, so the shortcut runs without needing a tap.</li>
+</ol>
+<div class="shots">
+    <img src="/images/projects/satellite-ai/shortcut-automation.png" alt="Satellite AI shortcut automation on the relay phone" loading="lazy">
 </div>
+
+<h4>AI model</h4>
+<p>The <strong>Ask Claude</strong> action comes from the Claude app, which must be installed and signed in on the relay phone. You can swap it for another AI action, such as Apple Intelligence's <strong>Use Model</strong> or <strong>Ask ChatGPT</strong>.</p>
+
+<h2>Notes</h2>
+<ul>
+    <li><strong>Keep replies short.</strong> Satellite messages are slow and work best when they're short. Add a prompt to the AI action such as "Answer in under 300 characters, plain text, no formatting."</li>
+    <li><strong>Cost.</strong> Apple has offered satellite features free on supported iPhones for a limited period. On the AI side, Apple Intelligence's models and the free tiers of the Claude and ChatGPT integrations keep the setup free to run.</li>
+</ul>
+
+<h2>What's next</h2>
+<ul>
+    <li>Commands for real-time weather data</li>
+    <li>Commands for translations</li>
+</ul>
+
+<p class="meta"><em>This is an experimental, unofficial setup and is not affiliated with Apple. Do not rely on it in an emergency. In an emergency, use Emergency SOS via satellite or contact emergency services directly. Satellite feature availability depends on device, iOS version, country, and carrier.</em></p>
+
+<footer>
+    <p>Katsuma Onishi</p>
+    <p>Last updated: November 2026</p>
+</footer>
 
 </main>
 

@@ -12,7 +12,7 @@ Only the apps with an app or web app to open (maritides, on-site, on-wildlife, o
 
 Short-URL redirect stubs: `unwrapped.html` (to `/spotify-unwrapped/`) and `nb-tides.html` (to `/maritides/`).
 
-`business/` is gitignored and must never be committed to this public repo. Never create a top-level page or folder named like one of my app repos (on-site, on-fishing, on-wildlife, maritides, spotify-unwrapped, roadtrip-2026), because it would shadow that repo's project site at katsuma.ca/<repo>/. Nesting under `/projects/` is safe.
+`business/` is gitignored and must never be committed to this public repo. Never create a top-level page or folder named like one of my app repos (on-site, on-fishing, on-wildlife, maritides, spotify-unwrapped, rockies-road-trip), because it would shadow that repo's project site at katsuma.ca/<repo>/. Nesting under `/projects/` is safe.
 
 ## No build step
 

@@ -12,7 +12,7 @@ Only the apps with an app or web app to open (maritides, on-site, on-wildlife, o
 
 Short-URL redirect stubs: `unwrapped.html` (to `/spotify-unwrapped/`) and `nb-tides.html` (to `/maritides/`).
 
-`business/` is gitignored and must never be committed to this public repo. Never create a top-level page or folder named like one of my app repos (on-site, on-fishing, on-wildlife, maritides, spotify-unwrapped, roadtrip-2026, shop), because it would shadow that repo's project site at katsuma.ca/<repo>/. Nesting under `/projects/` is safe.
+`business/` is gitignored and must never be committed to this public repo. Never create a top-level page or folder named like one of my app repos (on-site, on-fishing, on-wildlife, maritides, spotify-unwrapped, roadtrip-2026), because it would shadow that repo's project site at katsuma.ca/<repo>/. Nesting under `/projects/` is safe.
 
 ## No build step
 
@@ -24,7 +24,7 @@ To preview, open the `.html` file directly or run any throwaway static server (t
 
 GitHub Pages user site from the root of `main`. Pushing to `main` is the deploy. The owner merges every PR by hand; that merge is the approval and the deploy, so nothing lands on the public site without the owner being the last one to push. Never merge to `main` yourself.
 
-Custom domain is `katsuma.ca` via the `CNAME` file. Because of that, every project repo with Pages also serves under it automatically: katsuma.ca/maritides, /on-site, /on-fishing, /on-wildlife, /spotify-unwrapped, /shop. Old /on-camp/... addresses fall through to `404.html`, which forwards them to /on-site/... keeping path, search and hash. The other katsuma.* domains forward at GoDaddy. The old shop and life pages were removed in October 2026. The shop came back in November 2026 as its own repo, `shop` (formerly sticker-shop), served at katsuma.ca/shop/, so the .shop and .store forwards should point there and .life at katsuma.ca itself.
+Custom domain is `katsuma.ca` via the `CNAME` file. Because of that, every project repo with Pages also serves under it automatically: katsuma.ca/maritides, /on-site, /on-fishing, /on-wildlife, /spotify-unwrapped. Old /on-camp/... addresses fall through to `404.html`, which forwards them to /on-site/... keeping path, search and hash. The other katsuma.* domains forward at GoDaddy. The old shop and life pages were removed in October 2026. The shop came back in November 2026 and was retired again the same month; its repo is deleted, so the .shop, .store and .life forwards should all point at katsuma.ca itself.
 
 ## Layout
 
